@@ -34,6 +34,10 @@
 - 🧷 [수행 계획서]
 
 ---
+### 🔍 요구사항 분석
+- [🧷 [User Flow]](https://www.figma.com/board/RJ7TJHqIX29oRSNYUTevG3/Wikid-userFlow?node-id=0-1&p=f&t=N3FX3ZcUwH4q2cBI-0)
+
+---
 
 ### 🎨 디자인 시안
 - [🧷 [Figma - 원본]](https://www.figma.com/design/7aLjzZy50LPISym2AMxuQW/-BBB-%EC%9C%84%ED%82%A4%EB%93%9C?node-id=0-1&p=f&t=WkWo7Snz4tLkMsiz-0)
