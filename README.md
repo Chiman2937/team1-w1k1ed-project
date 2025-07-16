@@ -1,5 +1,5 @@
 # 📜 중급 프로젝트 README
-
+코드잇 파트3 1팀 중급 프로젝트
 > ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white&labelColor=20232a)
 ![css](https://img.shields.io/badge/-css-663399?logo=css&logoColor=white&labelColor=20232a)
 ![HTML5](https://img.shields.io/badge/-HTML5-E34F26?logo=html5&logoColor=white&labelColor=20232a)
