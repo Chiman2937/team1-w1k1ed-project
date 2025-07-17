@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Pretendard, nexonGothicBold, nexonGothicLight, nexonGothicRegular } from './font';
+import Header from '@/components/common/Header';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -23,6 +24,7 @@ export default function RootLayout({
         ${nexonGothicRegular.variable}
         antialiased`}
       >
+        <Header />
         {children}
       </body>
     </html>
