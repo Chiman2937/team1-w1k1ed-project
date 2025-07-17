@@ -21,7 +21,7 @@
 
 ---
 ## 🚀 배포 사이트
-- [🧷 [배포 사이트]](https://vercel.com/chiyoung-kims-projects/team1-w1k1ed-project)
+- [🧷 [배포 사이트]](https://team1-w1k1ed-project.vercel.app/)
 
 ---
 ### 💌 주제
