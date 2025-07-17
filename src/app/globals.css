@@ -1,25 +1,33 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --background: #ffffff;
+  --foreground: #171717; */
+  --grayscale-50: #ffffff;
+  --grayscale-100: #f7f7fa;
+  --grayscale-200: #efe5f0;
+  --grayscale-300: #c6cada;
+  --grayscale-400: #8f95b2;
+  --grayscale-500: #474d66;
+  --grayscale-600: #3b415b;
+  --primary-100: #eef9f6;
+  --primary-200: #4cbfa4;
+  --primary-300: #32a68a;
+  --secondary-red-100: #fbeded;
+  --secondary-red-200: #d14343;
+  --secondary-purple-100: #8e66ff;
+  --secondary-yellow-100: #fdd181;
 }
 
 @theme inline {
-  --color-background: var(--background);
+  /* --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-@theme {
+  --font-mono: var(--font-geist-mono); */
+  --font-pretendard: var(--pretendard);
+  --font-nexon-gothic-bold: var(--nexon-gothic-bold);
+  --font-nexon-gothic-regular: var(--nexon-gothic-regular);
+  --font-nexon-gothic-light: var(--nexon-gothic-light);
   /* Grayscale */
   --color-grayscale-50: #ffffff;
   --color-grayscale-100: #f7f7fa;
@@ -45,12 +53,115 @@
   --color-secondary-yellow-100: #fdd181;
 }
 
+@layer utilities {
+  .text-5xl-semibold {
+    @apply font-pretendard text-[48px]/[46px] font-semibold;
+  }
+
+  .text-4xl-bold {
+    @apply font-pretendard text-[40px]/[42px] font-bold;
+  }
+
+  .text-3xl-bold {
+    @apply font-pretendard text-[32px]/[46px] font-bold;
+  }
+  .text-3xl-semibold {
+    @apply font-pretendard text-[32px]/[42px] font-semibold;
+  }
+
+  .text-2xl-bold {
+    @apply font-pretendard text-[24px]/[32px] font-bold;
+  }
+  .text-2xl-semibold {
+    @apply font-pretendard text-[24px]/[32px] font-semibold;
+  }
+  .text-2xl-medium {
+    @apply font-pretendard text-[24px]/[32px] font-medium;
+  }
+  .text-2xl-regular {
+    @apply font-pretendard text-[24px]/[32px] font-normal;
+  }
+
+  .text-xl-bold {
+    @apply font-pretendard text-[20px]/[32px] font-bold;
+  }
+  .text-xl-semibold {
+    @apply font-pretendard text-[20px]/[32px] font-semibold;
+  }
+  .text-xl-medium {
+    @apply font-pretendard text-[20px]/[32px] font-medium;
+  }
+  .text-xl-regular {
+    @apply font-pretendard text-[20px]/[32px] font-normal;
+  }
+
+  .text-2lg-bold {
+    @apply font-pretendard text-[18px]/[26px] font-bold;
+  }
+  .text-2lg-semibold {
+    @apply font-pretendard text-[18px]/[26px] font-semibold;
+  }
+  .text-2lg-medium {
+    @apply font-pretendard text-[18px]/[26px] font-medium;
+  }
+  .text-2lg-regular {
+    @apply font-pretendard text-[18px]/[26px] font-normal;
+  }
+
+  .text-lg-bold {
+    @apply font-pretendard text-[16px]/[26px] font-bold;
+  }
+  .text-lg-semibold {
+    @apply font-pretendard text-[16px]/[26px] font-semibold;
+  }
+  .text-lg-medium {
+    @apply font-pretendard text-[16px]/[26px] font-medium;
+  }
+  .text-lg-regular {
+    @apply font-pretendard text-[16px]/[26px] font-normal;
+  }
+
+  .text-md-bold {
+    @apply font-pretendard text-[14px]/[24px] font-bold;
+  }
+  .text-md-semibold {
+    @apply font-pretendard text-[14px]/[24px] font-semibold;
+  }
+  .text-md-medium {
+    @apply font-pretendard text-[14px]/[24px] font-medium;
+  }
+  .text-md-regular {
+    @apply font-pretendard text-[14px]/[24px] font-normal;
+  }
+
+  .text-sm-semibold {
+    @apply font-pretendard text-[13px]/[22px] font-semibold;
+  }
+  .text-sm-medium {
+    @apply font-pretendard text-[13px]/[22px] font-medium;
+  }
+
+  .text-xs-semibold {
+    @apply font-pretendard text-[12px]/[20px] font-semibold;
+  }
+  .text-xs-medium {
+    @apply font-pretendard text-[12px]/[20px] font-medium;
+  }
+  .text-xs-regular {
+    @apply font-pretendard text-[12px]/[20px] font-normal;
+  }
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-* {
   box-sizing: border-box;
 }
