@@ -19,8 +19,38 @@
   }
 }
 
+@theme {
+  /* Grayscale */
+  --color-grayscale-50: #ffffff;
+  --color-grayscale-100: #f7f7fa;
+  --color-grayscale-200: #e4e6f0;
+  --color-grayscale-300: #c6cada;
+  --color-grayscale-400: #8f95b2;
+  --color-grayscale-500: #474d86;
+  --color-grayscale-600: #38415b;
+
+  /* Primary Green */
+  --color-primary-green-100: #eefff6;
+  --color-primary-green-200: #4cbfa4;
+  --color-primary-green-300: #32a68a;
+
+  /* Secondary Red */
+  --color-secondary-red-100: #fbebed;
+  --color-secondary-red-200: #d14343;
+
+  /* Secondary Purple */
+  --color-secondary-purple-100: #8e66ff;
+
+  /* Secondary Yellow */
+  --color-secondary-yellow-100: #fdd181;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
 }
