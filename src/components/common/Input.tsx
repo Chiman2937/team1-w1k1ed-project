@@ -1,6 +1,7 @@
 import React, { InputHTMLAttributes } from 'react';
 import clsx from 'clsx'; // clsx 임포트
-import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
+import { twMerge } from 'tailwind-merge';
+import { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
 
 type InputSize = 'S' | 'L';
 
@@ -13,7 +14,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
   // React Hook Form 통합을 위해 필요한 필수 Props
   name: string;
-  register: UseFormRegister<FieldValues>;
+  register?: UseFormRegisterReturn;
   errors?: FieldErrors;
 }
 
@@ -34,11 +35,13 @@ export default function Input({
 
   const baseStyle = clsx(
     'h-[45px] rounded-[10px] px-[20px] py-[14px]',
-    'bg-white',
-    'text--color-grayscale-500',
+    'bg-grayscale-100',
+    'text-grayscale-500',
     'text-md-regular',
-    'placeholder:text--color-grayscale-400',
-    'placeholder:text-md-regular',
+    'placeholder:text-grayscale-400',
+    'border border-transparent',
+    'focus:outline-none',
+    'focus:border-primary-green-200',
   );
 
   const sizeClasses = {
@@ -46,10 +49,12 @@ export default function Input({
     L: 'w-[400px]',
   };
 
+  const errorClasses = clsx('bg-secondary-red-100', 'focus:border-secondary-red-100');
+
   return (
     <div className='flex flex-col gap-[10px]'>
       {label && (
-        <label htmlFor={id || name} className='text-md-regular text--color-grayscale-500'>
+        <label htmlFor={id || name} className='text-md-regular text-grayscale-500'>
           {label}
         </label>
       )}
@@ -58,12 +63,12 @@ export default function Input({
         id={id || name}
         type={type}
         placeholder={placeholder}
-        className={clsx(baseStyle, sizeClasses[inputSize], className)}
-        {...register(name)}
+        className={twMerge(baseStyle, sizeClasses[inputSize], hasError && errorClasses, className)}
+        {...register}
         {...rest}
       />
 
-      {hasError && <p className='text-xs-regular text--color-secondary-red-200'>{errorMessage}</p>}
+      {hasError && <p className='text-xs-regular text-secondary-red-200'>{errorMessage}</p>}
     </div>
   );
 }
