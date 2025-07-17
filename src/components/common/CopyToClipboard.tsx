@@ -1,11 +1,37 @@
 import LinkIcon from '@/assets/images/icon-link.svg';
-import {
-  COPY_TO_CLIPBOARD_CONFIG,
-  COPY_BUTTON_STYLES,
-  COPY_ICON_STYLES,
-} from '@/constants/copyToClipboard.constants';
 import { truncateText } from '@/utils/truncateText';
+import clsx from 'clsx';
 
+// CopyToClipboard 컴포넌트에 사용되는 상수들 정리
+export const COPY_TO_CLIPBOARD_CONFIG = {
+  MAX_TEXT_LENGTH: 50,
+  DEFAULT_SUFFIX: '...',
+  MESSAGES: {
+    WARN: '복사할 텍스트가 비어있습니다.',
+    ERROR: '내 위키 링크 복사에 실패했습니다.',
+    SUCCESS: '내 위키 링크가 복사되었습니다.',
+  },
+  STYLES: {
+    sizes: {
+      default: 'w-auto h-[26px] text-xs-regular',
+      large: 'w-auto h-[30px] text-md-regular',
+    },
+    icons: {
+      default: 'w-4 h-4',
+      large: 'w-5 h-5',
+    },
+    base: [
+      'flex justify-center items-center gap-[5px]',
+      'rounded-[10px] px-2.5 py-[5px] border-0',
+      'cursor-pointer bg-primary-green-100 text-primary-green-200',
+      'hover:shadow-md active:shadow-sm',
+      'transition-all duration-200',
+      'opacity-100',
+    ],
+  },
+} as const;
+
+// 타입 정의
 type CopyButtonSize = 'default' | 'large';
 
 interface Props {
@@ -37,7 +63,7 @@ export default function CopyToClipboard({
   const handleCopyClipBoard = async () => {
     try {
       if (!text.trim()) {
-        console.warn('복사할 텍스트가 비어있습니다.');
+        alert(COPY_TO_CLIPBOARD_CONFIG.MESSAGES.WARN);
         return;
       }
       // 클립보드에 복사
@@ -62,19 +88,16 @@ export default function CopyToClipboard({
   return (
     <button
       onClick={handleCopyClipBoard}
-      className={`
-        ${COPY_BUTTON_STYLES[size]}
-        flex justify-center items-center gap-[5px]
-        rounded-[10px] px-2.5 py-[5px] border-0 
-        cursor-pointer bg-primary-green-100 text-primary-green-200
-        hover:shadow-md active:shadow-sm
-        opacity-100 ${className}
-      `}
+      className={clsx(
+        COPY_TO_CLIPBOARD_CONFIG.STYLES.sizes[size],
+        COPY_TO_CLIPBOARD_CONFIG.STYLES.base,
+        className,
+      )}
       // 접근성을 위한 속성 추가
       aria-label={`${buttonText || '링크'} 복사하기`}
       title='클립보드에 복사'
     >
-      <LinkIcon className={COPY_ICON_STYLES[size]} aria-hidden='true' />
+      <LinkIcon className={COPY_TO_CLIPBOARD_CONFIG.STYLES.icons[size]} aria-hidden='true' />
       {displayText}
     </button>
   );
