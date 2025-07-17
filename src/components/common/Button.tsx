@@ -1,18 +1,17 @@
 import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx'; // clsx 임포트
+import clsx from 'clsx';
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary';
-  size?: 'sm' | 'md' | 'lg'; // size prop 추가
-};
+type VariantType = 'primary' | 'secondary';
+type SizeType = 'sm' | 'md' | 'lg';
 
-export default function Button({
-  children,
-  variant = 'primary',
-  size = 'sm', // 기본 사이즈를 'sm'로 설정
-  className,
-  ...props
-}: ButtonProps) {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: VariantType;
+  size?: SizeType;
+  className?: string;
+  children: React.ReactNode;
+}
+
+const Button = ({ children, variant = 'primary', size = 'sm', className, ...props }: Props) => {
   const isDisabled = props.disabled;
 
   const baseStyle = clsx(
@@ -20,20 +19,18 @@ export default function Button({
     isDisabled ? '' : 'cursor-pointer',
   );
 
-  // variant에 따른 배경색, 폰트 색상, 호버 효과 정의
-  const variantStyles: Record<NonNullable<ButtonProps['variant']>, string> = {
+  const variantStyles: Record<VariantType, string> = {
     primary: 'bg-primary-green-200 text-white hover:bg-primary-green-300',
-    secondary: 'bg-transparent text-primary-green-200 border border-primary-green-200 ',
+    secondary: 'bg-transparent text-primary-green-200 border border-primary-green-200',
   };
 
-  // size에 따른 패딩 및 폰트 크기 정의
-  const sizeStyles: Record<NonNullable<ButtonProps['size']>, string> = {
-    sm: 'px-[20px] py-[8px] h-[40px]', //넓이 : hug (기존 기본값)
+  const sizeStyles: Record<SizeType, string> = {
+    sm: 'px-[20px] py-[8px] h-[40px]',
     md: 'py-[10.5px] w-[335px] h-[45px]',
-    lg: 'py-[10.5px] w-[400px] h-[45px]', // large
+    lg: 'py-[10.5px] w-[400px] h-[45px]',
   };
 
-  const disabledStyles = clsx('bg-grayscale-300 hover:bg-grayscale-300 ');
+  const disabledStyles = clsx('bg-grayscale-300 hover:bg-grayscale-300');
 
   return (
     <button
@@ -47,4 +44,6 @@ export default function Button({
       {children}
     </button>
   );
-}
+};
+
+export default Button;
