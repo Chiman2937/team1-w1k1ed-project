@@ -3,20 +3,20 @@
 :root {
   /* --background: #ffffff;
   --foreground: #171717; */
-  --scale-50: #ffffff;
-  --scale-100: #f7f7fa;
-  --scale-200: #efe5f0;
-  --scale-300: #c6cada;
-  --scale-400: #8f95b2;
-  --scale-500: #474d66;
-  --scale-600: #3b415b;
-  --pri-100: #eef9f6;
-  --pri-200: #4cbfa4;
-  --pri-300: #32a68a;
-  --sec-red-100: #fbeded;
-  --sec-red-200: #d14343;
-  --sec-purple-100: #8e66ff;
-  --sec-yellow-100: #fdd181;
+  --grayscale-50: #ffffff;
+  --grayscale-100: #f7f7fa;
+  --grayscale-200: #efe5f0;
+  --grayscale-300: #c6cada;
+  --grayscale-400: #8f95b2;
+  --grayscale-500: #474d66;
+  --grayscale-600: #3b415b;
+  --primary-100: #eef9f6;
+  --primary-200: #4cbfa4;
+  --primary-300: #32a68a;
+  --secondary-red-100: #fbeded;
+  --secondary-red-200: #d14343;
+  --secondary-purple-100: #8e66ff;
+  --secondary-yellow-100: #fdd181;
 }
 
 @theme inline {
@@ -28,20 +28,29 @@
   --font-nexon-gothic-bold: var(--nexon-gothic-bold);
   --font-nexon-gothic-regular: var(--nexon-gothic-regular);
   --font-nexon-gothic-light: var(--nexon-gothic-light);
-  --color-scale-50: #ffffff;
-  --color-scale-100: #f7f7fa;
-  --color-scale-200: #efe5f0;
-  --color-scale-300: #c6cada;
-  --color-scale-400: #8f95b2;
-  --color-scale-500: #474d66;
-  --color-scale-600: #3b415b;
-  --color-pri-100: #eef9f6;
-  --color-pri-200: #4cbfa4;
-  --color-pri-300: #32a68a;
-  --color-sec-red-100: #fbeded;
-  --color-sec-red-200: #d14343;
-  --color-sec-purple-100: #8e66ff;
-  --color-sec-yellow-100: #fdd181;
+  /* Grayscale */
+  --color-grayscale-50: #ffffff;
+  --color-grayscale-100: #f7f7fa;
+  --color-grayscale-200: #e4e6f0;
+  --color-grayscale-300: #c6cada;
+  --color-grayscale-400: #8f95b2;
+  --color-grayscale-500: #474d86;
+  --color-grayscale-600: #38415b;
+
+  /* Primary Green */
+  --color-primary-green-100: #eefff6;
+  --color-primary-green-200: #4cbfa4;
+  --color-primary-green-300: #32a68a;
+
+  /* Secondary Red */
+  --color-secondary-red-100: #fbebed;
+  --color-secondary-red-200: #d14343;
+
+  /* Secondary Purple */
+  --color-secondary-purple-100: #8e66ff;
+
+  /* Secondary Yellow */
+  --color-secondary-yellow-100: #fdd181;
 }
 
 @layer utilities {
@@ -149,9 +158,10 @@
     --foreground: #ededed;
   }
 } */
-/* 
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-} */
+  box-sizing: border-box;
+}
