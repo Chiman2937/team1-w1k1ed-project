@@ -4,8 +4,9 @@ import { Menu } from '@headlessui/react';
 import Link from 'next/link';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { VscAccount } from 'react-icons/vsc';
+import clsx from 'clsx';
 
-const icons = {
+const ICON = {
   hamburger: GiHamburgerMenu,
   account: VscAccount,
 };
@@ -22,7 +23,7 @@ type Props = {
 };
 
 export default function Dropdown({ iconName = 'hamburger', menuItems }: Props) {
-  const Icon = icons[iconName];
+  const Icon = ICON[iconName];
 
   const handleLogout = () => {
     console.log('로그아웃');
@@ -43,14 +44,14 @@ export default function Dropdown({ iconName = 'hamburger', menuItems }: Props) {
                 item.isLogout ? (
                   <button
                     onClick={handleLogout}
-                    className={`w-full px-4 py-2 text-sm ${active ? 'bg-gray-100 text-black' : ''}`}
+                    className={clsx('w-full px-4 py-2 text-sm', active && 'bg-gray-100 text-black')}
                   >
                     {item.label}
                   </button>
                 ) : (
                   <Link
                     href={item.href ?? '/'}
-                    className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100 text-black' : ''}`}
+                    className={clsx('block px-4 py-2 text-sm', active && 'bg-gray-100 text-black')}
                   >
                     {item.label}
                   </Link>

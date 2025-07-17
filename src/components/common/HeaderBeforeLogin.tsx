@@ -8,9 +8,9 @@ export default function HeaderBeforeLogin() {
     <div className='bg-grayscale-50'>
       <div
         className='mx-auto py-[25px] bg-grayscale-50 flex items-center justify-between
-    max-w-[375px] px-[20px]
-    md:max-w-[744px]
-    lg:max-w-[1920px] lg:px-[80px]'
+        max-w-[375px] px-[20px]
+        md:max-w-[744px]
+        lg:max-w-[1920px] lg:px-[80px]'
       >
         <div className='flex items-center gap-[40px]'>
           <Link href='/'>
