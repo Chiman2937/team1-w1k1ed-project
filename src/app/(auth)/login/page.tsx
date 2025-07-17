@@ -9,9 +9,9 @@ import { zodResolver } from '@hookform/resolvers/zod'; // Zod 리졸버 가져�
 // 폼 데이터의 유효성 검사를 위한 Zod 스키마 정의
 const loginSchema = z
   .object({
-    username: z.string().max(10, '열 자 이하로 작성해주세요.'), // 이름은 최소 1자 이상
+    username: z.string().trim().max(10, '열 자 이하로 작성해주세요.'),
     email: z.email('유효한 이메일 주소를 입력해주세요.'),
-    password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 6자 이상
+    password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 8자 이상
     confirmPassword: z.string().min(1, '비밀번호가 일치하지 않습니다.'), // 비밀번호 확인은 최소 1자 이상
   })
   .refine((data) => data.password === data.confirmPassword, {
