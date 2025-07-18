@@ -152,7 +152,7 @@
     @apply font-pretendard text-[12px]/[20px] font-medium;
   }
   .text-xs-regular {
-    @apply font-pretendard text-[12px]/[20px] font-normal;
+    @apply font-pretendard text-[12px]/[18px] font-normal;
   }
 }
 
