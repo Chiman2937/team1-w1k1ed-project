@@ -8,7 +8,7 @@ type InputSize = 'S' | 'L';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   className?: string;
-  inputSize?: InputSize;
+  variant?: InputSize;
   type?: InputHTMLAttributes<HTMLInputElement>['type']; //인풋 타입: text, password, email 등
   placeholder?: string;
 
@@ -22,7 +22,7 @@ export default function Input({
   label,
   className,
   id,
-  inputSize = 'S',
+  variant = 'S',
   type,
   placeholder,
   name,
@@ -44,7 +44,7 @@ export default function Input({
     'focus:border-primary-green-200',
   );
 
-  const sizeClasses = {
+  const SIZE_CLASSES = {
     S: 'w-[335px]',
     L: 'w-[400px]',
   };
@@ -63,7 +63,7 @@ export default function Input({
         id={id || name}
         type={type}
         placeholder={placeholder}
-        className={twMerge(baseStyle, sizeClasses[inputSize], hasError && errorClasses, className)}
+        className={twMerge(baseStyle, SIZE_CLASSES[variant], hasError && errorClasses, className)}
         {...register}
         {...rest}
       />

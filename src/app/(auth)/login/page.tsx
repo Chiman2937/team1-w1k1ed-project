@@ -50,7 +50,7 @@ export default function LoginPage() {
           type='text'
           placeholder='이름을 입력하세요'
           name='username'
-          inputSize='S'
+          variant='S'
           register={register('username')} // 'username' 필드 등록
           errors={errors} // 에러 객체 전달
         />
@@ -59,7 +59,7 @@ export default function LoginPage() {
           type='email'
           placeholder='이메일을 입력하세요'
           name='email'
-          inputSize='S'
+          variant='S'
           register={register('email')} // 'email 필드 등록
           errors={errors} // 에러 객체 전달
         />
@@ -68,7 +68,7 @@ export default function LoginPage() {
           type='password'
           placeholder='비밀번호를 입력하세요'
           name='password'
-          inputSize='S'
+          variant='L'
           register={register('password')} // 'password' 필드 등록
           errors={errors} // 에러 객체 전달
         />
@@ -77,7 +77,7 @@ export default function LoginPage() {
           type='password'
           placeholder='비밀번호를 다시 입력하세요'
           name='confirmPassword'
-          inputSize='S'
+          variant='L'
           register={register('confirmPassword')} // 'confirmPassword' 필드 등록
           errors={errors} // 에러 객체 전달
         />
