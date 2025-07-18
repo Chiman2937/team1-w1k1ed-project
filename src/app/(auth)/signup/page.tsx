@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form'; // useForm 훅 가져오기
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
@@ -39,7 +39,20 @@ export default function LoginPage() {
     // 여기에 실제 로그인 로직 (예: API 호출)을 추가하세요.
   };
 
+  // 👇 hydration mismatch 방지를 위한 마운트 상태
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isTabletOrDesktop = useMediaQuery({ minWidth: 768 });
+
+  // 👇 마운트 전에는 렌더를 생략하거나 기본 사이즈로
+  if (!mounted) return null; // 또는 fallback UI
+
+  const inputVariant = isTabletOrDesktop ? 'L' : 'S';
+  const buttonSize = isTabletOrDesktop ? 'lg' : 'md';
 
   return (
     <div className='flex flex-col justify-center items-center gap-[32px] mt-[100px]'>
@@ -51,7 +64,7 @@ export default function LoginPage() {
             type='text'
             placeholder='이름을 입력하세요'
             name='username'
-            variant={isTabletOrDesktop ? 'L' : 'S'}
+            variant={inputVariant}
             register={register('username')} // 'username' 필드 등록
             errors={errors} // 에러 객체 전달
           />
@@ -60,7 +73,7 @@ export default function LoginPage() {
             type='email'
             placeholder='이메일을 입력하세요'
             name='email'
-            variant={isTabletOrDesktop ? 'L' : 'S'}
+            variant={inputVariant}
             register={register('email')} // 'email 필드 등록
             errors={errors} // 에러 객체 전달
           />
@@ -69,7 +82,7 @@ export default function LoginPage() {
             type='password'
             placeholder='비밀번호를 입력하세요'
             name='password'
-            variant={isTabletOrDesktop ? 'L' : 'S'}
+            variant={inputVariant}
             register={register('password')} // 'password' 필드 등록
             errors={errors} // 에러 객체 전달
           />
@@ -78,16 +91,11 @@ export default function LoginPage() {
             type='password'
             placeholder='비밀번호를 다시 입력하세요'
             name='confirmPassword'
-            variant={isTabletOrDesktop ? 'L' : 'S'}
+            variant={inputVariant}
             register={register('confirmPassword')} // 'confirmPassword' 필드 등록
             errors={errors} // 에러 객체 전달
           />
-          <Button
-            variant='primary'
-            size={isTabletOrDesktop ? 'lg' : 'md'}
-            type='submit'
-            className='mt-4'
-          >
+          <Button variant='primary' size={buttonSize} type='submit' className='mt-4'>
             회원가입
           </Button>
         </form>
