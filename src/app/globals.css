@@ -28,10 +28,12 @@
   --font-nexon-gothic-bold: var(--nexon-gothic-bold);
   --font-nexon-gothic-regular: var(--nexon-gothic-regular);
   --font-nexon-gothic-light: var(--nexon-gothic-light);
+
   /* Grayscale */
   --color-grayscale-50: #ffffff;
   --color-grayscale-100: #f7f7fa;
   --color-grayscale-200: #e4e6f0;
+  --color-grayscale-250: #dee5f5;
   --color-grayscale-300: #c6cada;
   --color-grayscale-400: #8f95b2;
   --color-grayscale-500: #474d86;
@@ -39,6 +41,7 @@
 
   /* Primary Green */
   --color-primary-green-100: #eefff6;
+  --color-primary-green-150: #adedde;
   --color-primary-green-200: #4cbfa4;
   --color-primary-green-300: #32a68a;
 
@@ -47,6 +50,7 @@
   --color-secondary-red-200: #d14343;
 
   /* Secondary Purple */
+  --color-secondary-purple-50: #b2a5fd;
   --color-secondary-purple-100: #8e66ff;
 
   /* Secondary Yellow */
@@ -148,7 +152,7 @@
     @apply font-pretendard text-[12px]/[20px] font-medium;
   }
   .text-xs-regular {
-    @apply font-pretendard text-[12px]/[20px] font-normal;
+    @apply font-pretendard text-[12px]/[18px] font-normal;
   }
 
   /* motion */

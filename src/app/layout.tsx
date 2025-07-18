@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Pretendard, nexonGothicBold, nexonGothicLight, nexonGothicRegular } from './font';
-import Header from '@/components/common/Header';
+import HeaderBeforeLogin from '@/components/common/HeaderBeforeLogin';
+import HeaderAfterLogin from '@/components/common/HeaderAfterLogin';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='ko'>
       <body
         className={`
         ${Pretendard.className}
@@ -24,7 +25,8 @@ export default function RootLayout({
         ${nexonGothicRegular.variable}
         antialiased`}
       >
-        <Header />
+        <HeaderBeforeLogin />
+        <HeaderAfterLogin />
         {children}
       </body>
     </html>
