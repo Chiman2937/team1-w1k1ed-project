@@ -26,6 +26,11 @@ export default function LoginPage() {
     mode: 'onBlur',
   });
 
+  const onSubmit = (data: LoginFormData) => {
+    console.log('폼 제출됨:', data);
+    // 여기에 실제 로그인 로직 (예: API 호출)을 추가하세요.
+  };
+
   // 👇 hydration mismatch 방지를 위한 마운트 상태
   const [mounted, setMounted] = useState(false);
 
@@ -45,10 +50,7 @@ export default function LoginPage() {
     <div className='flex flex-col justify-center items-center gap-[50px] mt-[100px]'>
       <h1 className='text-2xl-semibold text-grayscale-500'>로그인</h1>
       <div className='flex flex-col gap-[40px] items-center'>
-        <form
-          onSubmit={handleSubmit((data) => console.log(data))}
-          className='flex flex-col gap-[32px] items-center'
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[32px] items-center'>
           <Input
             label='이메일'
             type='email'
