@@ -9,9 +9,17 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: SizeType;
   className?: string;
   children: React.ReactNode; // 태그 사이에 버튼에 들어갈 텍스트를 입력하시면 됩니다
+  type?: 'button' | 'submit' | 'reset';
 }
 
-const Button = ({ children, variant = 'primary', size = 'sm', className, ...props }: Props) => {
+const Button = ({
+  children,
+  variant = 'primary',
+  size = 'sm',
+  className,
+  type = 'button',
+  ...props
+}: Props) => {
   const isDisabled = props.disabled;
 
   const baseStyle = clsx(
@@ -34,6 +42,7 @@ const Button = ({ children, variant = 'primary', size = 'sm', className, ...prop
 
   return (
     <button
+      type={type}
       {...props}
       className={twMerge(
         clsx(baseStyle, variantStyles[variant], sizeStyles[size], props.disabled && disabledStyles),

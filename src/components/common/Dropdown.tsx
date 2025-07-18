@@ -22,7 +22,7 @@ type Props = {
   menuItems: DropdownMenuItem[];
 };
 
-export default function Dropdown({ iconName = 'hamburger', menuItems }: Props) {
+const Dropdown = ({ iconName = 'hamburger', menuItems }: Props) => {
   const Icon = ICONS[iconName];
 
   const handleLogout = () => {
@@ -63,4 +63,6 @@ export default function Dropdown({ iconName = 'hamburger', menuItems }: Props) {
       </Menu.Items>
     </Menu>
   );
-}
+};
+
+export default Dropdown;

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Nav from './Nav';
 import Dropdown from './Dropdown';
 
-export default function HeaderBeforeLogin() {
+const HeaderBeforeLogin = () => {
   return (
     <div className='bg-grayscale-50'>
       <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
@@ -38,4 +38,6 @@ export default function HeaderBeforeLogin() {
       </div>
     </div>
   );
-}
+};
+
+export default HeaderBeforeLogin;

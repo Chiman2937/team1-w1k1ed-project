@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
-export default function Nav() {
+const Nav = () => {
   const pathname = usePathname();
 
   // 2개 밖에 없는데 굳이 map 써야 하나? 싶지만 확장 대비로 map 사용
@@ -29,4 +29,6 @@ export default function Nav() {
       })}
     </div>
   );
-}
+};
+
+export default Nav;

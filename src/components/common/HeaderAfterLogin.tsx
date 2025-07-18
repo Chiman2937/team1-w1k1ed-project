@@ -1,19 +1,15 @@
-import LogoImage from '@/assets/images/logo.svg';
-import Link from 'next/link';
 import Nav from './Nav';
 import { FaBell } from 'react-icons/fa';
 import Dropdown from './Dropdown';
+import Logo from './Logo';
 
-export default function HeaderAfterLogin() {
+const HeaderAfterLogin = () => {
   return (
     <div className='bg-grayscale-50'>
       <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
         <div className=' mx-auto py-[25px] flex items-center justify-between'>
           <div className='flex items-center gap-[40px]'>
-            <Link href='/'>
-              <LogoImage alt='로고' width={107} height={30} className='h-8 w-auto' />
-            </Link>
-
+            <Logo />
             <div className='hidden md:block'>
               <Nav />
             </div>
@@ -23,8 +19,8 @@ export default function HeaderAfterLogin() {
             <button className='hidden md:inline'>
               <FaBell
                 className='text-gray-300 cursor-pointer
-              w-[24px] h-[24px]
-              md:w-[32px] md:h-[32px]'
+                w-[24px] h-[24px]
+                md:w-[32px] md:h-[32px]'
               />
             </button>
 
@@ -54,4 +50,6 @@ export default function HeaderAfterLogin() {
       </div>
     </div>
   );
-}
+};
+
+export default HeaderAfterLogin;
