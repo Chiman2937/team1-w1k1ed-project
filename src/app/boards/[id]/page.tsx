@@ -11,9 +11,11 @@ interface IParams {
 export default function Board({ params: { id } }: IParams) {
   return (
     <>
-      <BoardContent>
-        <BoardDetail id={id}></BoardDetail>
-      </BoardContent>
+      <div className='flex flex-col items-center justify-center'>
+        <BoardContent>
+          <BoardDetail id={id}></BoardDetail>
+        </BoardContent>
+      </div>
       <div className='flex flex-col items-center justify-center '>
         <BoardComments id={id}></BoardComments>
       </div>
