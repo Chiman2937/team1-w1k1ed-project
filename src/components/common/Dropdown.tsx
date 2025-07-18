@@ -6,7 +6,7 @@ import { GiHamburgerMenu } from 'react-icons/gi';
 import { VscAccount } from 'react-icons/vsc';
 import clsx from 'clsx';
 
-const ICON = {
+const ICONS = {
   hamburger: GiHamburgerMenu,
   account: VscAccount,
 };
@@ -23,7 +23,7 @@ type Props = {
 };
 
 export default function Dropdown({ iconName = 'hamburger', menuItems }: Props) {
-  const Icon = ICON[iconName];
+  const Icon = ICONS[iconName];
 
   const handleLogout = () => {
     console.log('로그아웃');
