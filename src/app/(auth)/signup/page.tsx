@@ -1,17 +1,25 @@
 'use client';
 import React from 'react';
 import { useForm } from 'react-hook-form'; // useForm 훅 가져오기
-import Link from 'next/link';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import * as z from 'zod'; // Zod 라이브러리 가져오기 (스키마 유효성 검사용)
 import { zodResolver } from '@hookform/resolvers/zod'; // Zod 리졸버 가져오기
+import Link from 'next/link';
 
 // 폼 데이터의 유효성 검사를 위한 Zod 스키마 정의
-const loginSchema = z.object({
-  email: z.email('유효한 이메일 주소를 입력해주세요.'),
-  password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 8자 이상
-});
+const loginSchema = z
+  .object({
+    username: z.string().trim().max(10, '열 자 이하로 작성해주세요.'),
+    email: z.email('유효한 이메일 주소를 입력해주세요.'),
+    password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 8자 이상
+    confirmPassword: z.string().min(1, '비밀번호가 일치하지 않습니다.'), // 비밀번호 확인은 최소 1자 이상
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    // 비밀번호와 비밀번호 확인이 일치하는지 검사
+    message: '비밀번호가 일치하지 않습니다.', // 일치하지 않을 때 메시지
+    path: ['confirmPassword'], // 에러 메시지가 표시될 필드
+  });
 
 // Zod 스키마로부터 폼 데이터의 TypeScript 타입 추론
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -32,10 +40,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center gap-[50px] mt-[140px]'>
-      <h1 className='text-2xl-semibold text-grayscale-500'>로그인</h1>
+    <div className='flex flex-col justify-center items-center gap-[32px] mt-[40px]'>
+      <h1 className='text-2xl-semibold text-grayscale-500'>회원가입</h1>
       <div className='flex flex-col gap-[40px] items-center'>
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[32px] items-center'>
+        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[30px] items-center'>
+          <Input
+            label='이름'
+            type='text'
+            placeholder='이름을 입력하세요'
+            name='username'
+            variant='S'
+            register={register('username')} // 'username' 필드 등록
+            errors={errors} // 에러 객체 전달
+          />
           <Input
             label='이메일'
             type='email'
@@ -54,13 +71,23 @@ export default function LoginPage() {
             register={register('password')} // 'password' 필드 등록
             errors={errors} // 에러 객체 전달
           />
+          <Input
+            label='비밀번호 확인'
+            type='password'
+            placeholder='비밀번호를 다시 입력하세요'
+            name='confirmPassword'
+            variant='S'
+            register={register('confirmPassword')} // 'confirmPassword' 필드 등록
+            errors={errors} // 에러 객체 전달
+          />
           <Button variant='primary' size='md' type='submit' className='mt-4'>
-            로그인
+            회원가입
           </Button>
         </form>
-        <div>
-          <Link href='/signup'>
-            <p className='text-md-regular text-primary-green-200'>회원가입</p>
+        <div className='flex gap-[10px] justify-center items-center'>
+          <p className='text-md-regular text-grayscale-400'>이미 회원이신가요?</p>
+          <Link href='/login'>
+            <p className='text-md-regular text-primary-green-200'>로그인하기</p>
           </Link>
         </div>
       </div>
