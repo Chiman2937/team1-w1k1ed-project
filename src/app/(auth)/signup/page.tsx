@@ -95,7 +95,12 @@ export default function LoginPage() {
             register={register('confirmPassword')} // 'confirmPassword' 필드 등록
             errors={errors} // 에러 객체 전달
           />
-          <Button variant='primary' size={buttonSize} type='submit' className='mt-4'>
+          <Button
+            variant='primary'
+            size={buttonSize}
+            type='submit'
+            className='flex items-center justify-center mt-4'
+          >
             회원가입
           </Button>
         </form>

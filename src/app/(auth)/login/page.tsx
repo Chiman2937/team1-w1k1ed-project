@@ -69,7 +69,12 @@ export default function LoginPage() {
             register={register('password')}
             errors={errors}
           />
-          <Button variant='primary' size={buttonSize} type='submit' className='mt-4'>
+          <Button
+            variant='primary'
+            size={buttonSize}
+            type='submit'
+            className='flex items-center justify-center mt-4'
+          >
             로그인
           </Button>
         </form>
