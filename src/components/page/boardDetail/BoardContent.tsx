@@ -11,7 +11,7 @@ const BoardContent = ({ children }: { children: React.ReactNode }) => {
       >
         {children}
       </div>
-      <Button variant={'secondary'} size={'sm'} className={'w-[140px] h-[45px]'}>
+      <Button variant={'secondary'} size={'sm'} className={'w-[140px] h-[45px] justify-center'}>
         <Link href={'/boards'}>목록으로</Link>
       </Button>
     </>
