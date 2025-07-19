@@ -22,9 +22,9 @@ export interface WikiCodeRes {
 }
 
 interface PageProps {
-  params: {
+  params: Promise<{
     code: string;
-  };
+  }>;
 }
 
 const WikiDetail = async ({ params }: PageProps) => {
