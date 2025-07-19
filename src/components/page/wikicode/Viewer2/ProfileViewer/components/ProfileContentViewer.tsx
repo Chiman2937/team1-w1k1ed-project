@@ -1,6 +1,6 @@
 import { WikiCodeRes } from '@/app/wiki/[code]/page';
-import ProfileField from '@/components/page/wikicode/viewer/ProfileViewer/components/ProfileField';
 import clsx from 'clsx';
+import ProfileField from './ProfileField';
 
 interface Props {
   wikiCodeData: WikiCodeRes;
