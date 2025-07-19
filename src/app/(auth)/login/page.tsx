@@ -10,6 +10,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMediaQuery } from 'react-responsive';
 import instance from '@/lib/axios';
 import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
+
+interface LoginSuccessResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: number;
+    email: string;
+    name: string;
+    teamId: string;
+    updatedAt: string;
+    createdAt: string;
+    profile: {
+      id: number;
+      code: string;
+    };
+  };
+}
 
 const loginSchema = z.object({
   email: z.email('유효한 이메일 주소를 입력해주세요.'),
@@ -19,6 +37,9 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  const router = useRouter(); //useRouter 훅 초기화
+  // const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+
   const {
     register,
     handleSubmit,
@@ -30,10 +51,17 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     console.log('폼 제출됨:', data);
+    // setIsLoading(true);
 
     try {
-      const response = await instance.post('/auth/signIn', data, { withCredentials: true });
+      const response = await instance.post<LoginSuccessResponse>('/auth/signIn', data);
       console.log('로그인 성공:', response.data);
+
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+
+      alert('로그인 성공!');
+      router.push('/');
     } catch (error) {
       // ⭐️ error를 AxiosError로 타입 단언
       const axiosError = error as AxiosError;
@@ -44,6 +72,8 @@ export default function LoginPage() {
         '알 수 없는 오류가 발생했습니다.';
       console.error('로그인 실패:', errorMessage);
       alert(`로그인 실패: ${errorMessage}`);
+    } finally {
+      // setIsLoading(false);
     }
   };
 

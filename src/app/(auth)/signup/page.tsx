@@ -9,9 +9,27 @@ import Link from 'next/link';
 import { useMediaQuery } from 'react-responsive';
 import instance from '@/lib/axios';
 import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
+
+interface SignUpSuccessResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: number;
+    email: string;
+    name: string;
+    teamId: string;
+    updatedAt: string;
+    createdAt: string;
+    profile: {
+      id: number;
+      code: string;
+    };
+  };
+}
 
 // 폼 데이터의 유효성 검사를 위한 Zod 스키마 정의
-const loginSchema = z
+const signUpSchema = z
   .object({
     name: z.string().trim().max(10, '열 자 이하로 작성해주세요.'),
     email: z.email('유효한 이메일 주소를 입력해주세요.'),
@@ -25,24 +43,32 @@ const loginSchema = z
   });
 
 // Zod 스키마로부터 폼 데이터의 TypeScript 타입 추론
-type LoginFormData = z.infer<typeof loginSchema>;
+type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const {
     register, // 입력 필드를 React Hook Form에 등록하는 함수
     handleSubmit, // 폼 제출을 처리하는 함수
     formState: { errors }, // 폼의 에러 상태 객체
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema), // Zod 스키마를 유효성 검사기로 사용
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema), // Zod 스키마를 유효성 검사기로 사용
     mode: 'onBlur', // 유효성 검사 트리거 모드 설정 (아래에서 자세히 설명)
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: SignUpFormData) => {
     console.log('폼 제출됨:', data);
 
     try {
-      const response = await instance.post('/auth/signUp', data, { withCredentials: true });
+      const response = await instance.post<SignUpSuccessResponse>('/auth/signUp', data);
       console.log('회원가입 성공:', response.data);
+
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+
+      alert('회원가입 성공! 로그인되었습니다.');
+      router.push('/login');
     } catch (error) {
       // ⭐️ error를 AxiosError로 타입 단언
       const axiosError = error as AxiosError;
