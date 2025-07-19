@@ -1,7 +1,7 @@
-import LogoImage from '@/assets/images/logo.svg';
 import Link from 'next/link';
 import Nav from './Nav';
 import Dropdown from './Dropdown';
+import Logo from './Logo';
 
 const HeaderBeforeLogin = () => {
   return (
@@ -9,9 +9,7 @@ const HeaderBeforeLogin = () => {
       <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
         <div className=' mx-auto py-[25px] flex items-center justify-between'>
           <div className='flex items-center gap-[40px]'>
-            <Link href='/'>
-              <LogoImage alt='로고' width={107} height={30} className='h-8 w-auto' />
-            </Link>
+            <Logo />
 
             <div className='hidden md:block'>
               <Nav />
