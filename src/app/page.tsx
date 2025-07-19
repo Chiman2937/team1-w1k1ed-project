@@ -1,4 +1,4 @@
-import Section1 from '@/components/common/section1';
+import Section1 from '@/components/common/Section1';
 import Section2 from '@/components/common/Section2';
 import Section3 from '@/components/common/Section3';
 import Section4 from '@/components/common/Section4';
