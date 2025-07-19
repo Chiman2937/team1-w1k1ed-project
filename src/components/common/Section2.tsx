@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default function Section2() {
+const Section2 = () => {
   return (
     <div className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'>
       <main
@@ -89,4 +89,6 @@ export default function Section2() {
       </main>
     </div>
   );
-}
+};
+
+export default Section2;

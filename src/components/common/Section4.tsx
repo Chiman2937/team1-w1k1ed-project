@@ -1,4 +1,4 @@
-export default function Section4() {
+const Section4 = () => {
   return (
     <div className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'>
       <section className='flex flex-col gap-[40px] bg-grayscale-500 text-center text-white px-[31px] py-[100px]'>
@@ -28,4 +28,6 @@ export default function Section4() {
       </section>
     </div>
   );
-}
+};
+
+export default Section4;
