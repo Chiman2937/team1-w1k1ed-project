@@ -47,12 +47,12 @@ const Button = ({
     isDisabled ? '' : 'cursor-pointer',
   );
 
-  const variantStyles: Record<VariantType, string> = {
+  const variantStyles = {
     primary: 'bg-primary-green-200 text-white hover:bg-primary-green-300', // 기본 스타일입니둥
     secondary: 'bg-transparent text-primary-green-200 border border-primary-green-200',
   };
 
-  const sizeStyles: Record<SizeType, string> = {
+  const sizeStyles = {
     sm: 'px-[20px] py-[8px] h-[40px]', // 기본 사이즈입니둥
     md: 'py-[10.5px] w-[335px] h-[45px]',
     lg: 'py-[10.5px] w-[400px] h-[45px]',
@@ -69,13 +69,7 @@ const Button = ({
   if (href) {
     return (
       <Link href={href} legacyBehavior passHref>
-        <a
-          className={composedClassName}
-          // 가독성 떨어짐 고민...
-          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
-        >
-          {children}
-        </a>
+        {children}
       </Link>
     );
   }
