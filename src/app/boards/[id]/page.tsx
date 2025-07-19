@@ -10,8 +10,6 @@ export default async function Board({ params }: { params: Promise<{ id: string }
         <BoardContent>
           <BoardDetail id={id}></BoardDetail>
         </BoardContent>
-      </div>
-      <div className='flex flex-col items-center justify-center '>
         <BoardComments id={id}></BoardComments>
       </div>
     </>
