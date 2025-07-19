@@ -8,6 +8,8 @@ import Button from '@/components/common/Button';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMediaQuery } from 'react-responsive';
+import instance from '@/lib/axios';
+import { AxiosError } from 'axios';
 
 const loginSchema = z.object({
   email: z.email('유효한 이메일 주소를 입력해주세요.'),
@@ -26,9 +28,23 @@ export default function LoginPage() {
     mode: 'onBlur',
   });
 
-  const onSubmit = (data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     console.log('폼 제출됨:', data);
-    // 여기에 실제 로그인 로직 (예: API 호출)을 추가하세요.
+
+    try {
+      const response = await instance.post('/auth/signIn', data, { withCredentials: true });
+      console.log('로그인 성공:', response.data);
+    } catch (error) {
+      // ⭐️ error를 AxiosError로 타입 단언
+      const axiosError = error as AxiosError;
+      // error.response가 없는 경우를 대비하여 || axiosError.message도 포함
+      const errorMessage =
+        (axiosError.response?.data as { message?: string })?.message ||
+        axiosError.message ||
+        '알 수 없는 오류가 발생했습니다.';
+      console.error('로그인 실패:', errorMessage);
+      alert(`로그인 실패: ${errorMessage}`);
+    }
   };
 
   // 👇 hydration mismatch 방지를 위한 마운트 상태

@@ -7,18 +7,21 @@ import * as z from 'zod'; // Zod 라이브러리 가져오기 (스키마 유효�
 import { zodResolver } from '@hookform/resolvers/zod'; // Zod 리졸버 가져오기
 import Link from 'next/link';
 import { useMediaQuery } from 'react-responsive';
+import instance from '@/lib/axios';
+import { AxiosError } from 'axios';
+
 // 폼 데이터의 유효성 검사를 위한 Zod 스키마 정의
 const loginSchema = z
   .object({
-    username: z.string().trim().max(10, '열 자 이하로 작성해주세요.'),
+    name: z.string().trim().max(10, '열 자 이하로 작성해주세요.'),
     email: z.email('유효한 이메일 주소를 입력해주세요.'),
     password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 8자 이상
-    confirmPassword: z.string().min(1, '비밀번호가 일치하지 않습니다.'), // 비밀번호 확인은 최소 1자 이상
+    passwordConfirmation: z.string().min(1, '비밀번호가 일치하지 않습니다.'), // 비밀번호 확인은 최소 1자 이상
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.passwordConfirmation, {
     // 비밀번호와 비밀번호 확인이 일치하는지 검사
     message: '비밀번호가 일치하지 않습니다.', // 일치하지 않을 때 메시지
-    path: ['confirmPassword'], // 에러 메시지가 표시될 필드
+    path: ['passwordConfirmation'], // 에러 메시지가 표시될 필드
   });
 
 // Zod 스키마로부터 폼 데이터의 TypeScript 타입 추론
@@ -34,9 +37,23 @@ export default function LoginPage() {
     mode: 'onBlur', // 유효성 검사 트리거 모드 설정 (아래에서 자세히 설명)
   });
 
-  const onSubmit = (data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     console.log('폼 제출됨:', data);
-    // 여기에 실제 로그인 로직 (예: API 호출)을 추가하세요.
+
+    try {
+      const response = await instance.post('/auth/signUp', data, { withCredentials: true });
+      console.log('회원가입 성공:', response.data);
+    } catch (error) {
+      // ⭐️ error를 AxiosError로 타입 단언
+      const axiosError = error as AxiosError;
+      // error.response가 없는 경우를 대비하여 || axiosError.message도 포함
+      const errorMessage =
+        (axiosError.response?.data as { message?: string })?.message ||
+        axiosError.message ||
+        '알 수 없는 오류가 발생했습니다.';
+      console.error('회원가입 실패:', errorMessage);
+      alert(`회원가입 실패: ${errorMessage}`);
+    }
   };
 
   // 👇 hydration mismatch 방지를 위한 마운트 상태
@@ -63,9 +80,9 @@ export default function LoginPage() {
             label='이름'
             type='text'
             placeholder='이름을 입력하세요'
-            name='username'
+            name='name'
             variant={inputVariant}
-            register={register('username')} // 'username' 필드 등록
+            register={register('name')} // 'username' 필드 등록
             errors={errors} // 에러 객체 전달
           />
           <Input
@@ -90,9 +107,9 @@ export default function LoginPage() {
             label='비밀번호 확인'
             type='password'
             placeholder='비밀번호를 다시 입력하세요'
-            name='confirmPassword'
+            name='passwordConfirmation'
             variant={inputVariant}
-            register={register('confirmPassword')} // 'confirmPassword' 필드 등록
+            register={register('passwordConfirmation')} // 'confirmPassword' 필드 등록
             errors={errors} // 에러 객체 전달
           />
           <Button
