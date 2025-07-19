@@ -36,7 +36,7 @@ const CommentEdit = ({ comment, isEdit }: CommentEditProps) => {
 
   return (
     <>
-      <div className='mt-4 min-w-[320px] rounded-lg bg-grayscale-100 p-4 shadow-md'>
+      <div className='mt-4 min-w-[300px] rounded-lg bg-grayscale-100 p-4 shadow-md'>
         <h3 className='text-md-semibold text-grayscale-500 lg:text-lg-semibold'>댓글 수정</h3>
         <textarea
           value={editedContent}
