@@ -1,7 +1,6 @@
-import {
+import React, {
   createContext,
   Dispatch,
-  RefObject,
   SetStateAction,
   useContext,
   useEffect,
@@ -12,9 +11,8 @@ import {
 const EditorDropdownContext = createContext<{
   selected: string;
   setSelected: Dispatch<SetStateAction<string>>;
-  // isOpen: boolean;
-  // setIsOpen: Dispatch<SetStateAction<boolean>>;
-  listRef: RefObject<HTMLDivElement | null>;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 } | null>(null);
 
 interface DropdownProps {
@@ -24,12 +22,26 @@ interface DropdownProps {
 
 export const EditorDropdown = ({ children }: DropdownProps) => {
   const [selected, setSelected] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const listRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <EditorDropdownContext.Provider value={{ selected, setSelected, listRef }}>
-      {children}
+    <EditorDropdownContext.Provider value={{ selected, setSelected, isOpen, setIsOpen }}>
+      <div ref={dropdownRef}>{children}</div>
     </EditorDropdownContext.Provider>
   );
 };
@@ -46,9 +58,17 @@ interface ButtonProps {
   className?: string;
 }
 const Button = ({ className }: ButtonProps) => {
-  const { selected } = useEditorDropdown();
+  const { selected, setIsOpen } = useEditorDropdown();
 
-  return <div className={className}>{selected}</div>;
+  const handleButtonClick = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  return (
+    <button className={className} onClick={handleButtonClick}>
+      {selected}
+    </button>
+  );
 };
 
 interface ListProps {
@@ -56,29 +76,32 @@ interface ListProps {
   className?: string;
 }
 const List = ({ children, className }: ListProps) => {
-  return <div className={className}>{children}</div>;
+  const { isOpen } = useEditorDropdown();
+
+  return <div className={`${isOpen ? 'block' : 'hidden'} ${className}`}>{children}</div>;
 };
 
 interface ListItemProps {
-  label: string;
+  value: string;
   onClick: () => void;
   className?: string;
+  children: React.ReactNode;
 }
-const ListItem = ({ label, onClick, className }: ListItemProps) => {
-  const { selected, setSelected } = useEditorDropdown();
-  const handleListItemClick = (label: string) => {
-    setSelected(label);
+const ListItem = ({ value, onClick, className, children }: ListItemProps) => {
+  const { setSelected, setIsOpen } = useEditorDropdown();
+  const handleListItemClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    const value = target.dataset.value;
+    if (!value) return;
+    setSelected(value);
     onClick();
+    setIsOpen(false);
   };
 
-  useEffect(() => {
-    setSelected((prev: string) => (prev === '' ? label : prev));
-  }, [selected, setSelected, label]);
-
   return (
-    <div className={className}>
-      <button onClick={() => handleListItemClick(label)}>{label}</button>
-    </div>
+    <button data-value={value} className={className} onClick={handleListItemClick}>
+      {children}
+    </button>
   );
 };
 
