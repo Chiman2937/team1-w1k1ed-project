@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-const Section1 = () => {
+const HeroSection = () => {
   return (
     <div className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'>
       <main
@@ -103,4 +103,4 @@ const Section1 = () => {
   );
 };
 
-export default Section1;
+export default HeroSection;

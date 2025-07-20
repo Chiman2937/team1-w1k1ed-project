@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu } from '@headlessui/react';
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import Link from 'next/link';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { VscAccount } from 'react-icons/vsc';
@@ -22,7 +22,7 @@ type Props = {
   menuItems: DropdownMenuItem[];
 };
 
-const Dropdown = ({ iconName = 'hamburger', menuItems }: Props) => {
+const HeaderDropdown = ({ iconName = 'hamburger', menuItems }: Props) => {
   const Icon = ICONS[iconName];
 
   const handleLogout = () => {
@@ -31,38 +31,44 @@ const Dropdown = ({ iconName = 'hamburger', menuItems }: Props) => {
   };
 
   return (
-    <Menu as='div' className='relative'>
-      <Menu.Button className='focus:outline-none'>
-        <Icon className='text-gray-300 cursor-pointer w-[24px] h-[24px] md:w-[32px] md:h-[32px]' />
-      </Menu.Button>
+    <Menu as='div' className='relative font-pretendard text-[14px] font-normal'>
+      <MenuButton className='focus:outline-none'>
+        <Icon className='text-grayscale-300 cursor-pointer w-[24px] h-[24px] md:w-[32px] md:h-[32px]' />
+      </MenuButton>
 
-      <Menu.Items className='absolute right-0 mt-2 w-[140px] text-center text-grayscale-500 bg-white rounded-[10px] shadow-lg z-50'>
+      <MenuItems className='absolute right-0 mt-2 w-[140px] text-center text-grayscale-500 bg-grayscale-50 rounded-[10px] shadow-lg z-50'>
         <div className='p-1'>
           {menuItems.map((item, idx) => (
-            <Menu.Item key={idx}>
+            <MenuItem key={idx}>
               {({ active }) =>
                 item.isLogout ? (
                   <button
                     onClick={handleLogout}
-                    className={clsx('w-full px-4 py-2 text-sm', active && 'bg-gray-100 text-black')}
+                    className={clsx(
+                      'w-full px-4 py-2 text-sm',
+                      active && 'bg-grayscale-100 text-black rounded-[10px]',
+                    )}
                   >
                     {item.label}
                   </button>
                 ) : (
                   <Link
                     href={item.href ?? '/'}
-                    className={clsx('block px-4 py-2 text-sm', active && 'bg-gray-100 text-black')}
+                    className={clsx(
+                      'block px-4 py-2 text-sm',
+                      active && 'bg-grayscale-100 text-black rounded-[10px]',
+                    )}
                   >
                     {item.label}
                   </Link>
                 )
               }
-            </Menu.Item>
+            </MenuItem>
           ))}
         </div>
-      </Menu.Items>
+      </MenuItems>
     </Menu>
   );
 };
 
-export default Dropdown;
+export default HeaderDropdown;

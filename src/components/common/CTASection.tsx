@@ -1,4 +1,4 @@
-const Section4 = () => {
+const CTASection = () => {
   return (
     <div className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'>
       <section className='flex flex-col gap-[40px] bg-grayscale-500 text-center text-white px-[31px] py-[100px]'>
@@ -30,4 +30,4 @@ const Section4 = () => {
   );
 };
 
-export default Section4;
+export default CTASection;
