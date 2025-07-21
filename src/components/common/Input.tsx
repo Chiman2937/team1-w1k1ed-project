@@ -3,12 +3,9 @@ import clsx from 'clsx'; // clsx 임포트
 import { twMerge } from 'tailwind-merge';
 import { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
 
-type InputSize = 'S' | 'L';
-
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   className?: string;
-  variant?: InputSize;
   type?: InputHTMLAttributes<HTMLInputElement>['type']; //인풋 타입: text, password, email 등
   placeholder?: string;
 
@@ -22,7 +19,6 @@ export default function Input({
   label,
   className,
   id,
-  variant = 'S',
   type,
   placeholder,
   name,
@@ -39,17 +35,12 @@ export default function Input({
     'text-grayscale-500',
     'text-md-regular',
     'placeholder:text-grayscale-400',
-    'border border-transparent',
+    'border:border-transparent',
     'focus:outline-none',
     'focus:border-primary-green-200',
   );
 
-  const SIZE_CLASSES = {
-    S: 'w-[335px]',
-    L: 'w-[400px]',
-  };
-
-  const errorClasses = clsx('bg-secondary-red-100', 'focus:border-secondary-red-100');
+  const errorClasses = clsx('bg-secondary-red-100', 'border-secondary-red-100');
 
   return (
     <div className='flex flex-col gap-[10px]'>
@@ -63,7 +54,11 @@ export default function Input({
         id={id || name}
         type={type}
         placeholder={placeholder}
-        className={twMerge(baseStyle, SIZE_CLASSES[variant], hasError && errorClasses, className)}
+        className={twMerge(
+          baseStyle,
+          /*SIZE_CLASSES[variant],*/ hasError && errorClasses,
+          className,
+        )}
         {...register}
         {...rest}
       />
