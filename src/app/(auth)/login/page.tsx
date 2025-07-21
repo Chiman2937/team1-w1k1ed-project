@@ -8,26 +8,9 @@ import Button from '@/components/common/Button';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMediaQuery } from 'react-responsive';
-import instance from '@/lib/axios';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
-
-interface LoginSuccessResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: number;
-    email: string;
-    name: string;
-    teamId: string;
-    updatedAt: string;
-    createdAt: string;
-    profile: {
-      id: number;
-      code: string;
-    };
-  };
-}
+import { authAPI } from '@/api/authAPI';
 
 const loginSchema = z.object({
   email: z.email('유효한 이메일 주소를 입력해주세요.'),
@@ -54,11 +37,11 @@ export default function LoginPage() {
     // setIsLoading(true);
 
     try {
-      const response = await instance.post<LoginSuccessResponse>('/auth/signIn', data);
-      console.log('로그인 성공:', response.data);
+      const responseData = await authAPI.signIn(data);
+      console.log('로그인 성공:', responseData);
 
-      localStorage.setItem('accessToken', response.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
+      localStorage.setItem('accessToken', responseData.accessToken);
+      localStorage.setItem('refreshToken', responseData.refreshToken);
 
       alert('로그인 성공!');
       router.push('/');

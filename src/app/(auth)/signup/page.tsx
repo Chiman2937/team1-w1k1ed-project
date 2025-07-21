@@ -7,26 +7,9 @@ import * as z from 'zod'; // Zod 라이브러리 가져오기 (스키마 유효�
 import { zodResolver } from '@hookform/resolvers/zod'; // Zod 리졸버 가져오기
 import Link from 'next/link';
 import { useMediaQuery } from 'react-responsive';
-import instance from '@/lib/axios';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
-
-interface SignUpSuccessResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: number;
-    email: string;
-    name: string;
-    teamId: string;
-    updatedAt: string;
-    createdAt: string;
-    profile: {
-      id: number;
-      code: string;
-    };
-  };
-}
+import { authAPI } from '@/api/authAPI';
 
 // 폼 데이터의 유효성 검사를 위한 Zod 스키마 정의
 const signUpSchema = z
@@ -61,11 +44,11 @@ export default function LoginPage() {
     console.log('폼 제출됨:', data);
 
     try {
-      const response = await instance.post<SignUpSuccessResponse>('/auth/signUp', data);
-      console.log('회원가입 성공:', response.data);
+      const responseData = await authAPI.signUp(data);
+      console.log('회원가입 성공:', responseData);
 
-      localStorage.setItem('accessToken', response.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
+      localStorage.setItem('accessToken', responseData.accessToken);
+      localStorage.setItem('refreshToken', responseData.refreshToken);
 
       alert('회원가입 성공! 로그인되었습니다.');
       router.push('/login');

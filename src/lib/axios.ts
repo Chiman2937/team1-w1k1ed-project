@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { authAPI } from '@/api/authAPI';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -49,20 +50,17 @@ instance.interceptors.response.use(
           // 이 요청에는 'Authorization' 헤더를 붙이지 않거나, 별도의 refreshInstance를 사용할 수도 있습니다.
           // 여기서는 originalRequest.headers.Authorization을 제거하지 않고 진행합니다.
           // 서버에서 refresh-token 엔드포인트는 토큰 유무와 상관없이 refreshToken 본문만으로 처리하므로 문제 없습니다.
-          const res = await instance.post<{ accessToken: string; refreshToken?: string }>(
-            '/auth/refresh-token',
-            { refreshToken },
-          );
+          const res = await authAPI.refreshToken(refreshToken);
 
-          if (res.data.accessToken) {
-            localStorage.setItem('accessToken', res.data.accessToken); // 새 Access Token 저장
-            if (res.data.refreshToken) {
+          if (res.accessToken) {
+            localStorage.setItem('accessToken', res.accessToken); // 새 Access Token 저장
+            if (res.refreshToken) {
               // 새 Refresh Token도 주어지면 업데이트
-              localStorage.setItem('refreshToken', res.data.refreshToken);
+              localStorage.setItem('refreshToken', res.refreshToken);
             }
 
             // 새로운 Access Token으로 기존 요청 재시도
-            originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
+            originalRequest.headers.Authorization = `Bearer ${res.accessToken}`;
             return instance(originalRequest); // 원래 요청 재시도
           }
         }
