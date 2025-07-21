@@ -3,8 +3,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next'; // Next.js 13.3+
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Pretendard, nexonGothicBold, nexonGothicLight, nexonGothicRegular } from './font';
-import HeaderBeforeLogin from '@/components/common/HeaderBeforeLogin';
-import HeaderAfterLogin from '@/components/common/HeaderAfterLogin';
+import { AuthProvider } from '@/context/AuthContext';
+import AuthHeaderRenderer from '@/components/layout/AuthHeaderRenderer';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -27,9 +27,10 @@ export default function RootLayout({
         ${nexonGothicRegular.variable}
         antialiased`}
       >
-        <HeaderBeforeLogin />
-        <HeaderAfterLogin />
-        {children}
+        <AuthProvider>
+          <AuthHeaderRenderer />
+          {children}
+        </AuthProvider>
         <Analytics />
         <SpeedInsights />
       </body>

@@ -27,7 +27,7 @@ const signUpSchema = z
 // Zod 스키마로부터 폼 데이터의 TypeScript 타입 추론
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
 
   const {
@@ -45,9 +45,6 @@ export default function LoginPage() {
     try {
       const responseData = await authAPI.signUp(data);
       console.log('회원가입 성공:', responseData);
-
-      localStorage.setItem('accessToken', responseData.accessToken);
-      localStorage.setItem('refreshToken', responseData.refreshToken);
 
       alert('회원가입 성공! 로그인되었습니다.');
       router.push('/login');
