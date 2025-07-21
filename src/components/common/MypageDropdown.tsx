@@ -24,12 +24,12 @@ const questions: QuestionItem[] = [
   { id: 1, content: '특별히 싫어하는 음식은?' },
   { id: 2, content: '키우고 있는 반려동물의 이름은?' },
   { id: 3, content: '직접 입력' }, // 이 항목
-  { id: 4, content: '질문 없음' },
+  { id: 4, content: '질문을 선택해주세요' },
 ];
 
 const MypageDropdown = ({ label, id, name, ...rest }: MypageDropdownProps) => {
   // `selected` 상태에 QuestionItem 객체 또는 직접 입력 문자열을 저장할 수 있도록 타입 확장
-  const [selected, setSelected] = useState<QuestionItem | string | undefined>(questions[0]);
+  const [selected, setSelected] = useState<QuestionItem | string | undefined>(questions[3]);
   const [query, setQuery] = useState('');
 
   const filteredQuestions =
@@ -46,9 +46,11 @@ const MypageDropdown = ({ label, id, name, ...rest }: MypageDropdownProps) => {
       <Combobox<QuestionItem | string>
         value={selected}
         onChange={(value) => {
+          if (!value) return; // 이해필요
+
           if (typeof value === 'object' && value.id === questions[2].id) {
             // "직접 입력" 선택 시 selected는 문자열로 설정 (query는 사용자가 직접 입력한 값)
-            setSelected(query || '');
+            setSelected(query || '직접 입력');
           } else if (typeof value === 'object') {
             setSelected(value);
             setQuery('');
