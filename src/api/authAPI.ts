@@ -30,7 +30,6 @@ interface SignUpPayload {
 }
 
 export const authAPI = {
-  //로그인
   signIn: async (payload: LoginPayload): Promise<AuthSuccessResponse> => {
     const response = await instance.post<AuthSuccessResponse>('auth/signIn', payload);
     return response.data;

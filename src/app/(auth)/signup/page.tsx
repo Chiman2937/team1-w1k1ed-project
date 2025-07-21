@@ -75,8 +75,8 @@ export default function LoginPage() {
             type='text'
             placeholder='이름을 입력하세요'
             name='name'
-            register={register('name')} // 'username' 필드 등록
-            errors={errors} // 에러 객체 전달
+            register={register('name')}
+            errors={errors}
           />
           <Input
             className='w-[335px] md:w-[400px]'
@@ -84,8 +84,8 @@ export default function LoginPage() {
             type='email'
             placeholder='이메일을 입력하세요'
             name='email'
-            register={register('email')} // 'email 필드 등록
-            errors={errors} // 에러 객체 전달
+            register={register('email')}
+            errors={errors}
           />
           <Input
             className='w-[335px] md:w-[400px]'
@@ -93,8 +93,8 @@ export default function LoginPage() {
             type='password'
             placeholder='비밀번호를 입력하세요'
             name='password'
-            register={register('password')} // 'password' 필드 등록
-            errors={errors} // 에러 객체 전달
+            register={register('password')}
+            errors={errors}
           />
           <Input
             className='w-[335px] md:w-[400px]'
@@ -102,8 +102,8 @@ export default function LoginPage() {
             type='password'
             placeholder='비밀번호를 다시 입력하세요'
             name='passwordConfirmation'
-            register={register('passwordConfirmation')} // 'confirmPassword' 필드 등록
-            errors={errors} // 에러 객체 전달
+            register={register('passwordConfirmation')}
+            errors={errors}
           />
           <Button
             variant='primary'

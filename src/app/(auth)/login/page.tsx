@@ -65,7 +65,6 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[32px] items-center'>
           <Input
             className='w-[335px] md:w-[400px]'
-            // variant='responsive'
             label='이메일'
             type='email'
             placeholder='이메일을 입력하세요'
@@ -75,7 +74,6 @@ export default function LoginPage() {
           />
           <Input
             className='w-[335px] md:w-[400px]'
-            // variant='responsive'
             label='비밀번호'
             type='password'
             placeholder='비밀번호를 입력하세요'
