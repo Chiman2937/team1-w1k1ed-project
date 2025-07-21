@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { SpeedInsights } from '@vercel/speed-insights/next'; // Next.js 13.3+
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Pretendard, nexonGothicBold, nexonGothicLight, nexonGothicRegular } from './font';
 import HeaderBeforeLogin from '@/components/common/HeaderBeforeLogin';
@@ -28,6 +30,8 @@ export default function RootLayout({
         <HeaderBeforeLogin />
         <HeaderAfterLogin />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
