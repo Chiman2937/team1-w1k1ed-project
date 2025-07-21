@@ -105,26 +105,58 @@ body {
   box-sizing: border-box;
 }
 
-#text-editor ul {
+.text-editor {
+  @apply outline-none;
+}
+
+.text-editor ul {
   @apply text-grayscale-500 list-disc pl-5;
 }
 
-#text-editor ol {
+.text-editor ol {
   @apply text-grayscale-500 list-decimal pl-5;
 }
 
-#text-editor p {
+.text-editor p {
   @apply text-grayscale-500;
 }
 
-#text-editor h1 {
+.text-editor h1 {
   @apply text-grayscale-500 block text-2xl-semibold pb-2 mb-2 border-b-1 border-grayscale-200;
 }
 
-#text-editor blockquote {
+.text-editor blockquote {
   @apply text-grayscale-500 block border-l-4 border-grayscale-500 pl-4 my-1;
 }
 
-#text-editor pre {
+.text-editor pre {
   @apply bg-grayscale-200 py-4 px-2;
+}
+
+.text-editor a {
+  @apply text-blue-500 underline;
+}
+
+.text-editor div.video-wrapper {
+  @apply w-fit;
+}
+
+.text-editor div.video-wrapper,
+.text-editor img {
+  @apply p-[2px] border-[3px] border-transparent box-border cursor-pointer;
+}
+
+.text-editor div.video-wrapper:hover,
+.text-editor img:hover {
+  @apply border-[3px] border-grayscale-400;
+}
+
+.text-editor div.video-wrapper.ProseMirror-selectednode,
+.text-editor img.ProseMirror-selectednode {
+  @apply border-[3px] border-primary-green-300;
+}
+
+/* 기본적으로 iframe은 클릭 방지 */
+.text-editor .video-wrapper iframe {
+  pointer-events: none;
 }
