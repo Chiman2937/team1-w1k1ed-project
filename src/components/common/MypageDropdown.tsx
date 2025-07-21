@@ -36,11 +36,14 @@ const MypageDropdown = ({ label, id, name, ...rest }: MypageDropdownProps) => {
   const [selected, setSelected] = useState<QuestionItem | string | undefined>(questions[3]);
 
   // 입력창에 입력되는 텍스트 상태 (검색 필터링과 직접입력에 사용됨)
+  // 직접 입력 모드일 때 사용자가 입력한 값을 임시로 저장하는 용도
   const [query, setQuery] = useState('');
 
   // 사용자가 입력한 query 값에 따라 필터링된 질문 목록 반환
   const filteredQuestions =
-    query === '' ? questions : questions.filter((item) => item.content.includes(query));
+    query === ''
+      ? questions
+      : questions.filter((item) => item.content.toLowerCase().includes(query.toLowerCase()));
 
   return (
     <div className='flex flex-col gap-[10px] font-pretendard'>
@@ -57,35 +60,37 @@ const MypageDropdown = ({ label, id, name, ...rest }: MypageDropdownProps) => {
         onChange={(value) => {
           if (!value) return;
 
-          // 1. value가 '직접 입력' 항목일 경우 (id === 3)
+          // 1. "직접 입력" 항목 (id === 3)이 선택된 경우
           if (typeof value === 'object' && value.id === questions[2].id) {
-            // 사용자가 아직 아무 것도 입력 안 했을 수도 있음
-            setSelected(query.trim() || '직접 입력');
-            return;
+            // '직접 입력' 객체를 선택된 상태로 유지합니다.
+            // 실제 사용자가 입력할 내용은 query 상태에서 관리됩니다.
+            setSelected(questions[2]);
+            setQuery(''); // 직접 입력을 시작하므로 query를 비웁니다.
           }
-
-          // 2. 문자열인 경우 (직접 입력 완료 후 Enter)
-          if (typeof value === 'string') {
-            setSelected(value.trim());
-            return;
+          // 2. 문자열이 선택된 경우 (예: 사용자가 "직접 입력" 모드에서 타이핑 후 Enter를 눌렀을 때)
+          else if (typeof value === 'string') {
+            setSelected(value.trim()); // 사용자가 입력한 커스텀 문자열을 selected에 직접 저장합니다.
+            setQuery(''); // 최종 값이 selected에 저장되었으므로 query를 비웁니다.
           }
-
           // 3. 일반 질문 항목을 선택한 경우
-          if (typeof value === 'object') {
+          else if (typeof value === 'object') {
             setSelected(value);
             setQuery('');
-            return;
+          } else {
+            setSelected(undefined); // 방어 코드
           }
-
-          setSelected(undefined); // 방어 코드
         }}
         onClose={() => {
-          // 직접 입력 항목 선택된 상태인데 query가 남아있다면 그것으로 갱신
-          if (typeof selected === 'object' && selected.id === questions[2].id) {
-            setSelected(query.trim() || '직접 입력');
+          // "직접 입력" 객체가 선택된 상태에서 사용자가 뭔가 입력했다면
+          // 그 입력값을 selected에 최종적으로 반영합니다.
+          if (
+            typeof selected === 'object' &&
+            selected.id === questions[2].id &&
+            query.trim() !== ''
+          ) {
+            setSelected(query.trim());
           }
-          // 나머지는 query 초기화만
-          setQuery('');
+          setQuery(''); // Combobox가 닫힐 때 항상 query를 비웁니다.
         }}
       >
         {/* isOpen: Combobox 내부 드롭다운이 열려 있는지 여부 */}
@@ -101,26 +106,32 @@ const MypageDropdown = ({ label, id, name, ...rest }: MypageDropdownProps) => {
                 displayValue={(
                   item: QuestionItem | string | number | readonly string[] | null | undefined,
                 ) => {
-                  // 선택된 항목이 null/undefined인 경우 빈 문자열 반환
                   if (item === null || item === undefined) return '';
-
-                  // 여러 항목이 배열로 들어왔을 경우 콤마로 연결
                   if (Array.isArray(item)) return item.map(String).join(', ');
+                  // selected 값이 직접 입력된 문자열이라면 그대로 표시합니다.
+                  if (typeof item === 'string') return item;
+                  if (typeof item === 'number') return String(item);
 
-                  // string이나 숫자라면 그대로 출력
-                  if (typeof item === 'string' || typeof item === 'number') return String(item);
+                  // '직접 입력' 항목이 선택되었고 Combobox가 열려있다면 query를 표시합니다.
+                  // 그렇지 않고 Combobox가 닫혀있다면 '직접 입력' 텍스트를 표시합니다.
+                  if ('id' in item && item.id === questions[2].id) {
+                    return isOpen ? query : item.content;
+                  }
 
-                  // 선택된 항목이 '직접 입력' 항목이면 query를 표시
-                  if ('id' in item && item.id === questions[2].id) return query;
-
-                  // 일반 질문 항목이면 content 출력
+                  // 일반 질문 항목이라면 content를 표시합니다.
                   if ('content' in item) return item.content;
-
-                  // 그 외는 빈 문자열
                   return '';
                 }}
                 // 사용자가 타이핑할 때마다 query 상태 업데이트
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  // '직접 입력' 항목이 선택된 상태라면 query를 업데이트하여 실시간 입력을 반영합니다.
+                  if (typeof selected === 'object' && selected.id === questions[2].id) {
+                    setQuery(e.target.value);
+                  } else {
+                    // 그 외의 경우에는 필터링을 위해 query를 업데이트합니다.
+                    setQuery(e.target.value);
+                  }
+                }}
                 className={clsx(
                   'w-full h-[45px] px-[20px] py-[14px] rounded-[10px]',
                   'bg-grayscale-100 text-grayscale-400 text-md-regular',
