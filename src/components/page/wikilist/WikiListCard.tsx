@@ -32,7 +32,8 @@ const WikiListCard = ({ code, image, name, nationality, city, job }: Profile) =>
   return (
     <Link
       href={`/wiki/${code}`}
-      className='flex flex-row w-auto min-h-[142px] shadow-md hover:shadow-lg px-9 py-6 gap-8 rounded-md items-center text-grayscale-400'
+      className='flex flex-row w-auto min-h-[142px] shadow-md px-6 py-5 hover:shadow-lg gap-5 rounded-md items-center text-grayscale-400
+      md:gap-8 md:px-9 md:py-6'
     >
       {image ? (
         <div className='relative size-[60px] shrink-0 rounded-full overflow-hidden md:size-[80px]'>
@@ -45,7 +46,7 @@ const WikiListCard = ({ code, image, name, nationality, city, job }: Profile) =>
           />
         </div>
       ) : (
-        <div className='size-[60px] md:size-[80px]'>
+        <div className='size-[60px] shrink-0 md:size-[80px]'>
           <IoPersonCircle className='w-full h-full' color='#C6CADA' />
         </div>
       )}
