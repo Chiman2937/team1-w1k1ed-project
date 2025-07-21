@@ -19,7 +19,7 @@ const PasswordChangeForm = () => {
       />
       <Input type='password' placeholder='새 비밀번호' name='newPassword' className='w-auto' />
       <Input
-        className='w-[335px] md:w-[400px] w-auto'
+        className='w-[335px] md:w-[400px]'
         type='password'
         placeholder='새 비밀번호 확인'
         name='confirmNewPassword'
