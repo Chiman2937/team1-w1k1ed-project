@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import CookiesJs from 'js-cookie';
 import { UserData } from '@/types/user';
 
@@ -23,7 +23,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false); // 현재 로그인 상태인지
   const [user, setUser] = useState<UserData | null>(null); // 로그인한 사용자의 정보
   const [accessToken, setAccessToken] = useState<string | null>(null); // API 호출 시 필요한 토큰
-  const [isMounted, setIsMounted] = useState(false);
 
   // 로그인 함수 정의: 외부에서 로그인 API 호출 성공 시 이 함수를 호출
   const login = useCallback(
@@ -80,8 +79,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    setIsMounted(true);
-
     const storedAccessToken = CookiesJs.get('accessToken'); // 'accessToken' 쿠키에서 가져오기
     const storedRefreshToken = CookiesJs.get('refreshToken'); // 'refreshToken' 쿠키에서 가져오기
     const storedUser = localStorage.getItem('user'); // 'user' 정볼르 로컬 스토리지에서 가져오기
@@ -106,11 +103,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(false);
     }
   }, []); // 빈 배열(`[]`)은 이 `useEffect` 훅이 컴포넌트가 처음 마운트될 때 딱 한 번만 실행되도록 한다.
-
-  // 서버에서는 AuthContext 내부의 클라이언트 전용 초기화 로직이 실행되지 않습니다
-  if (!isMounted) {
-    return null;
-  }
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }

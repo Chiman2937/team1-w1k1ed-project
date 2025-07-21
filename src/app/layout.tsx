@@ -5,6 +5,7 @@ import './globals.css';
 import { Pretendard, nexonGothicBold, nexonGothicLight, nexonGothicRegular } from './font';
 import { AuthProvider } from '@/context/AuthContext';
 import AuthHeaderRenderer from '@/components/layout/AuthHeaderRenderer';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -27,10 +28,12 @@ export default function RootLayout({
         ${nexonGothicRegular.variable}
         antialiased`}
       >
-        <AuthProvider>
-          <AuthHeaderRenderer />
-          {children}
-        </AuthProvider>
+        <Suspense fallback={<div>앱 로딩증</div>}>
+          <AuthProvider>
+            <AuthHeaderRenderer />
+            {children}
+          </AuthProvider>
+        </Suspense>
         <Analytics />
         <SpeedInsights />
       </body>

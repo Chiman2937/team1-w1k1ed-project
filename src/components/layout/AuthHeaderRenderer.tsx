@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthContext } from '@/context/AuthContext';
 import HeaderAfterLogin from '../common/HeaderAfterLogin';
 import HeaderBeforeLogin from '../common/HeaderBeforeLogin';

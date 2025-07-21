@@ -49,7 +49,7 @@ export default function LoginPage() {
 
       login(responseData.accessToken, responseData.refreshToken, responseData.user as UserData);
 
-      alert('로그인 성공!');
+      alert('로그인 되었습니다.');
     } catch (error) {
       // ⭐️ error를 AxiosError로 타입 단언
       const axiosError = error as AxiosError;

@@ -46,7 +46,7 @@ export default function SignupPage() {
       const responseData = await authAPI.signUp(data);
       console.log('회원가입 성공:', responseData);
 
-      alert('회원가입 성공! 로그인되었습니다.');
+      alert('가입이 완료되었습니다.');
       router.push('/login');
     } catch (error) {
       // ⭐️ error를 AxiosError로 타입 단언
