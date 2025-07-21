@@ -4,7 +4,10 @@ import clsx from 'clsx';
 
 // CopyToClipboard 컴포넌트에 사용되는 상수들 정리
 export const COPY_TO_CLIPBOARD = {
-  MAX_TEXT_LENGTH: 50,
+  MAX_TEXT_LENGTHS: {
+    default: 40,
+    large: 50,
+  },
   DEFAULT_SUFFIX: '...',
   MESSAGES: {
     WARN: '복사할 텍스트가 비어있습니다.',
@@ -81,10 +84,9 @@ export default function CopyToClipboard({
       alert(`${errorMessage}\n${COPY_TO_CLIPBOARD.MESSAGES.INFO}`); // TODO:나중에 스낵바로 변경
     }
   };
-
   const displayText = truncateText(
     buttonText || text,
-    COPY_TO_CLIPBOARD.MAX_TEXT_LENGTH,
+    COPY_TO_CLIPBOARD.MAX_TEXT_LENGTHS[size],
     COPY_TO_CLIPBOARD.DEFAULT_SUFFIX,
   );
 

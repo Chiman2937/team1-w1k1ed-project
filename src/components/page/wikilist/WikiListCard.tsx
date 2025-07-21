@@ -1,18 +1,14 @@
 'use client';
 
 import CopyToClipboard from '@/components/common/CopyToClipboard';
+import { IoPersonCircle } from 'react-icons/io5';
 import { Profile } from '../../../app/wikilist/page';
 import Link from 'next/link';
 import Image from 'next/image';
-import BasicProfileImage from '@/assets/images/icon.svg';
 
-interface locationProps {
-  nationality: string;
-  city: string;
-}
 // nationality와 city를 조건에 따라 표시
-const getLocationText = (profile: locationProps) => {
-  const locations = [profile.nationality, profile.city].filter(Boolean);
+const getLocationText = (nationality: string, city: string) => {
+  const locations = [nationality, city].filter(Boolean);
   return locations.join(', ');
 };
 
@@ -32,47 +28,62 @@ const getFullProfileUrl = (code: string) => {
   return `/wiki/${code}`;
 };
 
-const WikiListCard = (profile: Profile) => (
-  <Link
-    href={`/wiki/${profile.code}`}
-    className='flex flex-row w-auto min-h-[142px] shadow-md hover:shadow-lg p-4 rounded-md justify-center items-center text-grayscale-400'
-  >
-    <div className='relative size-10 shrink-0 rounded-full overflow-hidden md:size-[50px]'>
-      {profile.image ? (
-        <Image src={profile.image} alt='프로필 이미지' fill style={{ objectFit: 'cover' }} />
+const WikiListCard = ({ code, image, name, nationality, city, job }: Profile) => {
+  return (
+    <Link
+      href={`/wiki/${code}`}
+      className='flex flex-row w-auto min-h-[142px] shadow-md hover:shadow-lg px-9 py-6 gap-8 rounded-md items-center text-grayscale-400'
+    >
+      {image ? (
+        <div className='relative size-[60px] shrink-0 rounded-full overflow-hidden md:size-[80px]'>
+          <Image
+            src={image}
+            alt='프로필 이미지'
+            fill
+            sizes='(max-width: 768px)60,80px'
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
       ) : (
-        <BasicProfileImage />
+        <div className='size-[60px] md:size-[80px]'>
+          <IoPersonCircle className='w-full h-full' color='#C6CADA' />
+        </div>
       )}
-    </div>
-    <div>
-      <div className='flex flex-col gap-3.5'>
-        <h1
-          className='text-grayscale-500 text-xl-regular 
+      <div className='flex-1'>
+        <div className='flex flex-col gap-3.5'>
+          <h1
+            className='text-grayscale-500 text-xl-regular 
       md:text-2xl-semibold
       '
-        >
-          {profile.name}
-        </h1>
-        <p
-          className='text-xs-regular
+          >
+            {name}
+          </h1>
+          <p
+            className='text-xs-regular
     md:flex-row md:text-md-regular
         '
-        >
-          {getLocationText(profile)}
-        </p>
-      </div>
-      <div
-        className='flex flex-col justify-between text-xs-regular
-    md:flex-row md:text-md-regular
+          >
+            {getLocationText(nationality, city)}
+          </p>
+        </div>
+        <div
+          className='flex flex-col text-xs-regular
+    md:flex-row  md:justify-between md:text-md-regular
     '
-      >
-        <p>{profile.job}</p>
-        <div onClick={handleCopyClick}>
-          <CopyToClipboard text={getFullProfileUrl(profile.code)} />
+        >
+          <p>{job}</p>
+          <div onClick={handleCopyClick}>
+            <div className='block md:hidden'>
+              <CopyToClipboard text={getFullProfileUrl(code)} size='default' />
+            </div>
+            <div className='hidden md:block'>
+              <CopyToClipboard text={getFullProfileUrl(code)} size='large' />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </Link>
-);
+    </Link>
+  );
+};
 
 export default WikiListCard;

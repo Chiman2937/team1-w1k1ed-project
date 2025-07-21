@@ -1,6 +1,8 @@
 'use client';
 
 import PaginationButton from '@/components/page/wikilist/PaginationButton';
+import { FaAngleLeft } from 'react-icons/fa6';
+import { FaAngleRight } from 'react-icons/fa6';
 import { useState, useEffect } from 'react';
 
 interface PaginationProps<T> {
@@ -95,7 +97,7 @@ function Pagination<T>({
             disabled={groupStart === 1}
             onClick={handlePrevGroup}
           >
-            `{'<'}`
+            <FaAngleLeft />
           </PaginationButton>
 
           {/* 페이지 번호들 */}
@@ -116,7 +118,7 @@ function Pagination<T>({
             disabled={groupEnd === totalPages}
             onClick={handleNextGroup}
           >
-            `{'>'}`
+            <FaAngleRight />
           </PaginationButton>
           {/* 페이지 정보 (확인용 TODO:개발 끝나면 지우기) */}
           {/* <div className='ml-4 text-sm text-gray-600'>
