@@ -5,18 +5,24 @@ const PasswordChangeForm = () => {
   return (
     <form className='flex flex-col gap-[8px] mx-auto w-[335px] md:w-[400px]'>
       <Input
+        className='w-[335px] md:w-[400px]'
         label='비밀번호 변경'
         type='password'
         placeholder='기존 비밀번호'
         name='currentPassword'
-        className='w-auto'
+      />
+      <Input
+        className='w-[335px] md:w-[400px]'
+        type='password'
+        placeholder='새 비밀번호'
+        name='newPassword'
       />
       <Input type='password' placeholder='새 비밀번호' name='newPassword' className='w-auto' />
       <Input
+        className='w-[335px] md:w-[400px] w-auto'
         type='password'
         placeholder='새 비밀번호 확인'
         name='confirmNewPassword'
-        className='w-auto'
       />
       <div className='flex justify-end mt-[16px]'>
         <Button type='submit'>변경하기</Button>
