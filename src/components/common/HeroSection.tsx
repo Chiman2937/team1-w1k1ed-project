@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-const Section1 = () => {
+const HeroSection = () => {
   return (
     <div className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'>
       <main
@@ -35,7 +35,7 @@ const Section1 = () => {
             </button>
 
             <Image
-              src='/images/type=image1.svg'
+              src='/images/type=image1.png'
               alt='사용자 온보딩 문서'
               width={336}
               height={389}
@@ -72,7 +72,7 @@ const Section1 = () => {
               </h2>
 
               <Image
-                src='/images/type=image2.svg'
+                src='/images/type=image2.png'
                 alt='키보드 타이핑'
                 width={113}
                 height={162}
@@ -82,7 +82,7 @@ const Section1 = () => {
               />
             </div>
             <Image
-              src='/images/type=image3.svg'
+              src='/images/type=image3.png'
               alt='다크 테마 채팅 화면'
               width={192}
               height={250}
@@ -103,4 +103,4 @@ const Section1 = () => {
   );
 };
 
-export default Section1;
+export default HeroSection;

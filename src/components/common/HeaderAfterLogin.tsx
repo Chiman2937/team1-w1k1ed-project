@@ -1,11 +1,11 @@
 import Nav from './Nav';
 import { FaBell } from 'react-icons/fa';
-import Dropdown from './Dropdown';
 import Logo from './Logo';
+import HeaderDropdown from './HeaderDropdown';
 
 const HeaderAfterLogin = () => {
   return (
-    <div className='bg-grayscale-50'>
+    <div className='bg-grayscale-50 shadow-lg'>
       <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
         <div className=' mx-auto py-[25px] flex items-center justify-between'>
           <div className='flex items-center gap-[40px]'>
@@ -25,7 +25,7 @@ const HeaderAfterLogin = () => {
             </button>
 
             <div className='hidden md:flex items-center gap-2 cursor-pointer'>
-              <Dropdown
+              <HeaderDropdown
                 iconName='account'
                 menuItems={[
                   { label: '마이페이지', href: '/mypage' },
@@ -35,7 +35,7 @@ const HeaderAfterLogin = () => {
             </div>
 
             <div className='inline md:hidden'>
-              <Dropdown
+              <HeaderDropdown
                 menuItems={[
                   { label: '위키목록', href: '/wikilist' },
                   { label: '자유게시판', href: '/boards' },
