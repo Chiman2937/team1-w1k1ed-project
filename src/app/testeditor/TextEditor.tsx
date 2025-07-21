@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useReducer } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { ComboBox, ComboContainer, ComboButton, ComboList, ComboListItem } from 'cy-combobox';
 import { IoMdArrowDropdown as IconDropdown } from 'react-icons/io';
 import clsx from 'clsx';
@@ -8,15 +8,111 @@ import clsx from 'clsx';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { TextAlign } from '@tiptap/extension-text-align';
+import Image from '@tiptap/extension-image';
 
 import EditorButton from './EditorButton';
 import Separator from './Separator';
+import Link from '@tiptap/extension-link';
+import {
+  buttonActiveStyle,
+  buttonDefaultStyle,
+  comboBoxButtonDefaultStyle,
+  comboBoxContainerDefaultStyle,
+  comboBoxListDefaultStyle,
+  comboBoxListItemDefaultStyle,
+  comboBoxListItemSelectedStyle,
+  toolbarStyle,
+} from './TextEditorStyle';
+import { LocalVideo } from './LocalVideo';
+import { YoutubeVideo } from './YoutubeVideo';
 
 const TextEditor = () => {
+  const [_videos, setVideos] = useState<Record<string, File>>({});
+  const [_images, setImages] = useState<Record<string, File>>({});
+
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+
   //------------------------------Text Editor 인스턴스 객체 선언--------------------------------
 
   const editor = useEditor({
-    extensions: [StarterKit, TextAlign.configure({ types: ['heading', 'paragraph'] })],
+    extensions: [
+      StarterKit,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Image.configure({
+        allowBase64: true,
+      }),
+      LocalVideo,
+      YoutubeVideo,
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: 'https',
+        protocols: ['http', 'https'],
+        isAllowedUri: (url, ctx) => {
+          try {
+            // construct URL
+            const parsedUrl = url.includes(':')
+              ? new URL(url)
+              : new URL(`${ctx.defaultProtocol}://${url}`);
+
+            // use default validation
+            if (!ctx.defaultValidate(parsedUrl.href)) {
+              return false;
+            }
+
+            // disallowed protocols
+            const disallowedProtocols = ['ftp', 'file', 'mailto'];
+            const protocol = parsedUrl.protocol.replace(':', '');
+
+            if (disallowedProtocols.includes(protocol)) {
+              return false;
+            }
+
+            // only allow protocols specified in ctx.protocols
+            const allowedProtocols = ctx.protocols.map((p) =>
+              typeof p === 'string' ? p : p.scheme,
+            );
+
+            if (!allowedProtocols.includes(protocol)) {
+              return false;
+            }
+
+            // disallowed domains
+            const disallowedDomains = ['example-phishing.com', 'malicious-site.net'];
+            const domain = parsedUrl.hostname;
+
+            if (disallowedDomains.includes(domain)) {
+              return false;
+            }
+
+            // all checks have passed
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        shouldAutoLink: (url) => {
+          try {
+            // construct URL
+            const parsedUrl = url.includes(':') ? new URL(url) : new URL(`https://${url}`);
+
+            // only auto-link if the domain is not in the disallowed list
+            const disallowedDomains = ['example-no-autolink.com', 'another-no-autolink.com'];
+            const domain = parsedUrl.hostname;
+
+            return !disallowedDomains.includes(domain);
+          } catch {
+            return false;
+          }
+        },
+      }),
+    ],
+    editorProps: {
+      attributes: {
+        class: 'text-editor',
+      },
+    },
     content: '<p>Hello World! 🌎️</p>',
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
@@ -51,44 +147,111 @@ const TextEditor = () => {
     };
   }, [editor]);
 
-  //--------------------------Text Editor 각 구성요소의 스타일 정의------------------------------
+  // ----------------------------------이미지 등록 이벤트-------------------------------------
 
-  const toolbarStyle = clsx(
-    'flex flex-row items-center gap-[10px]',
-    'bg-grayscale-100 rounded-[10px] py-[10px] px-[30px]',
+  const handleImageSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file || !editor) return;
+
+      const imageBlobURL = URL.createObjectURL(file);
+      setImages((prev) => ({
+        ...prev,
+        [imageBlobURL]: file,
+      }));
+
+      editor
+        .chain()
+        .focus()
+        .setImage({
+          src: imageBlobURL,
+          alt: file.name,
+          title: file.name,
+        })
+        .run();
+    },
+    [editor],
   );
 
-  const buttonDefaultStyle = clsx(
-    'p-[5px] rounded-[5px] cursor-pointer',
-    'text-grayscale-400 hover:text-grayscale-500',
+  const addImage = useCallback(() => {
+    imageInputRef.current?.click();
+  }, []);
+
+  // ----------------------------------비디오 등록 이벤트-------------------------------------
+
+  const handleVideoSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file || !editor) return;
+
+      const videoBlobURL = URL.createObjectURL(file);
+
+      setVideos((prev) => ({
+        ...prev,
+        [videoBlobURL]: file,
+      }));
+
+      editor
+        .chain()
+        .focus()
+        .insertLocalVideo({
+          src: videoBlobURL,
+          width: '640',
+          height: '360',
+        })
+        .run();
+    },
+    [editor],
   );
-  const buttonActiveStyle = 'bg-grayscale-200';
 
-  const comboBoxContainerDefaultStyle = 'font-medium text-grayscale-400';
+  const addVideo = useCallback(() => {
+    videoInputRef.current?.click();
+  }, []);
+  // -------------------------------------------------------------------------------------------
 
-  const comboBoxButtonDefaultStyle = clsx(
-    'h-[20px] w-[80px] bg-grayscale-100',
-    'px-1',
-    'flex flex-row justify-between items-center gap-[5px]',
-    'cursor-pointer',
-  );
+  const convertYoutubeURLToEmbed = (src: string): string => {
+    const url = new URL(src);
+    if (url.hostname === 'youtu.be') {
+      return `https://www.youtube.com/embed/${url.pathname.slice(1)}`;
+    }
+    if (url.hostname.includes('youtube.com') && url.searchParams.get('v')) {
+      return `https://www.youtube.com/embed/${url.searchParams.get('v')}`;
+    }
+    return src; // fallback
+  };
 
-  const comboBoxListDefaultStyle = clsx(
-    'absolute',
-    'flex flex-col',
-    'w-[80px] bg-grayscale-50 border-1 border-grayscale-200 shadow-lg',
-    'z-1',
-  );
+  const addYoutubeVideo = useCallback(() => {
+    const url = prompt('Enter YouTube URL');
 
-  const comboBoxListItemDefaultStyle = clsx('px-1 py-1', 'text-left cursor-pointer');
-  const comboBoxListItemSelectedStyle = clsx('bg-grayscale-100 text-grayscale-500');
+    if (!editor) return;
+
+    if (url) {
+      editor
+        .chain()
+        .focus()
+        .insertYoutubeEmbed({
+          src: convertYoutubeURLToEmbed(url),
+          width: '640',
+          height: '360',
+        })
+        .run();
+    }
+
+    // if (url) {
+    //   editor.commands.setYoutubeVideo({
+    //     src: url,
+    //     width: 640,
+    //     height: 360,
+    //   });
+    // }
+  }, [editor]);
 
   // -------------------------------------------------------------------------------------------
 
   if (!editor) return null;
 
   return (
-    <div id='text-editor'>
+    <div className='flex flex-col gap-5'>
       <div id='tool-bar' className={toolbarStyle}>
         {/* 굵게 버튼 */}
         <EditorButton
@@ -202,7 +365,41 @@ const TextEditor = () => {
         >
           코드블럭
         </button> */}
+        {/* 링크 버튼 */}
+        <EditorButton
+          variant='link'
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .toggleLink({ href: 'https://example.com', target: '_blank' })
+              .run()
+          }
+          className={clsx(buttonDefaultStyle, editor.isActive('link') && buttonActiveStyle)}
+        />
+        <EditorButton variant='image' onClick={addImage} className={clsx(buttonDefaultStyle)}>
+          <input
+            ref={imageInputRef}
+            type='file'
+            onChange={handleImageSelect}
+            style={{ display: 'none' }}
+          />
+        </EditorButton>
+        <EditorButton variant='video' onClick={addVideo} className={clsx(buttonDefaultStyle)}>
+          <input
+            ref={videoInputRef}
+            type='file'
+            onChange={handleVideoSelect}
+            style={{ display: 'none' }}
+          />
+        </EditorButton>
+        <EditorButton
+          variant='youtube'
+          onClick={addYoutubeVideo}
+          className={clsx(buttonDefaultStyle)}
+        />
       </div>
+
       <EditorContent editor={editor} />
     </div>
   );
