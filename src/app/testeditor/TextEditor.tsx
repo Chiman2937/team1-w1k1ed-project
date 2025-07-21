@@ -147,6 +147,44 @@ const TextEditor = () => {
     };
   }, [editor]);
 
+  // ----------------------------------링크 등록 이벤트-------------------------------------
+
+  const handleLinkSelect = useCallback(() => {
+    if (!editor) return;
+
+    // 링크가 이미 적용된 상태라면 해제
+    if (editor.isActive('link')) {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+      return;
+    }
+
+    const previousUrl = editor.getAttributes('link').href;
+    const url = window.prompt('URL', previousUrl);
+
+    // cancelled
+    if (url === null) {
+      return;
+    }
+
+    // empty
+    if (url === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+
+      return;
+    }
+
+    // update link
+    try {
+      editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+    } catch (e) {
+      if (e instanceof Error) {
+        alert(e.message);
+      } else {
+        alert('에러 발생');
+      }
+    }
+  }, [editor]);
+
   // ----------------------------------이미지 등록 이벤트-------------------------------------
 
   const handleImageSelect = useCallback(
@@ -207,7 +245,7 @@ const TextEditor = () => {
   const addVideo = useCallback(() => {
     videoInputRef.current?.click();
   }, []);
-  // -------------------------------------------------------------------------------------------
+  // ----------------------------------유튜브 등록 이벤트-------------------------------------
 
   const convertYoutubeURLToEmbed = (src: string): string => {
     const url = new URL(src);
@@ -368,15 +406,10 @@ const TextEditor = () => {
         {/* 링크 버튼 */}
         <EditorButton
           variant='link'
-          onClick={() =>
-            editor
-              .chain()
-              .focus()
-              .toggleLink({ href: 'https://example.com', target: '_blank' })
-              .run()
-          }
+          onClick={handleLinkSelect}
           className={clsx(buttonDefaultStyle, editor.isActive('link') && buttonActiveStyle)}
         />
+        {/* 이미지 버튼 */}
         <EditorButton variant='image' onClick={addImage} className={clsx(buttonDefaultStyle)}>
           <input
             ref={imageInputRef}
@@ -385,6 +418,7 @@ const TextEditor = () => {
             style={{ display: 'none' }}
           />
         </EditorButton>
+        {/* 로컬 비디오 버튼 */}
         <EditorButton variant='video' onClick={addVideo} className={clsx(buttonDefaultStyle)}>
           <input
             ref={videoInputRef}
@@ -393,6 +427,7 @@ const TextEditor = () => {
             style={{ display: 'none' }}
           />
         </EditorButton>
+        {/* 유튜브 버튼 */}
         <EditorButton
           variant='youtube'
           onClick={addYoutubeVideo}
