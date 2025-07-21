@@ -1,6 +1,6 @@
 'use client';
 import { toast } from 'cy-toast';
-import SnackBar from '../../components/common/Snackbar/Snackbar';
+import SnackBar from '../../components/common/Snackbar';
 
 const ModalSection = () => {
   const handleSuccessClick = () => {
