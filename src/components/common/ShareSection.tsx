@@ -48,7 +48,7 @@ const ShareSection = () => {
               lg:w-[360px] lg:h-[360px]'
             ></div>
             <Image
-              src='/images/type=image7.svg'
+              src='/images/type=image7.png'
               alt='공지 메가폰 아이콘'
               width={76}
               height={76}
@@ -57,7 +57,7 @@ const ShareSection = () => {
               lg:w-[360px]'
             />
             <Image
-              src='/images/type=image8.svg'
+              src='/images/type=image8.png'
               alt='회사 로고'
               width={76}
               height={76}
@@ -66,7 +66,7 @@ const ShareSection = () => {
               lg:w-[360px]'
             />
             <Image
-              src='/images/type=image9.svg'
+              src='/images/type=image9.png'
               alt='앱 업데이트 화면'
               width={76}
               height={76}
@@ -75,7 +75,7 @@ const ShareSection = () => {
               lg:w-[360px]'
             />
             <Image
-              src='/images/type=image10.svg'
+              src='/images/type=image10.png'
               alt='대화 말풍선'
               width={76}
               height={76}

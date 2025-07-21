@@ -35,7 +35,7 @@ const HeroSection = () => {
             </button>
 
             <Image
-              src='/images/type=image1.svg'
+              src='/images/type=image1.png'
               alt='사용자 온보딩 문서'
               width={336}
               height={389}
@@ -72,7 +72,7 @@ const HeroSection = () => {
               </h2>
 
               <Image
-                src='/images/type=image2.svg'
+                src='/images/type=image2.png'
                 alt='키보드 타이핑'
                 width={113}
                 height={162}
@@ -82,7 +82,7 @@ const HeroSection = () => {
               />
             </div>
             <Image
-              src='/images/type=image3.svg'
+              src='/images/type=image3.png'
               alt='다크 테마 채팅 화면'
               width={192}
               height={250}

@@ -31,7 +31,7 @@ const ViewSection = () => {
           </div>
           <div className='flex flex-col gap-[10px]'>
             <Image
-              src='/images/type=image4.svg'
+              src='/images/type=image4.png'
               alt='밝은 테마 채팅 화면'
               width={335}
               height={102}
@@ -46,7 +46,7 @@ const ViewSection = () => {
               lg:w-[924px] lg:h-[280px] lg:gap-[40px]'
             >
               <Image
-                src='/images/type=image6.svg'
+                src='/images/type=image6.png'
                 alt='알림 종 아이콘'
                 width={102}
                 height={102}
@@ -55,7 +55,7 @@ const ViewSection = () => {
                 lg:w-[280px]'
               />
               <Image
-                src='/images/type=image5.svg'
+                src='/images/type=image5.png'
                 alt='FAQ 채팅 버블'
                 width={223}
                 height={102}
