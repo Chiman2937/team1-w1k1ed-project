@@ -1,12 +1,11 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form'; // useForm 훅 가져오기
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import * as z from 'zod'; // Zod 라이브러리 가져오기 (스키마 유효성 검사용)
 import { zodResolver } from '@hookform/resolvers/zod'; // Zod 리졸버 가져오기
 import Link from 'next/link';
-import { useMediaQuery } from 'react-responsive';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { authAPI } from '@/api/authAPI';
@@ -65,65 +64,50 @@ export default function LoginPage() {
     }
   };
 
-  // 👇 hydration mismatch 방지를 위한 마운트 상태
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const isTabletOrDesktop = useMediaQuery({ minWidth: 768 });
-
-  // 👇 마운트 전에는 렌더를 생략하거나 기본 사이즈로
-  if (!mounted) return null; // 또는 fallback UI
-
-  const inputVariant = isTabletOrDesktop ? 'L' : 'S';
-  const buttonSize = isTabletOrDesktop ? 'lg' : 'md';
-
   return (
     <div className='flex flex-col justify-center items-center gap-[32px] mt-[100px]'>
       <h1 className='text-2xl-semibold text-grayscale-500'>회원가입</h1>
       <div className='flex flex-col gap-[40px] items-center'>
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[30px] items-center'>
           <Input
+            className='w-[335px] md:w-[400px]'
             label='이름'
             type='text'
             placeholder='이름을 입력하세요'
             name='name'
-            variant={inputVariant}
             register={register('name')} // 'username' 필드 등록
             errors={errors} // 에러 객체 전달
           />
           <Input
+            className='w-[335px] md:w-[400px]'
             label='이메일'
             type='email'
             placeholder='이메일을 입력하세요'
             name='email'
-            variant={inputVariant}
             register={register('email')} // 'email 필드 등록
             errors={errors} // 에러 객체 전달
           />
           <Input
+            className='w-[335px] md:w-[400px]'
             label='비밀번호'
             type='password'
             placeholder='비밀번호를 입력하세요'
             name='password'
-            variant={inputVariant}
             register={register('password')} // 'password' 필드 등록
             errors={errors} // 에러 객체 전달
           />
           <Input
+            className='w-[335px] md:w-[400px]'
             label='비밀번호 확인'
             type='password'
             placeholder='비밀번호를 다시 입력하세요'
             name='passwordConfirmation'
-            variant={inputVariant}
             register={register('passwordConfirmation')} // 'confirmPassword' 필드 등록
             errors={errors} // 에러 객체 전달
           />
           <Button
             variant='primary'
-            size={buttonSize}
+            size='lg'
             type='submit'
             className='flex items-center justify-center mt-4'
           >
