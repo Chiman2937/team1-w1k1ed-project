@@ -81,7 +81,7 @@ export default function LoginPage() {
           register={register('confirmPassword')} // 'confirmPassword' 필드 등록
           errors={errors} // 에러 객체 전달
         />
-        <Button variant='primary' size='md' type='submit' className='mt-4'>
+        <Button variant='primary' type='submit' className='mt-4'>
           로그인
         </Button>
       </form>

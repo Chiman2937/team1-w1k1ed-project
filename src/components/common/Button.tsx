@@ -2,13 +2,11 @@ import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import Link from 'next/link';
 
-type VariantType = 'primary' | 'secondary';
-type SizeType = 'sm' | 'md' | 'lg';
+type VariantType = 'primary' | 'secondary' | 'landingWhite' | 'landingGray';
 
 // 같이 사용될 베이스 프롭스 타입선언입니다.
 interface BaseProps {
   variant?: VariantType;
-  size?: SizeType;
   className?: string;
   children: React.ReactNode;
 }
@@ -30,14 +28,7 @@ type AnchorProps = BaseProps &
 // 타입별칭 + 유니온을 사용하여 묶어주었습니다
 type Props = ButtonProps | AnchorProps;
 
-const Button = ({
-  children,
-  variant = 'primary',
-  size = 'sm',
-  className,
-  href,
-  ...props
-}: Props) => {
+const Button = ({ children, variant = 'primary', className, href, ...props }: Props) => {
   // 전달받은 props 안에 disabled가 있는지 확인하는 불린형 선언자 (true와 false로 조절 가능합니다)
   // 예시 <Button disabled={false} /> 이면 활성상태가 됩니다
   const isDisabled = 'disabled' in props && props.disabled;
@@ -48,20 +39,17 @@ const Button = ({
   );
 
   const variantStyles = {
-    primary: 'bg-primary-green-200 text-white hover:bg-primary-green-300', // 기본 스타일입니둥
+    primary: 'bg-primary-green-200 text-white hover:bg-primary-green-300 px-[20px] py-[11px]', // 기본 스타일입니둥
     secondary: 'bg-transparent text-primary-green-200 border border-primary-green-200',
-  };
-
-  const sizeStyles = {
-    sm: 'px-[20px] py-[8px] h-[40px]', // 기본 사이즈입니둥
-    md: 'py-[10.5px] w-[335px] h-[45px]',
-    lg: 'py-[10.5px] w-[400px] h-[45px]',
+    landingWhite: 'bg-white text-grayscale-500',
+    landingGray: 'bg-grayscale-500 text-white',
   };
 
   const disabledStyles = clsx('bg-grayscale-300 hover:bg-grayscale-300');
 
   const composedClassName = twMerge(
-    clsx(baseStyle, variantStyles[variant], sizeStyles[size], isDisabled && disabledStyles),
+    clsx(baseStyle, variantStyles[variant], isDisabled && disabledStyles),
+
     className,
   );
 
