@@ -1,4 +1,4 @@
-import LinkIcon from '@/assets/images/icon-link.svg';
+import { AiOutlineLink } from 'react-icons/ai';
 import { truncateText } from '@/utils/truncateText';
 import clsx from 'clsx';
 
@@ -100,7 +100,7 @@ export default function CopyToClipboard({
       aria-label={`${buttonText || '링크'} 복사하기`}
       title='클립보드에 복사'
     >
-      <LinkIcon className={COPY_TO_CLIPBOARD.STYLES.icons[size]} aria-hidden='true' />
+      <AiOutlineLink className={COPY_TO_CLIPBOARD.STYLES.icons[size]} aria-hidden='true' />
       {displayText}
     </button>
   );
