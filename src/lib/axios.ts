@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { authAPI } from '@/api/authAPI';
+import Cookies from 'js-cookie';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -16,7 +17,7 @@ instance.interceptors.request.use(
   (config) => {
     // 클라이언트 사이드에서만 localStorage에 접근 (Next.js SSR/CSR 환경 고려)
     if (typeof window !== 'undefined') {
-      const accessToken = localStorage.getItem('accessToken');
+      const accessToken = Cookies.get('accessToken');
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
@@ -43,7 +44,7 @@ instance.interceptors.response.use(
       originalRequest._retry = true; // 무한 루프 방지 플래그
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = Cookies.get('refreshToken');
         if (refreshToken) {
           // ⭐️ Refresh Token을 이용하여 새로운 Access Token 요청
           // 이때, 'instance'를 다시 사용하여 무한 루프에 빠지지 않도록 주의해야 합니다.
@@ -53,10 +54,10 @@ instance.interceptors.response.use(
           const res = await authAPI.refreshToken(refreshToken);
 
           if (res.accessToken) {
-            localStorage.setItem('accessToken', res.accessToken); // 새 Access Token 저장
+            Cookies.set('accessToken', res.accessToken, { secure: true, expires: 1 / 24 }); // 새 Access Token 저장
             if (res.refreshToken) {
               // 새 Refresh Token도 주어지면 업데이트
-              localStorage.setItem('refreshToken', res.refreshToken);
+              Cookies.set('refreshToken', res.refreshToken, { secure: true, expires: 7 });
             }
 
             // 새로운 Access Token으로 기존 요청 재시도
@@ -69,8 +70,8 @@ instance.interceptors.response.use(
         // Refresh Token 만료 또는 유효하지 않은 경우: 강제 로그아웃
         if (typeof window !== 'undefined') {
           // 클라이언트 사이드에서만 실행
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
+          Cookies.remove('accessToken');
+          Cookies.remove('refreshToken');
           alert('세션이 만료되었습니다. 다시 로그인해주세요.');
           window.location.href = '/login'; // 로그인 페이지로 리다이렉트
         }
