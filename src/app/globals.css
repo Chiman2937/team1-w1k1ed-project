@@ -42,6 +42,7 @@
 
   /* Primary Green */
   --color-primary-green-100: #eefff6;
+  --color-primary-green-105: #ced8d5;
   --color-primary-green-150: #adedde;
   --color-primary-green-200: #4cbfa4;
   --color-primary-green-300: #32a68a;
@@ -102,28 +103,4 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
-}
-
-#text-editor ul {
-  @apply text-grayscale-500 list-disc pl-5;
-}
-
-#text-editor ol {
-  @apply text-grayscale-500 list-decimal pl-5;
-}
-
-#text-editor p {
-  @apply text-grayscale-500;
-}
-
-#text-editor h1 {
-  @apply text-grayscale-500 block text-2xl-semibold pb-2 mb-2 border-b-1 border-grayscale-200;
-}
-
-#text-editor blockquote {
-  @apply text-grayscale-500 block border-l-4 border-grayscale-500 pl-4 my-1;
-}
-
-#text-editor pre {
-  @apply bg-grayscale-200 py-4 px-2;
 }

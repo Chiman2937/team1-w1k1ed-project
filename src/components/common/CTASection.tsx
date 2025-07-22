@@ -1,4 +1,6 @@
-const Section4 = () => {
+import Button from './Button';
+
+const CTASection = () => {
   return (
     <div className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'>
       <section className='flex flex-col gap-[40px] bg-grayscale-500 text-center text-white px-[31px] py-[100px]'>
@@ -15,19 +17,19 @@ const Section4 = () => {
           >
             나만의 위키 만들어 보기
           </h1>
-          <button
+          <Button
+            variant='landingWhite'
             className='mx-[40px] my-[40px] px-[20px] py-[15px] rounded-[15px]
             font-pretendard font-semibold transition cursor-pointer
-            bg-white text-grayscale-500 
             text-[20px]
             md:text-[24px]'
           >
             지금 시작하기
-          </button>
+          </Button>
         </div>
       </section>
     </div>
   );
 };
 
-export default Section4;
+export default CTASection;
