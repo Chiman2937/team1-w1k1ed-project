@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
-import OGLink, { OgData, OgLinkData } from '../utils/components/OGLink';
+import LinkPreview, { OgData, OgLinkData } from '../utils/components/LinkPreview';
 import { truncateText } from '@/utils/truncateText';
 
 interface Props {
@@ -72,7 +72,7 @@ const LinkModal = ({ onModalClose, ogData, setOgData }: Props) => {
           </div>
         </form>
 
-        {ogData && <OGLink ogLinkData={ogData} />}
+        {ogData && <LinkPreview ogLinkData={ogData} />}
         {isError && (
           <div>
             <span className='text-xs-regular text-grayscale-400'>
