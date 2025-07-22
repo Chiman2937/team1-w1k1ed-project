@@ -19,7 +19,7 @@
 }
 
 .dot {
-  background-color: var(--color-purple-600);
+  background-color: var(--color-primary-green-300);
   aspect-ratio: 1 / 1;
   border-radius: 999px;
   animation: bounce 1.5s ease-in-out infinite;
