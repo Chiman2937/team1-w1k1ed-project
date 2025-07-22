@@ -53,20 +53,24 @@
 .text-editor div.video-wrapper,
 .text-editor img {
   padding: 2px;
-  border: 3px solid transparent;
+  outline: 3px solid transparent;
   cursor: pointer;
 }
 
 .text-editor div.video-wrapper:hover,
 .text-editor img:hover {
-  border: 3px solid var(--color-grayscale-400);
+  outline: 1px solid var(--color-grayscale-400);
 }
 
 .text-editor div.video-wrapper.ProseMirror-selectednode,
 .text-editor img.ProseMirror-selectednode {
-  border: 3px solid var(--color-primary-green-300);
+  outline: 3px solid var(--color-primary-green-300);
 }
 
 .text-editor .video-wrapper iframe {
   pointer-events: none;
+}
+
+.text-editor a {
+  text-decoration: none;
 }
