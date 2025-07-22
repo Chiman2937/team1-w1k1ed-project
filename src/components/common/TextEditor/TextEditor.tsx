@@ -5,10 +5,8 @@ import { useCallback, useRef, useState } from 'react';
 import { useTextEditor } from '@/components/common/TextEditor/utils/hooks/useTextEditor';
 import { useTextEditorForceUpdate } from '@/components/common/TextEditor/utils/hooks/useTextEditorForceUpdate';
 import { EditorContent } from '@tiptap/react';
-import { handleLinkSelect } from './utils/handlers/handleLinkSelect';
 import { handleVideoSelect } from './utils/handlers/handleVideoSelect';
 import { handleImageSelect } from './utils/handlers/handleImageSelect';
-import { handleYoutubeSelect } from './utils/handlers/handleYoutubeSelect';
 import {
   buttonActiveStyle,
   buttonDefaultStyle,
@@ -23,10 +21,15 @@ import EditorButton from './toolbar/components/EditorButton';
 import Separator from './toolbar/components/Separator';
 import { ComboBox, ComboContainer, ComboButton, ComboList, ComboListItem } from 'cy-combobox';
 import { IoMdArrowDropdown as IconDropdown } from 'react-icons/io';
+import LinkModal from './modals/LinkModal';
+import { OgLinkData } from './utils/components/OGLink';
 
 const TextEditor = () => {
   const [_videos, setVideos] = useState<Record<string, File>>({});
   const [_images, setImages] = useState<Record<string, File>>({});
+  const [ogData, setOgData] = useState<OgLinkData | null>(null);
+
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -36,6 +39,43 @@ const TextEditor = () => {
 
   // Editor에 작성된 요소들 style 감지를 위한 강제 업데이트
   const { blockType, alignType } = useTextEditorForceUpdate(editor);
+
+  // 링크 등록 이벤트 연결
+
+  const handleLinkButtonClick = useCallback(() => {
+    setIsLinkModalOpen(true);
+  }, []);
+
+  const handleLinkSubmit = useCallback(() => {
+    const extractYoutubeId = (url: string): string | null => {
+      const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    };
+    setIsLinkModalOpen(false);
+    const youtubeId = extractYoutubeId(ogData?.url || '');
+    console.log(youtubeId);
+    if (!youtubeId) {
+      editor?.commands.insertContent({
+        type: 'ogLink',
+        attrs: {
+          url: ogData?.url,
+          title: ogData?.title,
+          description: ogData?.description,
+          image: ogData?.image,
+        },
+      });
+      return;
+    }
+    editor?.commands.insertContent({
+      type: 'youtubeIframe',
+      attrs: {
+        youtubeId,
+      },
+    });
+
+    setOgData(null);
+  }, [editor, ogData]);
 
   // 이미지 등록 이벤트 연결
   const addImage = useCallback(() => {
@@ -166,11 +206,19 @@ const TextEditor = () => {
           코드블럭
         </button> */}
         {/* 링크 버튼 */}
-        <EditorButton
+        {/* <EditorButton
           variant='link'
           onClick={() => handleLinkSelect(editor)}
           className={clsx(buttonDefaultStyle, editor.isActive('link') && buttonActiveStyle)}
+        /> */}
+        <EditorButton
+          variant='link'
+          onClick={handleLinkButtonClick}
+          className={clsx(buttonDefaultStyle)}
         />
+        {isLinkModalOpen && (
+          <LinkModal ogData={ogData} setOgData={setOgData} onModalClose={handleLinkSubmit} />
+        )}
         {/* 이미지 버튼 */}
         <EditorButton variant='image' onClick={addImage} className={clsx(buttonDefaultStyle)}>
           <input
@@ -189,15 +237,11 @@ const TextEditor = () => {
             style={{ display: 'none' }}
           />
         </EditorButton>
-        {/* 유튜브 버튼 */}
-        <EditorButton
-          variant='youtube'
-          onClick={() => handleYoutubeSelect(editor)}
-          className={clsx(buttonDefaultStyle)}
-        />
       </div>
       {/* Text Area 컴포넌트 */}
-      <EditorContent editor={editor} />
+      <div className='px-5'>
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 };
