@@ -3,7 +3,9 @@ const Footer = () => {
     <div className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'>
       <footer
         className='text-left bg-grayscale-600 text-white font-pretendard
-      px-[20px] py-[40px]'
+      px-[20px] py-[40px]
+      md:py-[60px]
+      '
       >
         <div
           className=' m-auto
