@@ -5,6 +5,8 @@ import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import { LocalVideo } from '@/components/common/TextEditor/utils/extensions/LocalVideo';
 import { YoutubeVideo } from '@/components/common/TextEditor/utils/extensions/YoutubeVideo';
+import { OGLinkNode } from '../nodes/OGLinkNode';
+import { YoutubeNode } from '../nodes/YoutubeNode';
 
 export const useTextEditor = () => {
   return useEditor({
@@ -16,6 +18,8 @@ export const useTextEditor = () => {
       }),
       LocalVideo,
       YoutubeVideo,
+      OGLinkNode,
+      YoutubeNode,
       Link.configure({
         openOnClick: false,
         autolink: true,
