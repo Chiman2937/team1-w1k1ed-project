@@ -1,11 +1,9 @@
-'use client';
-
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 
 const PasswordChangeForm = () => {
   return (
-    <form className='flex flex-col gap-[8px] mx-auto'>
+    <form className='flex flex-col gap-[8px] mx-auto w-[335px] md:w-[400px]'>
       <Input
         className='w-[335px] md:w-[400px]'
         label='비밀번호 변경'
@@ -19,6 +17,7 @@ const PasswordChangeForm = () => {
         placeholder='새 비밀번호'
         name='newPassword'
       />
+      <Input type='password' placeholder='새 비밀번호' name='newPassword' className='w-auto' />
       <Input
         className='w-[335px] md:w-[400px]'
         type='password'
