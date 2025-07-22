@@ -3,23 +3,22 @@ import StarterKit from '@tiptap/starter-kit';
 import { TextAlign } from '@tiptap/extension-text-align';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import { LocalVideo } from '@/components/common/TextEditor/utils/extensions/LocalVideo';
-import { YoutubeVideo } from '@/components/common/TextEditor/utils/extensions/YoutubeVideo';
-import { OGLinkNode } from '../nodes/OGLinkNode';
-import { YoutubeNode } from '../nodes/YoutubeNode';
+import { LocalVideoExtension } from '@/components/common/TextEditor/utils/extensions/LocalVideoExtension';
+import { YoutubeExtension } from '@/components/common/TextEditor/utils/extensions/YoutubeExtension';
+import { OGLinkExtension } from '../extensions/OGLinkExtension';
 
 export const useTextEditor = () => {
-  return useEditor({
+  const editor = useEditor({
     extensions: [
       StarterKit,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Image.configure({
         allowBase64: true,
       }),
-      LocalVideo,
-      YoutubeVideo,
-      OGLinkNode,
-      YoutubeNode,
+      LocalVideoExtension,
+      YoutubeExtension,
+      OGLinkExtension,
+      YoutubeExtension,
       Link.configure({
         openOnClick: false,
         autolink: true,
@@ -93,4 +92,5 @@ export const useTextEditor = () => {
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
   });
+  return { editor };
 };
