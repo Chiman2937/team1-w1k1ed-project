@@ -27,7 +27,7 @@ const extractYoutubeId = (url: string): string | null => {
   return match ? match[1] : null;
 };
 
-const OGLink = ({ ogLinkData }: Props) => {
+const LinkPreview = ({ ogLinkData }: Props) => {
   const { title, description, image, url } = ogLinkData;
 
   if (isYoutubeUrl(url)) {
@@ -35,7 +35,7 @@ const OGLink = ({ ogLinkData }: Props) => {
     if (!videoId) return null;
 
     return (
-      <div className='w-full aspect-video'>
+      <div className='w-full aspect-video pointer-events-none'>
         <iframe
           width='100%'
           height='100%'
@@ -49,7 +49,7 @@ const OGLink = ({ ogLinkData }: Props) => {
   }
 
   return (
-    <a href={url} className='group'>
+    <a href={url} className='pointer-events-none'>
       <div className='border-1 border-grayscale-300 w-[450px] flex flex-row items-center shadow-sm bg-white group-hover:bg-grayscale-100'>
         <div
           className='w-[120px] h-[120px]'
@@ -76,4 +76,4 @@ const OGLink = ({ ogLinkData }: Props) => {
   );
 };
 
-export default OGLink;
+export default LinkPreview;
