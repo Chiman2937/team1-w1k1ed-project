@@ -20,8 +20,6 @@ export const handleVideoSelect = (
     .focus()
     .insertLocalVideo({
       src: videoBlobURL,
-      width: '640',
-      height: '360',
     })
     .run();
 };
