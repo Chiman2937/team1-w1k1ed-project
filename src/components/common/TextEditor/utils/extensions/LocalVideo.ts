@@ -1,5 +1,6 @@
 // extensions/LocalVideo.ts
 import { Node, mergeAttributes, Command } from '@tiptap/core';
+import { createWrapperElement } from '../nodeWrapper/createWrapperElement';
 
 type LocalVideoAttrs = {
   src: string;
@@ -37,12 +38,6 @@ export const LocalVideo = Node.create<LocalVideoOptions>({
       src: {
         default: null as string | null,
       },
-      width: {
-        default: '640',
-      },
-      height: {
-        default: '360',
-      },
     };
   },
 
@@ -65,19 +60,28 @@ export const LocalVideo = Node.create<LocalVideoOptions>({
 
   addNodeView() {
     return ({ node }) => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'video-wrapper';
-
       const video = document.createElement('video');
       video.src = node.attrs.src;
-      video.width = parseInt(node.attrs.width);
-      video.height = parseInt(node.attrs.height);
       video.controls = true;
 
-      // 핵심 포인트: video 자체가 이벤트를 먹지 않도록 설정
-      video.style.pointerEvents = 'none';
+      Object.assign(video.style, {
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        border: '0',
+        pointerEvents: 'none',
+      });
 
-      wrapper.appendChild(video);
+      const wrapper = createWrapperElement('div', {
+        className: 'video-wrapper',
+        style: {
+          width: '100%',
+          aspectRatio: '16 / 9',
+          position: 'relative',
+          overflow: 'hidden',
+        },
+        children: [video],
+      });
 
       return {
         dom: wrapper,
