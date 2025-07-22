@@ -1,94 +1,57 @@
 'use client';
-
-import { useEffect, useMemo, useReducer } from 'react';
+import './textarea/editorHtmlStyle.css';
+import clsx from 'clsx';
+import { useCallback, useRef, useState } from 'react';
+import { useTextEditor } from '@/components/common/TextEditor/utils/hooks/useTextEditor';
+import { useTextEditorForceUpdate } from '@/components/common/TextEditor/utils/hooks/useTextEditorForceUpdate';
+import { EditorContent } from '@tiptap/react';
+import { handleLinkSelect } from './utils/handlers/handleLinkSelect';
+import { handleVideoSelect } from './utils/handlers/handleVideoSelect';
+import { handleImageSelect } from './utils/handlers/handleImageSelect';
+import { handleYoutubeSelect } from './utils/handlers/handleYoutubeSelect';
+import {
+  buttonActiveStyle,
+  buttonDefaultStyle,
+  comboBoxButtonDefaultStyle,
+  comboBoxContainerDefaultStyle,
+  comboBoxListDefaultStyle,
+  comboBoxListItemDefaultStyle,
+  comboBoxListItemSelectedStyle,
+  toolbarStyle,
+} from './toolbar/toolBarStyle';
+import EditorButton from './toolbar/components/EditorButton';
+import Separator from './toolbar/components/Separator';
 import { ComboBox, ComboContainer, ComboButton, ComboList, ComboListItem } from 'cy-combobox';
 import { IoMdArrowDropdown as IconDropdown } from 'react-icons/io';
-import clsx from 'clsx';
-
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import { TextAlign } from '@tiptap/extension-text-align';
-
-import EditorButton from './EditorButton';
-import Separator from './Separator';
 
 const TextEditor = () => {
-  //------------------------------Text Editor 인스턴스 객체 선언--------------------------------
+  const [_videos, setVideos] = useState<Record<string, File>>({});
+  const [_images, setImages] = useState<Record<string, File>>({});
 
-  const editor = useEditor({
-    extensions: [StarterKit, TextAlign.configure({ types: ['heading', 'paragraph'] })],
-    content: '<p>Hello World! 🌎️</p>',
-    // Don't render immediately on the server to avoid SSR issues
-    immediatelyRender: false,
-  });
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
-  //----------------Editor에 작성된 요소들 style 감지를 위한 강제 업데이트 구문--------------------
+  // Text Editor 인스턴스 객체 선언
+  const editor = useTextEditor();
 
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  // Editor에 작성된 요소들 style 감지를 위한 강제 업데이트
+  const { blockType, alignType } = useTextEditorForceUpdate(editor);
 
-  const blockType = useMemo(() => {
-    if (editor?.isActive('heading', { level: 1 })) return 'heading';
-    if (editor?.isActive('paragraph') && !editor?.isActive('blockquote')) return 'paragraph';
-    if (editor?.isActive('blockquote')) return 'blockquote';
-  }, [editor, editor?.state.selection]);
+  // 이미지 등록 이벤트 연결
+  const addImage = useCallback(() => {
+    imageInputRef.current?.click();
+  }, []);
 
-  const alignType = useMemo(() => {
-    if (editor?.isActive({ textAlign: 'left' })) return 'left';
-    if (editor?.isActive({ textAlign: 'center' })) return 'center';
-    if (editor?.isActive({ textAlign: 'right' })) return 'right';
-    if (editor?.isActive({ textAlign: 'justify' })) return 'justify';
-  }, [editor, editor?.state.selection]);
-
-  useEffect(() => {
-    if (!editor) return;
-    const handler = () => {
-      forceUpdate();
-    };
-
-    editor.on('transaction', handler);
-    return () => {
-      editor.off('transaction', handler);
-    };
-  }, [editor]);
-
-  //--------------------------Text Editor 각 구성요소의 스타일 정의------------------------------
-
-  const toolbarStyle = clsx(
-    'flex flex-row items-center gap-[10px]',
-    'bg-grayscale-100 rounded-[10px] py-[10px] px-[30px]',
-  );
-
-  const buttonDefaultStyle = clsx(
-    'p-[5px] rounded-[5px] cursor-pointer',
-    'text-grayscale-400 hover:text-grayscale-500',
-  );
-  const buttonActiveStyle = 'bg-grayscale-200';
-
-  const comboBoxContainerDefaultStyle = 'font-medium text-grayscale-400';
-
-  const comboBoxButtonDefaultStyle = clsx(
-    'h-[20px] w-[80px] bg-grayscale-100',
-    'px-1',
-    'flex flex-row justify-between items-center gap-[5px]',
-    'cursor-pointer',
-  );
-
-  const comboBoxListDefaultStyle = clsx(
-    'absolute',
-    'flex flex-col',
-    'w-[80px] bg-grayscale-50 border-1 border-grayscale-200 shadow-lg',
-    'z-1',
-  );
-
-  const comboBoxListItemDefaultStyle = clsx('px-1 py-1', 'text-left cursor-pointer');
-  const comboBoxListItemSelectedStyle = clsx('bg-grayscale-100 text-grayscale-500');
-
-  // -------------------------------------------------------------------------------------------
+  // 비디오 등록 이벤트 연결
+  const addVideo = useCallback(() => {
+    videoInputRef.current?.click();
+  }, []);
 
   if (!editor) return null;
 
   return (
-    <div id='text-editor'>
+    // Tool Bar 컴포넌트
+    <div className='flex flex-col gap-5'>
       <div id='tool-bar' className={toolbarStyle}>
         {/* 굵게 버튼 */}
         <EditorButton
@@ -202,7 +165,38 @@ const TextEditor = () => {
         >
           코드블럭
         </button> */}
+        {/* 링크 버튼 */}
+        <EditorButton
+          variant='link'
+          onClick={() => handleLinkSelect(editor)}
+          className={clsx(buttonDefaultStyle, editor.isActive('link') && buttonActiveStyle)}
+        />
+        {/* 이미지 버튼 */}
+        <EditorButton variant='image' onClick={addImage} className={clsx(buttonDefaultStyle)}>
+          <input
+            ref={imageInputRef}
+            type='file'
+            onChange={(e) => handleImageSelect(e, editor, setImages)}
+            style={{ display: 'none' }}
+          />
+        </EditorButton>
+        {/* 로컬 비디오 버튼 */}
+        <EditorButton variant='video' onClick={addVideo} className={clsx(buttonDefaultStyle)}>
+          <input
+            ref={videoInputRef}
+            type='file'
+            onChange={(e) => handleVideoSelect(e, editor, setVideos)}
+            style={{ display: 'none' }}
+          />
+        </EditorButton>
+        {/* 유튜브 버튼 */}
+        <EditorButton
+          variant='youtube'
+          onClick={() => handleYoutubeSelect(editor)}
+          className={clsx(buttonDefaultStyle)}
+        />
       </div>
+      {/* Text Area 컴포넌트 */}
       <EditorContent editor={editor} />
     </div>
   );

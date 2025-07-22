@@ -11,6 +11,7 @@ import { FaAlignJustify as IconAlignJustify } from 'react-icons/fa6';
 import { MdOutlineImage as IconImage } from 'react-icons/md';
 import { MdOutlineVideoCameraFront as IconVideo } from 'react-icons/md';
 import { FaLink as IconLink } from 'react-icons/fa';
+import { FaYoutube as IconYoutube } from 'react-icons/fa';
 
 import { MouseEventHandler } from 'react';
 
@@ -27,15 +28,17 @@ type Variant =
   | 'justify'
   | 'image'
   | 'video'
-  | 'link';
+  | 'link'
+  | 'youtube';
 
 interface Props {
   variant: Variant;
   className?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  children?: React.ReactNode;
 }
 
-const EditorButton = ({ variant, onClick, className }: Props) => {
+const EditorButton = ({ variant, onClick, className, children }: Props) => {
   const iconMap = {
     bold: IconBold,
     italic: IconItalic,
@@ -50,12 +53,14 @@ const EditorButton = ({ variant, onClick, className }: Props) => {
     image: IconImage,
     video: IconVideo,
     link: IconLink,
+    youtube: IconYoutube,
   };
 
   const IconComponent = iconMap[variant];
 
   return (
     <button className={className} onClick={onClick}>
+      {children}
       <IconComponent />
     </button>
   );

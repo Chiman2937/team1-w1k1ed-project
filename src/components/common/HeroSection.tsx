@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Button from './Button';
 
 const HeroSection = () => {
   return (
@@ -26,13 +27,14 @@ const HeroSection = () => {
             </span>
           </h1>
           <div className='relative z-10'>
-            <button
-              className='mx-[40px] px-[20px] py-[15px] rounded-[15px] font-pretendard  transition bg-grayscale-500 text-white hover:bg-grayscale-600
-            font-[20px]
-            md:font-[24px]'
+            <Button
+              variant='landingGray'
+              className='mx-[40px] py-[15px] rounded-[15px] font-pretendard  transition
+              font-[20px]
+              md:font-[24px]'
             >
               위키 만들기
-            </button>
+            </Button>
 
             <Image
               src='/images/type=image1.png'

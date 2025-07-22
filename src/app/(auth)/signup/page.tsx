@@ -102,12 +102,7 @@ export default function SignupPage() {
             register={register('passwordConfirmation')}
             errors={errors}
           />
-          <Button
-            variant='primary'
-            size='lg'
-            type='submit'
-            className='flex items-center justify-center mt-4'
-          >
+          <Button variant='primary' type='submit' className='flex items-center justify-center mt-4'>
             회원가입
           </Button>
         </form>
