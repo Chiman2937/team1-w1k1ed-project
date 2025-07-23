@@ -1,7 +1,11 @@
 import React, { InputHTMLAttributes } from 'react';
 import clsx from 'clsx'; // clsx 임포트
 import { twMerge } from 'tailwind-merge';
-import { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
+import { FieldErrors, FieldValues, UseFormRegisterReturn } from 'react-hook-form';
+
+type TouchedFieldsType<TFieldValues extends FieldValues> = {
+  [K in keyof TFieldValues]?: boolean;
+};
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -13,6 +17,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   register?: UseFormRegisterReturn;
   errors?: FieldErrors;
+  touchedFields?: TouchedFieldsType<FieldValues>;
 }
 
 export default function Input({
@@ -24,10 +29,11 @@ export default function Input({
   name,
   register,
   errors,
+  touchedFields,
   ...rest
 }: InputProps) {
   const errorMessage = errors?.[name]?.message as string | undefined;
-  const hasError = !!errorMessage;
+  const hasError = !!errorMessage && touchedFields?.[name];
 
   const baseStyle = clsx(
     'h-[45px] rounded-[10px] px-[20px] py-[14px]',

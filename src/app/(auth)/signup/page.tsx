@@ -16,7 +16,7 @@ const signUpSchema = z
     name: z.string().trim().max(10, '열 자 이하로 작성해주세요.'),
     email: z.email('이메일 형식으로 작성해 주세요.'),
     password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 8자 이상
-    passwordConfirmation: z.string().min(1, '비밀번호가 일치하지 않습니다.'), // 비밀번호 확인은 최소 1자 이상
+    passwordConfirmation: z.string(), // 비밀번호 확인은 최소 1자 이상
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     // 비밀번호와 비밀번호 확인이 일치하는지 검사
@@ -33,11 +33,17 @@ export default function SignupPage() {
   const {
     register, // 입력 필드를 React Hook Form에 등록하는 함수
     handleSubmit, // 폼 제출을 처리하는 함수
-    formState: { errors }, // 폼의 에러 상태 객체
+    formState: { errors, touchedFields }, // 폼의 에러 상태 객체
     watch, // 필드 값을 감시하기 위함
     trigger, // 유효성 검사를 수동으로 하기 위함
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema), // Zod 스키마를 유효성 검사기로 사용
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+    },
     mode: 'onChange', // 유효성 검사 트리거 모드 설정 (아래에서 자세히 설명)
   });
 
@@ -83,6 +89,7 @@ export default function SignupPage() {
               name='name'
               register={register('name')}
               errors={errors}
+              touchedFields={touchedFields}
             />
             <Input
               className='w-[335px] md:w-[400px]'
@@ -92,6 +99,7 @@ export default function SignupPage() {
               name='email'
               register={register('email')}
               errors={errors}
+              touchedFields={touchedFields}
             />
             <Input
               className='w-[335px] md:w-[400px]'
@@ -101,6 +109,7 @@ export default function SignupPage() {
               name='password'
               register={register('password')}
               errors={errors}
+              touchedFields={touchedFields}
             />
             <Input
               className='w-[335px] md:w-[400px]'
@@ -110,6 +119,7 @@ export default function SignupPage() {
               name='passwordConfirmation'
               register={register('passwordConfirmation')}
               errors={errors}
+              touchedFields={touchedFields}
             />
           </div>
           <Button

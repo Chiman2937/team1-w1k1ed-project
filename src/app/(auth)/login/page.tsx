@@ -27,10 +27,14 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: 'onBlur',
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onChange',
   });
 
   useEffect(() => {
@@ -77,6 +81,7 @@ export default function LoginPage() {
               name='email'
               register={register('email')}
               errors={errors}
+              touchedFields={touchedFields}
             />
             <Input
               className='w-[335px] md:w-[400px]'
@@ -86,6 +91,7 @@ export default function LoginPage() {
               name='password'
               register={register('password')}
               errors={errors}
+              touchedFields={touchedFields}
             />
           </div>
           <Button type='submit' className='flex items-center justify-center w-[335px] md:w-[400px]'>
