@@ -35,7 +35,7 @@ export default function Input({
     'text-grayscale-500',
     'text-md-regular',
     'placeholder:text-grayscale-400',
-    'border:border-transparent',
+    'border border-transparent',
     'focus:outline-none',
     'focus:border-primary-green-200',
   );
