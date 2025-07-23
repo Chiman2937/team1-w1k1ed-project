@@ -35,38 +35,3 @@
   padding-left: 16px;
   margin: 4px 0;
 }
-
-.text-editor pre {
-  background-color: var(--color-grayscale-200);
-  padding: 16px 8px;
-}
-
-.text-editor a {
-  color: var(--color-blue-500);
-  text-decoration: underline;
-}
-
-.text-editor div.video-wrapper {
-  width: fit-content;
-}
-
-.text-editor div.video-wrapper,
-.text-editor img {
-  padding: 2px;
-  border: 3px solid transparent;
-  cursor: pointer;
-}
-
-.text-editor div.video-wrapper:hover,
-.text-editor img:hover {
-  border: 3px solid var(--color-grayscale-400);
-}
-
-.text-editor div.video-wrapper.ProseMirror-selectednode,
-.text-editor img.ProseMirror-selectednode {
-  border: 3px solid var(--color-primary-green-300);
-}
-
-.text-editor .video-wrapper iframe {
-  pointer-events: none;
-}

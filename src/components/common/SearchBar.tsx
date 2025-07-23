@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { useCallback, useEffect, useRef } from 'react';
+import { FiSearch } from 'react-icons/fi';
 // TODO: 재사용 가능하게 분리하기
 interface Profile {
   id: number;
@@ -106,8 +107,12 @@ const SearchBar = ({
 
   return (
     <div className='relative flex flex-1 flex-shrink-0'>
+      <FiSearch
+        size={20}
+        className='absolute  left-3 top-1/2 -translate-y-1/2  text-grayscale-400 pointer-events-none'
+      />
       <input
-        className='peer block h-[45px] w-full rounded-[10px] text-grayscale-500 bg-grayscale-100 py-[9px] px-3'
+        className=' block pl-10 h-[45px] w-full rounded-[10px] text-grayscale-500 bg-grayscale-100 py-[9px] px-3'
         placeholder={placeholder}
         onChange={(e) => {
           handleSearchWithDebounce(e.target.value);

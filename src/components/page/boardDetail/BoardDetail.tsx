@@ -1,7 +1,7 @@
 import { dateFormater } from '@/utils/date';
 
 import Image from 'next/image';
-import { BoardEdit, BoardLike } from './BoardDetailButton';
+import { BoardDelete, BoardEdit, BoardLike } from './BoardDetailButton';
 
 const BASE_URL = 'https://wikied-api.vercel.app/6-16/';
 
@@ -14,6 +14,7 @@ export async function getArticles(id: string) {
 
 export default async function BoardDetail({ id }: { id: string }) {
   const article = await getArticles(id);
+
   console.log(article);
   const {
     title,
@@ -30,7 +31,10 @@ export default async function BoardDetail({ id }: { id: string }) {
       <header className='flex flex-col gap-[30px]'>
         <section className='flex justify-between items-center'>
           <h1 className='text-3xl-semibold'>{title}</h1>
-          <BoardEdit articleId={id} />
+          <div className='flex gap-[14px]'>
+            <BoardEdit articleId={id} />
+            <BoardDelete articleId={id} />
+          </div>
         </section>
         <section className='flex justify-between items-center  text-grayscale-400 text-md-regular'>
           <div className='flex gap-[10px]'>

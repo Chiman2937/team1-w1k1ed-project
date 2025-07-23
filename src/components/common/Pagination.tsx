@@ -1,7 +1,9 @@
 'use client';
 
 import PaginationButton from '@/components/page/wikilist/PaginationButton';
-import { useState, useEffect } from 'react';
+import { FaAngleLeft as PaginationPrev } from 'react-icons/fa6';
+import { FaAngleRight as PaginationNext } from 'react-icons/fa6';
+import { useState, useEffect, ReactNode } from 'react';
 
 interface PaginationProps<T> {
   // 총 데이터
@@ -13,7 +15,7 @@ interface PaginationProps<T> {
   // 보여줄 데이터의 형식
   renderItem: (item: T, index: number) => React.ReactNode;
   // 데이터가 없을 때 보여줄 것
-  emptyMessage?: string;
+  emptyMessage?: ReactNode;
   // 추가 스타일링
   className?: string;
 }
@@ -95,7 +97,7 @@ function Pagination<T>({
             disabled={groupStart === 1}
             onClick={handlePrevGroup}
           >
-            `{'<'}`
+            <PaginationPrev />
           </PaginationButton>
 
           {/* 페이지 번호들 */}
@@ -116,7 +118,7 @@ function Pagination<T>({
             disabled={groupEnd === totalPages}
             onClick={handleNextGroup}
           >
-            `{'>'}`
+            <PaginationNext />
           </PaginationButton>
           {/* 페이지 정보 (확인용 TODO:개발 끝나면 지우기) */}
           {/* <div className='ml-4 text-sm text-gray-600'>

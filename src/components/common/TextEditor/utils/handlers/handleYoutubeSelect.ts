@@ -24,8 +24,6 @@ export function handleYoutubeSelect(editor: Editor | null) {
     .focus()
     .insertYoutubeEmbed({
       src: embedUrl,
-      width: '640',
-      height: '360',
     })
     .run();
 }

@@ -1,0 +1,35 @@
+.container {
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+
+.dot {
+  aspect-ratio: 1 / 1;
+  position: absolute;
+  top: var(--distance);
+  left: var(--distance);
+  background-color: var(--color-primary-green-300);
+  opacity: 0.2;
+  border-radius: 20px;
+  transform: rotate(calc(var(--degree) * var(--i))) translateX(var(--distance));
+  animation-name: blink;
+  animation-duration: var(--total-animation-duration);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}

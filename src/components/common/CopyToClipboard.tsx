@@ -1,10 +1,13 @@
-import LinkIcon from '@/assets/images/icon-link.svg';
+import { AiOutlineLink } from 'react-icons/ai';
 import { truncateText } from '@/utils/truncateText';
 import clsx from 'clsx';
 
 // CopyToClipboard 컴포넌트에 사용되는 상수들 정리
 export const COPY_TO_CLIPBOARD = {
-  MAX_TEXT_LENGTH: 50,
+  MAX_TEXT_LENGTHS: {
+    default: 40,
+    large: 50,
+  },
   DEFAULT_SUFFIX: '...',
   MESSAGES: {
     WARN: '복사할 텍스트가 비어있습니다.',
@@ -81,10 +84,9 @@ export default function CopyToClipboard({
       alert(`${errorMessage}\n${COPY_TO_CLIPBOARD.MESSAGES.INFO}`); // TODO:나중에 스낵바로 변경
     }
   };
-
   const displayText = truncateText(
     buttonText || text,
-    COPY_TO_CLIPBOARD.MAX_TEXT_LENGTH,
+    COPY_TO_CLIPBOARD.MAX_TEXT_LENGTHS[size],
     COPY_TO_CLIPBOARD.DEFAULT_SUFFIX,
   );
 
@@ -100,7 +102,7 @@ export default function CopyToClipboard({
       aria-label={`${buttonText || '링크'} 복사하기`}
       title='클립보드에 복사'
     >
-      <LinkIcon className={COPY_TO_CLIPBOARD.STYLES.icons[size]} aria-hidden='true' />
+      <AiOutlineLink className={COPY_TO_CLIPBOARD.STYLES.icons[size]} aria-hidden='true' />
       {displayText}
     </button>
   );
