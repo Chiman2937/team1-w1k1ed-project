@@ -29,9 +29,10 @@ const HeroSection = () => {
           <div className='relative z-10'>
             <Button
               variant='landingGray'
-              className='mx-[40px] py-[15px] rounded-[15px] font-pretendard  transition
-              font-[20px]
-              md:font-[24px]'
+              className='mx-[40px] rounded-[15px] transition font-pretendard font-bold
+              px-[30px] py-[15px] text-[20px]
+              md:font-[24px] md:text-[24px]
+              lg:'
             >
               위키 만들기
             </Button>

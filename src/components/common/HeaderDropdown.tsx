@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { VscAccount } from 'react-icons/vsc';
 import clsx from 'clsx';
+import { useAuthContext } from '@/context/AuthContext';
 
 const ICONS = {
   hamburger: GiHamburgerMenu,
@@ -24,9 +25,11 @@ type Props = {
 
 const HeaderDropdown = ({ iconName = 'hamburger', menuItems }: Props) => {
   const Icon = ICONS[iconName];
+  const { logout } = useAuthContext();
 
   const handleLogout = () => {
     console.log('로그아웃');
+    logout();
     // 여기에 실제 로그아웃 처리 로직 작성 (예: signOut(), removeToken() 등)
   };
 
