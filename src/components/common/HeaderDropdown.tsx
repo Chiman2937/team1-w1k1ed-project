@@ -14,21 +14,17 @@ const ICONS = {
 type DropdownMenuItem = {
   label: string;
   href?: string;
-  isLogout?: boolean;
+  onClick?: () => void;
 };
 
 type Props = {
   iconName?: 'hamburger' | 'account';
   menuItems: DropdownMenuItem[];
+  onItemClick?: (label: string) => void;
 };
 
-const HeaderDropdown = ({ iconName = 'hamburger', menuItems }: Props) => {
+const HeaderDropdown = ({ iconName = 'hamburger', menuItems, onItemClick }: Props) => {
   const Icon = ICONS[iconName];
-
-  const handleLogout = () => {
-    console.log('로그아웃');
-    // 여기에 실제 로그아웃 처리 로직 작성 (예: signOut(), removeToken() 등)
-  };
 
   return (
     <Menu as='div' className='relative font-pretendard text-[14px] font-normal'>
@@ -40,29 +36,46 @@ const HeaderDropdown = ({ iconName = 'hamburger', menuItems }: Props) => {
         <div className='p-1'>
           {menuItems.map((item, idx) => (
             <MenuItem key={idx}>
-              {({ active }) =>
-                item.isLogout ? (
-                  <button
-                    onClick={handleLogout}
-                    className={clsx(
-                      'w-full px-4 py-2 text-sm',
-                      active && 'bg-grayscale-100 text-black rounded-[10px]',
-                    )}
-                  >
-                    {item.label}
-                  </button>
-                ) : (
-                  <Link
-                    href={item.href ?? '/'}
-                    className={clsx(
-                      'block px-4 py-2 text-sm',
-                      active && 'bg-grayscale-100 text-black rounded-[10px]',
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                )
-              }
+              {({ active }) => {
+                if (item.onClick) {
+                  return (
+                    <button
+                      onClick={item.onClick}
+                      className={clsx(
+                        'w-full px-4 py-2 text-sm',
+                        active && 'bg-grayscale-100 text-black rounded-[10px]',
+                      )}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                } else if (item.href) {
+                  return (
+                    <Link
+                      href={item.href}
+                      onClick={() => onItemClick?.(item.label)}
+                      className={clsx(
+                        'block px-4 py-2 text-sm',
+                        active && 'bg-grayscale-100 text-black rounded-[10px]',
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                } else {
+                  return (
+                    <button
+                      onClick={() => onItemClick?.(item.label)}
+                      className={clsx(
+                        'w-full px-4 py-2 text-sm',
+                        active && 'bg-grayscale-100 text-black rounded-[10px]',
+                      )}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                }
+              }}
             </MenuItem>
           ))}
         </div>
