@@ -1,6 +1,6 @@
 import { cloudinaryClient } from './clients/CloudinaryClient';
 
-type UploadType = 'image' | 'video';
+export type UploadType = 'image' | 'video';
 
 interface Payload {
   fileObject: File;
