@@ -22,13 +22,14 @@ const LinkModal = ({ onModalClose, ogData, setOgData }: Props) => {
   const handleInputSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    const res = await fetch(`http://localhost:3000/api/fetch-og?url=${inputValue}`);
+    const res = await fetch(`/api/fetch-og?url=${inputValue}`);
     const data: OgData = await res.json();
     setIsLoading(false);
     setIsError(false);
     if (!res.ok) {
       setOgData(null);
       setIsError(true);
+      setIsLoading(false);
       return;
     }
     setOgData({
