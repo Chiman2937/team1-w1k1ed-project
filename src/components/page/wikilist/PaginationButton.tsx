@@ -19,14 +19,10 @@ const PaginationButton = ({
 }: PaginationButtonProps) => {
   // 공통 스타일
   const baseClasses =
-    'py-3 px-[18px] rounded-[10px] shadow-lg transition-colors text-grayscale-400 bg-grayscale-50';
+    'py-3 px-[18px] rounded-[10px] shadow-lg transition-colors text-grayscale-400 bg-grayscale-50 disabled:text-gray-300 disabled:cursor-not-allowed';
 
   // 상태별 스타일
   const getVariantClasses = () => {
-    if (disabled) {
-      return 'text-gray-300 cursor-not-allowed';
-    }
-
     if (variant === 'page' && active) {
       return 'text-primary-green-200';
     }
