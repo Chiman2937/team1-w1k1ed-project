@@ -14,8 +14,8 @@ import { useAuthContext } from '@/context/AuthContext';
 import { UserData } from '@/types/user';
 
 const loginSchema = z.object({
-  email: z.email('유효한 이메일 주소를 입력해주세요.'),
-  password: z.string().min(8, '8자 이상 입력해주세요.'),
+  email: z.email('이메일 형식으로 작성해 주세요.'),
+  password: z.string().min(8, '8자 이상 작성해 주세요.'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
