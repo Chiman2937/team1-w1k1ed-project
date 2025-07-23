@@ -1,8 +1,6 @@
 'use client';
 
 import PaginationButton from '@/components/page/wikilist/PaginationButton';
-// import { FaAngleLeft } from 'react-icons/fa6';
-// import { FaAngleRight } from 'react-icons/fa6';
 import { FaAngleLeft as PaginationPrev } from 'react-icons/fa6';
 import { FaAngleRight as PaginationNext } from 'react-icons/fa6';
 import { useState, useEffect, ReactNode } from 'react';
