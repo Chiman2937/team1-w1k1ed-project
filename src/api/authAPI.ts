@@ -29,6 +29,24 @@ interface SignUpPayload {
   passwordConfirmation: string;
 }
 
+interface ResetPasswordPayload {
+  currentPassword: string;
+  password: string;
+  passwordConfirmation: string;
+}
+
+interface ResetPasswordResponse {
+  profile: {
+    code: string;
+    id: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+  teamId: string;
+  name: string;
+  id: number;
+}
+
 export const authAPI = {
   signIn: async (payload: LoginPayload): Promise<AuthSuccessResponse> => {
     const response = await instance.post<AuthSuccessResponse>('auth/signIn', payload);
@@ -44,6 +62,11 @@ export const authAPI = {
     const response = await instance.post<AuthSuccessResponse>('/auth/refresh-token', {
       refreshToken,
     });
+    return response.data;
+  },
+
+  resetPassword: async (payload: ResetPasswordPayload): Promise<ResetPasswordResponse> => {
+    const response = await instance.post('/users/me/password', payload);
     return response.data;
   },
 };
