@@ -68,25 +68,27 @@ export default function LoginPage() {
       <h1 className='text-2xl-semibold text-grayscale-500'>로그인</h1>
       <div className='flex flex-col gap-[40px] items-center'>
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[32px] items-center'>
-          <Input
-            className='w-[335px] md:w-[400px]'
-            label='이메일'
-            type='email'
-            placeholder='이메일을 입력하세요'
-            name='email'
-            register={register('email')}
-            errors={errors}
-          />
-          <Input
-            className='w-[335px] md:w-[400px]'
-            label='비밀번호'
-            type='password'
-            placeholder='비밀번호를 입력하세요'
-            name='password'
-            register={register('password')}
-            errors={errors}
-          />
-          <Button variant='primary' type='submit' className='flex items-center justify-center mt-4'>
+          <div className='flex flex-col gap-[24px]'>
+            <Input
+              className='w-[335px] md:w-[400px]'
+              label='이메일'
+              type='email'
+              placeholder='이메일을 입력하세요'
+              name='email'
+              register={register('email')}
+              errors={errors}
+            />
+            <Input
+              className='w-[335px] md:w-[400px]'
+              label='비밀번호'
+              type='password'
+              placeholder='비밀번호를 입력하세요'
+              name='password'
+              register={register('password')}
+              errors={errors}
+            />
+          </div>
+          <Button type='submit' className='flex items-center justify-center w-[335px] md:w-[400px]'>
             로그인
           </Button>
         </form>
