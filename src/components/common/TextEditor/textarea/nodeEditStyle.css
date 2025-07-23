@@ -1,0 +1,24 @@
+.text-editor .og-link-inner-wrapper,
+.text-editor .youtube-inner-wrapper,
+.text-editor .local-video-inner-wrapper {
+  padding: 3px;
+  cursor: pointer;
+}
+
+.text-editor .og-link-inner-wrapper a,
+.text-editor .youtube-inner-wrapper iframe,
+.text-editor .local-video-inner-wrapper video {
+  pointer-events: none;
+}
+
+.text-editor .og-link-inner-wrapper:hover,
+.text-editor .youtube-inner-wrapper:hover,
+.text-editor .local-video-inner-wrapper:hover {
+  outline: 1px solid #757474;
+}
+
+.text-editor .og-link-outer-wrapper.ProseMirror-selectednode .og-link-inner-wrapper,
+.text-editor .youtube-outer-wrapper.ProseMirror-selectednode .youtube-inner-wrapper,
+.text-editor .local-video-outer-wrapper.ProseMirror-selectednode .local-video-inner-wrapper {
+  outline: 3px solid #11c238;
+}
