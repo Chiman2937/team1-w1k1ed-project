@@ -4,6 +4,7 @@ import './textarea/nodeOGStyle.css';
 import './textarea/nodeLocalVideoStyle.css';
 import './textarea/nodeYoutubeStyle.css';
 import './textarea/nodeEditStyle.css';
+import './textarea/nodeImageStyle.css';
 import clsx from 'clsx';
 import { useCallback, useRef, useState } from 'react';
 import { useTextEditorForceUpdate } from '@/components/common/TextEditor/utils/hooks/useTextEditorForceUpdate';

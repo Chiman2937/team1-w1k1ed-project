@@ -6,6 +6,7 @@ import Link from '@tiptap/extension-link';
 import { LocalVideoExtension } from '@/components/common/TextEditor/utils/extensions/LocalVideoExtension';
 import { YoutubeExtension } from '@/components/common/TextEditor/utils/extensions/YoutubeExtension';
 import { OGLinkExtension } from '../extensions/OGLinkExtension';
+import { CustomImageExtension } from '../extensions/CustomImageExtension';
 
 export const useTextEditor = () => {
   const editor = useEditor({
@@ -19,6 +20,7 @@ export const useTextEditor = () => {
       YoutubeExtension,
       OGLinkExtension,
       YoutubeExtension,
+      CustomImageExtension,
       Link.configure({
         openOnClick: false,
         autolink: true,
