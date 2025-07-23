@@ -40,7 +40,7 @@ export default function Input({
     'focus:border-primary-green-200',
   );
 
-  const errorClasses = clsx('bg-secondary-red-100', 'border-secondary-red-100');
+  const errorClasses = clsx('bg-secondary-red-100', 'border-secondary-red-200');
 
   return (
     <div className='flex flex-col gap-[10px]'>
