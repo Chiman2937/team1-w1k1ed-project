@@ -8,7 +8,7 @@ export interface ISignal {
 interface AsyncFunctionArgs<P> extends ISignal {
   params: P;
 }
-//P: Params Type
+//P: Payload Type
 //R: Response Type
 export const useAsync = <P, R>(params: {
   asyncFunction: (args: AsyncFunctionArgs<P>) => Promise<R>;
