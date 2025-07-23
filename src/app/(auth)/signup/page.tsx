@@ -27,7 +27,7 @@ const signUpSchema = z
 // Zod 스키마로부터 폼 데이터의 TypeScript 타입 추론
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
 
   const {
@@ -46,10 +46,7 @@ export default function LoginPage() {
       const responseData = await authAPI.signUp(data);
       console.log('회원가입 성공:', responseData);
 
-      localStorage.setItem('accessToken', responseData.accessToken);
-      localStorage.setItem('refreshToken', responseData.refreshToken);
-
-      alert('회원가입 성공! 로그인되었습니다.');
+      alert('가입이 완료되었습니다.');
       router.push('/login');
     } catch (error) {
       // ⭐️ error를 AxiosError로 타입 단언
@@ -68,44 +65,49 @@ export default function LoginPage() {
     <div className='flex flex-col justify-center items-center gap-[32px] mt-[100px]'>
       <h1 className='text-2xl-semibold text-grayscale-500'>회원가입</h1>
       <div className='flex flex-col gap-[40px] items-center'>
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[30px] items-center'>
-          <Input
-            className='w-[335px] md:w-[400px]'
-            label='이름'
-            type='text'
-            placeholder='이름을 입력하세요'
-            name='name'
-            register={register('name')}
-            errors={errors}
-          />
-          <Input
-            className='w-[335px] md:w-[400px]'
-            label='이메일'
-            type='email'
-            placeholder='이메일을 입력하세요'
-            name='email'
-            register={register('email')}
-            errors={errors}
-          />
-          <Input
-            className='w-[335px] md:w-[400px]'
-            label='비밀번호'
-            type='password'
-            placeholder='비밀번호를 입력하세요'
-            name='password'
-            register={register('password')}
-            errors={errors}
-          />
-          <Input
-            className='w-[335px] md:w-[400px]'
-            label='비밀번호 확인'
-            type='password'
-            placeholder='비밀번호를 다시 입력하세요'
-            name='passwordConfirmation'
-            register={register('passwordConfirmation')}
-            errors={errors}
-          />
-          <Button variant='primary' type='submit' className='flex items-center justify-center mt-4'>
+        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[32px] items-center'>
+          <div className='flex flex-col gap-[24px]'>
+            <Input
+              className='w-[335px] md:w-[400px]'
+              label='이름'
+              type='text'
+              placeholder='이름을 입력하세요'
+              name='name'
+              register={register('name')}
+              errors={errors}
+            />
+            <Input
+              className='w-[335px] md:w-[400px]'
+              label='이메일'
+              type='email'
+              placeholder='이메일을 입력하세요'
+              name='email'
+              register={register('email')}
+              errors={errors}
+            />
+            <Input
+              className='w-[335px] md:w-[400px]'
+              label='비밀번호'
+              type='password'
+              placeholder='비밀번호를 입력하세요'
+              name='password'
+              register={register('password')}
+              errors={errors}
+            />
+            <Input
+              className='w-[335px] md:w-[400px]'
+              label='비밀번호 확인'
+              type='password'
+              placeholder='비밀번호를 다시 입력하세요'
+              name='passwordConfirmation'
+              register={register('passwordConfirmation')}
+              errors={errors}
+            />
+          </div>
+          <Button
+            type='submit'
+            className='flex items-center justify-center w-[335px] md:w-[400px]  '
+          >
             회원가입
           </Button>
         </form>
