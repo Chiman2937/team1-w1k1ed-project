@@ -7,15 +7,11 @@ import Logo from './Logo';
 import Nav from './Nav';
 import HeaderDropdown from './HeaderDropdown';
 import NotificationPanel from './NotificationPanel';
+import { useAuthContext } from '@/context/AuthContext';
 
 const HeaderAfterLogin = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  const handleLogout = () => {
-    console.log('로그아웃');
-    localStorage.removeItem('accessToken'); // 사용 중이라면
-    window.location.href = '/login';
-  };
+  const { logout } = useAuthContext();
 
   return (
     <>
@@ -48,7 +44,7 @@ const HeaderAfterLogin = () => {
                   iconName='account'
                   menuItems={[
                     { label: '마이페이지', href: '/mypage' },
-                    { label: '로그아웃', onClick: handleLogout },
+                    { label: '로그아웃', onClick: logout },
                   ]}
                 />
               </div>
@@ -61,7 +57,7 @@ const HeaderAfterLogin = () => {
                     { label: '자유게시판', href: '/boards' },
                     { label: '알림' },
                     { label: '마이페이지', href: '/mypage' },
-                    { label: '로그아웃', onClick: handleLogout },
+                    { label: '로그아웃', onClick: logout },
                   ]}
                   onItemClick={(label) => {
                     if (label === '알림') {
