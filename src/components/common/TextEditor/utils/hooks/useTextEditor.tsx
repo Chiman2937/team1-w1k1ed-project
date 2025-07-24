@@ -16,8 +16,8 @@ interface Props {
 
 export const useTextEditor = ({ initialContent = '' }: Props = {}) => {
   const [tempFiles, setTempFiles] = useState<Record<string, File>>({});
-  const [lengthWithSpace, setLengthWithSpace] = useState<number>(0);
-  const [lengthWithoutSpace, setLengthWithoutSpace] = useState<number>(0);
+  const [lengthWithSpaces, setLengthWithSpaces] = useState<number>(0);
+  const [lengthWithoutSpaces, setLengthWithoutSpaces] = useState<number>(0);
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -100,13 +100,19 @@ export const useTextEditor = ({ initialContent = '' }: Props = {}) => {
       },
     },
     onUpdate: ({ editor }) => {
-      setLengthWithSpace(getHtmlLength.withSpaces(editor));
-      setLengthWithoutSpace(getHtmlLength.withoutSpaces(editor));
+      setLengthWithSpaces(getHtmlLength.withSpaces(editor));
+      setLengthWithoutSpaces(getHtmlLength.withoutSpaces(editor));
       console.log('[DEBUG] editor updated');
     },
     content: initialContent,
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
   });
-  return { editor, tempFiles, setTempFiles, lengthWithSpace, lengthWithoutSpace };
+  return {
+    editor,
+    tempFiles,
+    setTempFiles,
+    lengthWithSpaces,
+    lengthWithoutSpaces,
+  };
 };

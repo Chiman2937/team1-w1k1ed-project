@@ -12,7 +12,7 @@ export const getHtmlLength = {
   },
 };
 
-function getLength(editor: Editor, options: { ignoreSpaces: boolean }): number {
+const getLength = (editor: Editor, options: { ignoreSpaces: boolean }): number => {
   const json: JSONContent = editor.getJSON();
   let length = 0;
 
@@ -31,4 +31,4 @@ function getLength(editor: Editor, options: { ignoreSpaces: boolean }): number {
 
   traverse(json);
   return length;
-}
+};
