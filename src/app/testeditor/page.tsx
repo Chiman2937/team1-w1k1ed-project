@@ -8,7 +8,8 @@ import ContentViewer from '@/components/common/TextEditor/ContentViewer';
 import ContentEditor from '@/components/common/TextEditor/ContentEditor';
 
 const TestEditor = () => {
-  const { editor, tempFiles, setTempFiles, lengthWithSpace, lengthWithoutSpace } = useTextEditor();
+  const { editor, tempFiles, setTempFiles, lengthWithSpaces, lengthWithoutSpaces } =
+    useTextEditor();
   const [content, setContent] = useState('');
 
   const handleRenderClick = async () => {
@@ -23,13 +24,13 @@ const TestEditor = () => {
       <div>
         <p>
           <span>공백 포함: </span>
-          {lengthWithSpace}
+          {lengthWithSpaces}
         </p>
       </div>
       <div>
         <p>
           <span>공백 제외: </span>
-          {lengthWithoutSpace}
+          {lengthWithoutSpaces}
         </p>
       </div>
       <ToolBar editor={editor} setTempFiles={setTempFiles} />
