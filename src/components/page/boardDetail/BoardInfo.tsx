@@ -3,10 +3,9 @@ const TITLE_MAX_LEN = 30;
 interface PostFormProps {
   title: string;
   setTitle: (title: string) => void;
-  contentLength: { withSpaces: number; withoutSpaces: number };
 }
 
-const BoardInfoForm: React.FC<PostFormProps> = ({ title, setTitle, contentLength }) => {
+const BoardInfoForm: React.FC<PostFormProps> = ({ title, setTitle }) => {
   return (
     <>
       <div>
@@ -27,10 +26,6 @@ const BoardInfoForm: React.FC<PostFormProps> = ({ title, setTitle, contentLength
         </div>
         <div className='border-t' />
       </div>
-      <span className='text-md-medium md:text-lg-medium'>
-        공백포함 : 총<span className='text-primary-green-200'> {contentLength.withSpaces}</span>자 |
-        공백제외: 총<span className='text-primary-green-200'> {contentLength.withoutSpaces}</span>자
-      </span>
     </>
   );
 };
