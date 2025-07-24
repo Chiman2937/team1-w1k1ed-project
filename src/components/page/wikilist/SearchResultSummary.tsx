@@ -16,12 +16,14 @@ const SearchResultSummary = ({
   className = '',
 }: SearchResultSummaryProps) => {
   // 검색어가 없거나 결과가 없으면 표시하지 않음
-  if (!searchTerm || resultCount === 0) {
-    return null;
-  }
+  const shouldShow = searchTerm && resultCount > 0;
 
   return (
-    <p className={`text-grayscale-400 text-lg-regular ${className}`}>
+    <p
+      className={`text-grayscale-400 text-lg-regular ${className} ${
+        shouldShow ? 'visible' : 'invisible'
+      }`}
+    >
       &quot;<span>{searchTerm}</span>&quot;님을 총{' '}
       <span className='text-primary-green-200'>{resultCount}</span>
       {unit} 찾았습니다.

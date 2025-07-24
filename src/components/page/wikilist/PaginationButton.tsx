@@ -18,8 +18,19 @@ const PaginationButton = ({
   className = '',
 }: PaginationButtonProps) => {
   // 공통 스타일
-  const baseClasses =
-    'py-3 px-[18px] rounded-[10px] shadow-lg transition-colors text-grayscale-400 bg-grayscale-50 disabled:text-gray-300 disabled:cursor-not-allowed';
+  const baseClasses = `
+    w-[40px] h-[40px] 
+    md:w-[45px] md:h-[45px]
+    rounded-[10px] 
+    shadow-lg 
+    transition-colors 
+    text-grayscale-400 
+    bg-grayscale-50 
+    disabled:text-gray-300 
+    disabled:cursor-not-allowed
+    flex items-center justify-center
+    font-medium
+  `;
 
   // 상태별 스타일
   const getVariantClasses = () => {
