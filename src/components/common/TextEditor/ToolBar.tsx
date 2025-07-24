@@ -41,7 +41,7 @@ const ToolBar = ({ editor }: Props) => {
   const [ogData, setOgData] = useState<OgLinkData | null>(null);
 
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-  const [isImgaeModalOpen, setIsImageModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -240,7 +240,7 @@ const ToolBar = ({ editor }: Props) => {
         onClick={() => setIsImageModalOpen(true)}
         className={clsx(buttonDefaultStyle)}
       />
-      <Modal isOpen={isImgaeModalOpen} onClose={() => setIsImageModalOpen(false)}>
+      <Modal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)}>
         <div className='flex justify-center flex-col'>
           <h3 className='mt-[10px] center text-lg-semibold md:text-2lg-semibold text-grayscale-500 m-auto'>
             이미지
