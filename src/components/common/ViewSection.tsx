@@ -79,11 +79,12 @@ const ViewSection = () => {
             <Image
               src='/images/type=image4.png'
               alt='밝은 테마 채팅 화면'
-              width={335}
-              height={102}
+              width={924}
+              height={280}
               className='border border-none rounded-[10px]
-                md:w-[648px] md:h-[196px]
-                lg:w-[924px] lg:h-[280px]'
+              w-[335px] h-[102px]
+              md:w-[648px] md:h-[196px]
+              lg:w-[924px] lg:h-[280px]'
             />
             <motion.div
               variants={itemVariants}
@@ -95,18 +96,20 @@ const ViewSection = () => {
               <Image
                 src='/images/type=image6.png'
                 alt='알림 종 아이콘'
-                width={102}
-                height={102}
+                width={280}
+                height={280}
                 className='bg-secondary-purple-100 border border-none rounded-[10px] aspect-square
+                w-[102px]
                 md:w-[198px]
                 lg:w-[280px]'
               />
               <Image
                 src='/images/type=image5.png'
                 alt='FAQ 채팅 버블'
-                width={223}
-                height={102}
+                width={604}
+                height={280}
                 className='border border-none rounded-[10px]
+                w-[223px] h-[102px]
                 md:w-[428px] md:h-[198px]
                 lg:w-[604px] lg:h-[280px]'
               />

@@ -96,8 +96,8 @@ const HeroSection = () => {
             <Image
               src='/images/type=image1.png'
               alt='사용자 온보딩 문서'
-              width={336}
-              height={389}
+              width={498}
+              height={590}
               className='my-[44px] mx-auto
               w-[336px] h-[389px]
               md:w-[498px] md:h-[590px]'
@@ -142,9 +142,10 @@ const HeroSection = () => {
                 <Image
                   src='/images/type=image2.png'
                   alt='키보드 타이핑'
-                  width={113}
-                  height={162}
+                  width={364}
+                  height={450}
                   className='bg-primary-green-200 border border-none rounded-[10px]
+                  w-[113px] h-[162px]]
                   md:w-[262px] md:h-[322px]
                   lg:w-[364px] lg:h-[450px]'
                 />
@@ -156,10 +157,12 @@ const HeroSection = () => {
               <Image
                 src='/images/type=image3.png'
                 alt='다크 테마 채팅 화면'
-                width={192}
-                height={250}
+                width={520}
+                height={681}
                 unoptimized
-                className='md:w-[365px] md:h-[479px]
+                className='
+                w-[192px] h-[250px]]
+                md:w-[365px] md:h-[479px]
                 lg:w-[520px] lg:h-[681px]'
               />
             </motion.div>

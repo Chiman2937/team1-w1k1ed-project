@@ -3,23 +3,25 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaBell } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 import Logo from './Logo';
 import Nav from './Nav';
 import HeaderDropdown from './HeaderDropdown';
 import NotificationPanel from './NotificationPanel';
 
 const HeaderAfterLogin = () => {
+  const router = useRouter();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const handleLogout = () => {
     console.log('로그아웃');
     localStorage.removeItem('accessToken'); // 사용 중이라면
-    window.location.href = '/login';
+    router.push('/login');
   };
 
   return (
     <>
-      <div className='bg-grayscale-50 shadow-lg sticky top-0 left-0 w-full z-50'>
+      <div className='bg-grayscale-50 shadow-md sticky top-0 left-0 w-full z-50'>
         <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
           <div className='mx-auto py-[25px] flex items-center justify-between'>
             <div className='flex items-center gap-[40px]'>
@@ -48,6 +50,7 @@ const HeaderAfterLogin = () => {
                   iconName='account'
                   menuItems={[
                     { label: '마이페이지', href: '/mypage' },
+                    { label: '비밀번호 재설정', href: '/passwordChangePage' },
                     { label: '로그아웃', onClick: handleLogout },
                   ]}
                 />
@@ -61,6 +64,7 @@ const HeaderAfterLogin = () => {
                     { label: '자유게시판', href: '/boards' },
                     { label: '알림' },
                     { label: '마이페이지', href: '/mypage' },
+                    { label: '비밀번호 재설정', href: '/passwordChangePage' },
                     { label: '로그아웃', onClick: handleLogout },
                   ]}
                   onItemClick={(label) => {

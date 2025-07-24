@@ -24,7 +24,7 @@ const itemVariants = {
 
 const CTASection = () => {
   const controls = useAnimation();
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.5 });
 
   useEffect(() => {
     if (inView) {

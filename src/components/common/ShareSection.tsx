@@ -40,8 +40,8 @@ const ShareSection = () => {
       key='image-7'
       src='/images/type=image7.png'
       alt='공지 메가폰 아이콘'
-      width={76}
-      height={76}
+      width={360}
+      height={360}
       className='bg-secondary-purple-50 border border-none rounded-[10px] aspect-square shrink-0
       md:w-[147px]
       lg:w-[360px]'
@@ -50,8 +50,8 @@ const ShareSection = () => {
       key='image-8'
       src='/images/type=image8.png'
       alt='회사 로고'
-      width={76}
-      height={76}
+      width={360}
+      height={360}
       className='bg-primary-green-150 border border-none rounded-[10px] aspect-square shrink-0
       md:w-[147px]
       lg:w-[360px]'
@@ -60,8 +60,8 @@ const ShareSection = () => {
       key='image-9'
       src='/images/type=image9.png'
       alt='앱 업데이트 화면'
-      width={76}
-      height={76}
+      width={360}
+      height={360}
       className='bg-grayscale-250 border border-none rounded-[10px] aspect-square shrink-0
       md:w-[147px]
       lg:w-[360px]'
@@ -70,8 +70,8 @@ const ShareSection = () => {
       key='image-10'
       src='/images/type=image10.png'
       alt='대화 말풍선'
-      width={76}
-      height={76}
+      width={360}
+      height={360}
       className='bg-grayscale-250 border border-none rounded-[10px] aspect-square shrink-0
       md:w-[147px]
       lg:w-[360px]'
@@ -80,8 +80,8 @@ const ShareSection = () => {
       key='image-13'
       src='/images/type=image13.png'
       alt='웃는 이모지'
-      width={76}
-      height={76}
+      width={360}
+      height={360}
       className='bg-pink-100 border border-none rounded-[10px] aspect-square shrink-0
       md:w-[147px]
       lg:w-[360px]'
@@ -90,8 +90,8 @@ const ShareSection = () => {
       key='image-14'
       src='/images/type=image14.png'
       alt='박수 환영'
-      width={76}
-      height={76}
+      width={360}
+      height={360}
       className='bg-yellow-100 border border-none rounded-[10px] aspect-square shrink-0
       md:w-[147px]
       lg:w-[360px]'
@@ -163,6 +163,11 @@ const ShareSection = () => {
               ))}
               {items.map((item, index) => (
                 <span key={`second-${index}`} className='shrink-0'>
+                  {item}
+                </span>
+              ))}
+              {items.map((item, index) => (
+                <span key={`third-${index}`} className='shrink-0'>
                   {item}
                 </span>
               ))}
