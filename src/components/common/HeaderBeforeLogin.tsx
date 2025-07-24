@@ -28,8 +28,6 @@ const HeaderBeforeLogin = () => {
                 menuItems={[
                   { label: '위키목록', href: '/wikilist' },
                   { label: '자유게시판', href: '/boards' },
-                  { label: '알림', href: '/login' },
-                  { label: '마이페이지', href: '/login' },
                   { label: '로그인', href: '/login' },
                 ]}
               />
