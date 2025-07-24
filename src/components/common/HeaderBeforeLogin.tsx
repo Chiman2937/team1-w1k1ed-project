@@ -5,7 +5,10 @@ import Logo from './Logo';
 
 const HeaderBeforeLogin = () => {
   return (
-    <div className='bg-grayscale-50 shadow-lg'>
+    <div
+      className='bg-grayscale-50 shadow-lg
+        sticky top-0 left-0 w-full z-50'
+    >
       <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
         <div className=' mx-auto py-[25px] flex items-center justify-between'>
           <div className='flex items-center gap-[40px]'>
@@ -25,8 +28,6 @@ const HeaderBeforeLogin = () => {
                 menuItems={[
                   { label: '위키목록', href: '/wikilist' },
                   { label: '자유게시판', href: '/boards' },
-                  { label: '알림', href: '/login' },
-                  { label: '마이페이지', href: '/login' },
                   { label: '로그인', href: '/login' },
                 ]}
               />

@@ -9,7 +9,11 @@ const ViewSection = () => {
         md:w-[646px] 
         lg:w-[924px]'
       >
-        <section className=' py-[100px]'>
+        <section
+          className=' py-[100px]
+        md:py-[160px]
+        lg:py-[200px]'
+        >
           <div className='text-left'>
             <h3
               className='text-primary-green-200 font-nexon-gothic-bold text-[10px]

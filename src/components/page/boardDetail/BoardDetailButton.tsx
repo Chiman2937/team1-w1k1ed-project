@@ -1,29 +1,50 @@
-'use client'; // ⭐️ 클라이언트 컴포넌트임을 명시
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CiHeart } from 'react-icons/ci';
-import Edit from '@/assets/images/type=edit.svg';
-import Delete from '@/assets/images/type=delete.svg';
+import { FiEdit2 as Edit } from 'react-icons/fi';
+import { FaRegTrashAlt as Delete } from 'react-icons/fa';
 import Button from '@/components/common/Button';
 
 const BASE_URL = 'https://wikied-api.vercel.app/9-3/';
 
-interface EditButtonsProps {
+interface ButtonsProps {
   articleId: string;
 }
 
-interface LikeButtonProps {
-  articleId: string;
+interface LikeButtonProps extends ButtonsProps {
   initialLikeCount: string;
 }
 
 // edit, delete button
-export const BoardEdit = ({ articleId }: EditButtonsProps) => {
+export const BoardEdit = ({ articleId }: ButtonsProps) => {
   const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+  const handleEdit = () => {
+    if (isEditing && !articleId) return;
+    setIsEditing(true);
+    router.push(`/boards/${articleId}/edit`);
+  };
+
+  return (
+    <>
+      <div>
+        <Button className={'hidden md:inline w-[120px]'} onClick={handleEdit} disabled={isEditing}>
+          수정하기
+        </Button>
+        <button className='inline md:hidden' onClick={handleEdit} disabled={isEditing}>
+          <Edit />
+        </button>
+      </div>
+    </>
+  );
+};
+
+export const BoardDelete = ({ articleId }: ButtonsProps) => {
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
   const handleDelete = async () => {
     if (isDeleting) return;
     setIsDeleting(true);
@@ -52,33 +73,15 @@ export const BoardEdit = ({ articleId }: EditButtonsProps) => {
     }
   };
 
-  const handleEdit = () => {
-    if (isEditing) return;
-    setIsEditing(true);
-    //edit 상태 구현 필요
-  };
-
   return (
-    <>
-      <div className='flex gap-[14px]'>
-        <Button
-          className={'hidden md:inline w-[120px]'}
-          onClick={handleDelete}
-          disabled={isDeleting}
-        >
-          삭제하기
-        </Button>
-        <button className='inline md:hidden' onClick={handleDelete} disabled={isDeleting}>
-          <Delete />
-        </button>
-        <Button className={'hidden md:inline w-[120px]'} onClick={handleEdit} disabled={isEditing}>
-          수정하기
-        </Button>
-        <button className='inline md:hidden' onClick={handleEdit} disabled={isEditing}>
-          <Edit />
-        </button>
-      </div>
-    </>
+    <div>
+      <Button className={'hidden md:inline w-[120px]'} onClick={handleDelete} disabled={isDeleting}>
+        삭제하기
+      </Button>
+      <button className='inline md:hidden' onClick={handleDelete} disabled={isDeleting}>
+        <Delete />
+      </button>
+    </div>
   );
 };
 

@@ -22,13 +22,14 @@ const LinkModal = ({ onModalClose, ogData, setOgData }: Props) => {
   const handleInputSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    const res = await fetch(`http://localhost:3000/api/fetch-og?url=${inputValue}`);
+    const res = await fetch(`/api/fetch-og?url=${inputValue}`);
     const data: OgData = await res.json();
     setIsLoading(false);
     setIsError(false);
     if (!res.ok) {
       setOgData(null);
       setIsError(true);
+      setIsLoading(false);
       return;
     }
     setOgData({
@@ -51,8 +52,8 @@ const LinkModal = ({ onModalClose, ogData, setOgData }: Props) => {
   if (!isMount) return;
 
   return (
-    <div className='absolute  z-1'>
-      <div className='border-1 bg-grayscale-50 border-grayscale-300 p-5 flex flex-col items-center w-fit shadow-sm'>
+    <div className='z-1'>
+      <div className='bg-grayscale-50 p-5 flex flex-col items-center w-fit'>
         <form className='flex flex-col items-center gap-4 pb-4' onSubmit={handleInputSubmit}>
           <label htmlFor='linkSearch' className='text-xl-bold text-grayscale-600'>
             링크
