@@ -124,6 +124,14 @@
     .lg\:animate-scroll-left {
       animation-duration: 15s; /* lg 사이즈 이상에서는 15초 */
     }
+
+    /* 스크롤바 숨기기 유틸리티 */
+    .scrollbar-hide {
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      scrollbar-width: none;
+    }
   }
 }
 
