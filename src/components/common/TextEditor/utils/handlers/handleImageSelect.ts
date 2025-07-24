@@ -16,12 +16,13 @@ export const handleImageSelect = (
   }));
 
   editor
-    .chain()
+    ?.chain()
     .focus()
-    .setImage({
+    .insertCustomImage({
       src: imageBlobURL,
       alt: file.name,
-      title: file.name,
     })
     .run();
+
+  e.target.value = '';
 };

@@ -22,4 +22,6 @@ export const handleVideoSelect = (
       src: videoBlobURL,
     })
     .run();
+
+  e.target.value = '';
 };
