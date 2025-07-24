@@ -8,8 +8,7 @@ import ContentViewer from '@/components/common/TextEditor/ContentViewer';
 import ContentEditor from '@/components/common/TextEditor/ContentEditor';
 
 const TestEditor = () => {
-  const { editor, tempFiles, setTempFiles } = useTextEditor();
-
+  const { editor, tempFiles, setTempFiles, lengthWithSpace, lengthWithoutSpace } = useTextEditor();
   const [content, setContent] = useState('');
 
   const handleRenderClick = async () => {
@@ -21,6 +20,18 @@ const TestEditor = () => {
   if (!editor) return;
   return (
     <div className='p-3 max-w-[960px] mx-auto flex flex-col gap-[20px]'>
+      <div>
+        <p>
+          <span>공백 포함: </span>
+          {lengthWithSpace}
+        </p>
+      </div>
+      <div>
+        <p>
+          <span>공백 제외: </span>
+          {lengthWithoutSpace}
+        </p>
+      </div>
       <ToolBar editor={editor} setTempFiles={setTempFiles} />
       <ContentEditor editor={editor} />
       <button onClick={handleRenderClick}>파싱 시작</button>
