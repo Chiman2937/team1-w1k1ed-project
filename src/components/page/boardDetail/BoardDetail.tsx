@@ -7,7 +7,7 @@ import {
   postArticleLike,
   deleteArticleLike,
   deleteArticle,
-} from '@/lib/articleApi';
+} from '@/api/clients/articleApi';
 import BoardEdit from './BoardEdit';
 import { BoardDeleteButton, BoardEditButton, BoardLikeButton } from './BoardDetailButton';
 import { useState, useEffect } from 'react';
