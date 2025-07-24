@@ -1,0 +1,71 @@
+.text-viewer .og-link-outer-wrapper {
+  width: 100%;
+}
+
+.text-viewer .og-link-inner-wrapper {
+  max-height: 120px;
+  aspect-ratio: 450 / 120;
+}
+
+.text-viewer a.og-container {
+  /* @apply border-1 border-grayscale-300 flex flex-row items-center
+  shadow-sm bg-white group-hover:bg-grayscale-100 */
+  border: 1px solid var(--color-grayscale-300);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  background-color: var(--color-grayscale-50);
+  height: 100%;
+  /* group hover 스타일 추가 */
+}
+
+.text-viewer a.og-container:hover {
+  background-color: var(--color-grayscale-100);
+}
+
+.text-viewer div.og-thumbnail {
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+}
+
+.text-viewer div.og-content {
+  padding: 0 25px;
+}
+
+.text-viewer span.og-title {
+  display: block;
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: 600;
+  color: var(--color-grayscale-600);
+  height: 36px;
+  padding-bottom: 4px;
+}
+
+.text-viewer span.og-description {
+  display: block;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 500;
+  color: var(--color-grayscale-400);
+  height: 30px;
+  padding-bottom: 8px;
+}
+
+.text-viewer span.og-url {
+  display: block;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 500;
+  color: #00cc36;
+  height: 22px;
+}
+
+/* .text-viewer a.og-container:hover .og-content {
+  background-color: var(--color-grayscale-100);
+} */
