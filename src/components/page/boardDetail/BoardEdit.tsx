@@ -2,14 +2,19 @@
 
 import Button from '@/components/common/Button';
 import BoardContent from '@/components/page/boardDetail/BoardContent';
-// import BoardInfoForm from '@/components/page/boardDetail/BoardInfo';
+import BoardInfoForm from '@/components/page/boardDetail/BoardInfo';
 import { useParams } from 'next/navigation';
-// import { useState } from 'react';
+import { useState } from 'react';
 
-const BoardEdit = () => {
-  // const [title, setTitle] = useState('');
-  // const [content, setContent] = useState('');
-  // const [contentLength, setContentLength] = useState({ withSpaces: 0, withoutSpaces: 0 });
+const BoardEdit = ({
+  initalTitle,
+  initalContent,
+}: {
+  initalTitle: string;
+  initalContent: string;
+}) => {
+  const [title, setTitle] = useState(initalTitle);
+  // const [content, setContent] = useState(initalContent);
   // const [isEditing, setIsEditing] = useState(false);
 
   const param = useParams();
@@ -23,19 +28,19 @@ const BoardEdit = () => {
               <h2 className='text-lg-semibold md:text-xl-semibold lg:text-2xl-semibold'>
                 게시물 수정하기
               </h2>
-              <Button disabled={true} variant='primary'>
-                아무튼 버튼 {/* isEditing ? '등록 중...' : '등록하기' */}
-              </Button>
+              <div>
+                <Button>취소</Button>
+                <Button disabled={true} variant='primary'>
+                  아무튼 버튼 {/* isEditing ? '등록 중...' : '등록하기' */}
+                </Button>
+              </div>
             </div>
 
             <span className='text-xs-regular text-gray-400 md:text-lg-regular'>
               {/* {user?.name} {dateToString(new Date())} */}
             </span>
-            {/* <BoardInfoForm
-              title={'fetch 해서 가져오기'}
-              setTitle={setTitle}
-              contentLength={contentLength}
-            /> */}
+            <BoardInfoForm title={title} setTitle={setTitle} />
+            {initalContent}
             {/* TextEditor */}
             {/* TextEditor */}
           </main>
