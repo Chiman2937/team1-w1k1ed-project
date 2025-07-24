@@ -1,4 +1,5 @@
 import { FaTimes } from 'react-icons/fa';
+import { AiFillNotification } from 'react-icons/ai';
 
 type NotificationItemProps = {
   id: number; // 알림을 식별하기 위한 id 추가
@@ -21,9 +22,9 @@ const NotificationItem = ({ id, content, createdAt, onDelete }: NotificationItem
   };
   return (
     <>
-      <div className='w-[328px] px-[12px] py-[16px] border border-primary-green-100 rounded-[5px] bg-white '>
+      <div className='w-[328px] px-[12px] py-[16px] rounded-[5px] bg-white '>
         <header className='flex justify-between'>
-          <div className='w-2 h-2 rounded-full bg-blue-500' />
+          <AiFillNotification size={20} />
           <FaTimes
             className='cursor-pointer' // 클릭 가능한 요소임을 표시
             onClick={() => onDelete(id)} // X 아이콘 클릭 시 onDelete 호출
