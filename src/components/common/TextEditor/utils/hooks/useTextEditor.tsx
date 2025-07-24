@@ -6,9 +6,15 @@ import Link from '@tiptap/extension-link';
 import { LocalVideoExtension } from '@/components/common/TextEditor/utils/extensions/LocalVideoExtension';
 import { YoutubeExtension } from '@/components/common/TextEditor/utils/extensions/YoutubeExtension';
 import { OGLinkExtension } from '../extensions/OGLinkExtension';
-import { CustomImageExtension } from '../extensions/CustomImageExtension';
+import { LocalImageExtension } from '../extensions/LocalImageExtension';
+import { useState } from 'react';
 
-export const useTextEditor = () => {
+interface Props {
+  initialContent?: string;
+}
+
+export const useTextEditor = ({ initialContent = '' }: Props = {}) => {
+  const [tempFiles, setTempFiles] = useState<Record<string, File>>({});
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -20,7 +26,7 @@ export const useTextEditor = () => {
       YoutubeExtension,
       OGLinkExtension,
       YoutubeExtension,
-      CustomImageExtension,
+      LocalImageExtension,
       Link.configure({
         openOnClick: false,
         autolink: true,
@@ -90,9 +96,9 @@ export const useTextEditor = () => {
         class: 'text-editor',
       },
     },
-    content: '<p>Hello World! 🌎️</p>',
+    content: initialContent,
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
   });
-  return { editor };
+  return { editor, tempFiles, setTempFiles };
 };
