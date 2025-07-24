@@ -27,6 +27,10 @@ import { ComboBox, ComboContainer, ComboButton, ComboList, ComboListItem } from 
 import { IoMdArrowDropdown as IconDropdown } from 'react-icons/io';
 import LinkModal from './modals/LinkModal';
 import { OgLinkData } from './utils/components/LinkPreview';
+import { Modal } from 'react-simplified-package';
+import { CiCamera as IconCamera } from 'react-icons/ci';
+import { MdOutlineVideoCameraFront as IconVideo } from 'react-icons/md';
+import Button from '../Button';
 
 interface Props {
   editor: Editor;
@@ -38,6 +42,8 @@ const ToolBar = ({ editor }: Props) => {
   const [ogData, setOgData] = useState<OgLinkData | null>(null);
 
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [isImgaeModalOpen, setIsImageModalOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -225,27 +231,66 @@ const ToolBar = ({ editor }: Props) => {
         onClick={handleLinkButtonClick}
         className={clsx(buttonDefaultStyle)}
       />
-      {isLinkModalOpen && (
+      <Modal isOpen={isLinkModalOpen} onClose={() => setIsLinkModalOpen(false)}>
         <LinkModal ogData={ogData} setOgData={setOgData} onModalClose={handleLinkSubmit} />
-      )}
+      </Modal>
       {/* 이미지 버튼 */}
-      <EditorButton variant='image' onClick={addImage} className={clsx(buttonDefaultStyle)}>
-        <input
-          ref={imageInputRef}
-          type='file'
-          onChange={(e) => handleImageSelect(e, editor, setImages)}
-          style={{ display: 'none' }}
-        />
-      </EditorButton>
+
+      <EditorButton
+        variant='image'
+        onClick={() => setIsImageModalOpen(true)}
+        className={clsx(buttonDefaultStyle)}
+      />
+      <Modal isOpen={isImgaeModalOpen} onClose={() => setIsImageModalOpen(false)}>
+        <div className='flex justify-center flex-col'>
+          <h3 className='mt-[10px] center text-lg-semibold md:text-2lg-semibold text-grayscale-500 m-auto'>
+            이미지
+          </h3>
+          <div
+            className='my-5 min-w-[240px] w-[354px] h-[160px] bg-grayscale-100 rounded-lg flex items-center justify-center cursor-pointer'
+            onClick={addImage}
+          >
+            <IconCamera className='text-grayscale-400 w-[36px] h-[36px]' />
+            <input
+              ref={imageInputRef}
+              type='file'
+              onChange={(e) => handleImageSelect(e, editor, setImages)}
+              style={{ display: 'none' }}
+            />
+          </div>
+          <div className='flex justify-end'>
+            <Button>삽입하기</Button>
+          </div>
+        </div>
+      </Modal>
       {/* 로컬 비디오 버튼 */}
-      <EditorButton variant='video' onClick={addVideo} className={clsx(buttonDefaultStyle)}>
-        <input
-          ref={videoInputRef}
-          type='file'
-          onChange={(e) => handleVideoSelect(e, editor, setVideos)}
-          style={{ display: 'none' }}
-        />
-      </EditorButton>
+      <EditorButton
+        variant='video'
+        onClick={() => setIsVideoModalOpen(true)}
+        className={clsx(buttonDefaultStyle)}
+      ></EditorButton>
+      <Modal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)}>
+        <div className='flex justify-center flex-col'>
+          <h3 className='mt-[10px] center text-lg-semibold md:text-2lg-semibold text-grayscale-500 m-auto'>
+            이미지
+          </h3>
+          <div
+            className='my-5 min-w-[240px] w-[354px] h-[160px] bg-grayscale-100 rounded-lg flex items-center justify-center cursor-pointer'
+            onClick={addVideo}
+          >
+            <IconVideo className='text-grayscale-400 w-[36px] h-[36px]' />
+            <input
+              ref={videoInputRef}
+              type='file'
+              onChange={(e) => handleVideoSelect(e, editor, setVideos)}
+              style={{ display: 'none' }}
+            />
+          </div>
+          <div className='flex justify-end'>
+            <Button>삽입하기</Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
