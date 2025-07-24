@@ -96,6 +96,14 @@
   .animation-slide-down-out {
     animation: slideDownOut 0.2s ease-in;
   }
+
+  /* 스크롤바 숨기기 유틸리티 */
+  .scrollbar-hide {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+  }
 }
 
 body {
