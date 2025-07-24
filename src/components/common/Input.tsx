@@ -43,7 +43,7 @@ export default function Input({
   const errorClasses = clsx('bg-secondary-red-100', 'border-secondary-red-100');
 
   return (
-    <div className='flex flex-col gap-[10px]'>
+    <div className={twMerge('flex flex-col gap-[10px]', className)}>
       {label && (
         <label htmlFor={id || name} className='text-md-regular text-grayscale-500'>
           {label}
