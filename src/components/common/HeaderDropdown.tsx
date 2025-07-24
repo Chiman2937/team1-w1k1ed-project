@@ -1,12 +1,11 @@
 'use client';
 
-import { usePathname } from 'next/navigation'; // 추가
+import { usePathname } from 'next/navigation';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import Link from 'next/link';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { VscAccount } from 'react-icons/vsc';
 import clsx from 'clsx';
-import { useAuthContext } from '@/context/AuthContext';
 
 const ICONS = {
   hamburger: GiHamburgerMenu,
@@ -27,13 +26,7 @@ type Props = {
 
 const HeaderDropdown = ({ iconName = 'hamburger', menuItems, onItemClick }: Props) => {
   const Icon = ICONS[iconName];
-  const { logout } = useAuthContext();
-  const pathname = usePathname(); // 현재 경로 가져오기
-
-  const _handleLogout = () => {
-    console.log('로그아웃');
-    logout();
-  };
+  const pathname = usePathname();
 
   return (
     <Menu as='div' className='relative font-pretendard text-[14px] font-normal'>
