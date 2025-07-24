@@ -1,4 +1,4 @@
-import instance from '@/lib/axios';
+import instance from '@/api/clients/axios';
 
 interface AuthSuccessResponse {
   accessToken: string;

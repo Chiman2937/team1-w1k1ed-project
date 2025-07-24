@@ -60,11 +60,7 @@ export default function Input({
         id={id || name}
         type={type}
         placeholder={placeholder}
-        className={twMerge(
-          baseStyle,
-          /*SIZE_CLASSES[variant],*/ hasError && errorClasses,
-          className,
-        )}
+        className={twMerge(baseStyle, hasError && errorClasses, className)}
         {...register}
         {...rest}
       />
