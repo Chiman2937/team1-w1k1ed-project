@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Button from '@/components/common/Button';
@@ -16,51 +15,31 @@ type Item = {
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  list: Item[]; // 알림 목록을 prop으로 받음
+  onAddItem: () => void; // 알림 추가 함수를 prop으로 받음
+  onDeleteItem: (id: number) => void; // 알림 삭제 함수를 prop으로 받음
 };
 
-// 추후에 api데이터로 수정 res데이터와 동일한 구성
-const NotificationPanel = ({ isOpen, onClose }: Props) => {
-  const [list, setList] = useState<Item[]>([
-    {
-      id: 1,
-      content: '첫 번째 알림입니다.',
-      createdAt: '2025-07-19T12:39:23.618Z',
-    },
-    {
-      id: 2,
-      content: '두 번째 알림이 도착했어요!',
-      createdAt: '2025-07-19T12:45:00.000Z',
-    },
-  ]);
-
-  // 알림 추가 함수
-  const handleAddItem = () => {
-    const newItem: Item = {
-      id: list.length > 0 ? Math.max(...list.map((item) => item.id)) + 1 : 1,
-      content: `새 알림 ${new Date().toLocaleTimeString()}`,
-      createdAt: new Date().toISOString(),
-    };
-    setList([newItem, ...list]);
-  };
-
-  // 알림 삭제 함수
-  const handleDeleteItem = (id: number) => {
-    setList((prevList) => prevList.filter((item) => item.id !== id));
-  };
-
+const NotificationPanel = ({ isOpen, onClose, list, onAddItem, onDeleteItem }: Props) => {
   return (
     <AnimatePresence>
       {isOpen && (
         <Dialog as='div' className='relative z-50' open={isOpen} onClose={onClose}>
-          {/* 오버레이 */}
-          <div className='fixed inset-0 bg-black/30' aria-hidden='true' onClick={onClose} />
-
-          {/* 알림 패널 */}
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }} // 초기 상태: 투명
+            animate={{ opacity: 1 }} // 열리는 상태: 불투명
+            exit={{ opacity: 0 }} // 닫히는 상태: 투명
+            transition={{ duration: 0.2 }} // 0.2초 동안 전환
+            className='fixed inset-0 bg-black/30'
+            aria-hidden='true'
+            onClick={onClose}
+          />
+
+          <motion.div
+            initial={{ x: '100%', opacity: 0 }} // 초기 상태: 오른쪽 밖(100%)에 위치하며 투명
+            animate={{ x: 0, opacity: 1 }} // 열리는 상태: 제자리에(0) 오며 불투명
+            exit={{ x: '100%', opacity: 1 }} // 닫히는 상태: 오른쪽 밖으로 이동하며 불투명
+            transition={{ duration: 0.2 }} // 0.3초 동안 전환
             className='fixed top-0 right-0 w-[380px] h-full bg-gray-100 shadow-xl'
           >
             <DialogPanel className='h-full flex flex-col p-4'>
@@ -70,7 +49,7 @@ const NotificationPanel = ({ isOpen, onClose }: Props) => {
                 </DialogTitle>
                 {/* 알림 추가 버튼 */}
                 <div className='mb-4'>
-                  <Button onClick={handleAddItem}>새 알림 추가</Button>
+                  <Button onClick={onAddItem}>새 알림 추가</Button>
                 </div>
                 <IconClose onClick={onClose} className='cursor-pointer text-grayscale-500' />
               </div>
@@ -84,7 +63,7 @@ const NotificationPanel = ({ isOpen, onClose }: Props) => {
                       id={item.id}
                       content={item.content}
                       createdAt={item.createdAt}
-                      onDelete={handleDeleteItem}
+                      onDelete={onDeleteItem}
                     />
                   ))
                 ) : (
