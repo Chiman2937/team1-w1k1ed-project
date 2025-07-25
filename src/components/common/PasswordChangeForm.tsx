@@ -15,8 +15,8 @@ import { authAPI } from '@/api/authAPI';
 const resetPasswordSchema = z
   .object({
     currentPassword: z.string().min(1, '현재 비밀번호를 입력해주세요.'),
-    newPassword: z.string().min(8, '비밀번호는 8자 이상이어야 함'),
-    confirmNewPassword: z.string(),
+    newPassword: z.string().min(8, '비밀번호는 8자 이상이어야 합니다.'),
+    confirmNewPassword: z.string().min(8, '비밀번호는 8자 이상이어야 합니다.'),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: '새 비밀번호가 일치하지 않음',
@@ -33,7 +33,7 @@ const PasswordChangeForm = () => {
   const {
     register, // input 연결용
     handleSubmit, // form submit handler
-    formState: { errors }, // 폼 에러 상태
+    formState: { errors, touchedFields }, // 폼 에러 상태
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     mode: 'onBlur', // blur 시점에 유효성 검사
@@ -51,7 +51,7 @@ const PasswordChangeForm = () => {
       const responseData = await authAPI.resetPassword(payload);
 
       console.log('비밀번호 변경 성공:', responseData);
-      alert('비밀번호가 성공적으로 변경됨');
+      alert('비밀번호가 성공적으로 변경됨'); // 토스트
     } catch (error) {
       const axiosError = error as AxiosError;
 
@@ -75,6 +75,7 @@ const PasswordChangeForm = () => {
         name='currentPassword'
         register={register('currentPassword')}
         errors={errors}
+        touchedFields={touchedFields}
       />
 
       <Input
@@ -84,6 +85,7 @@ const PasswordChangeForm = () => {
         name='newPassword'
         register={register('newPassword')}
         errors={errors}
+        touchedFields={touchedFields}
       />
 
       <Input
@@ -93,6 +95,7 @@ const PasswordChangeForm = () => {
         name='confirmNewPassword'
         register={register('confirmNewPassword')}
         errors={errors}
+        touchedFields={touchedFields}
       />
 
       <div className='flex justify-end mt-[16px]'>
