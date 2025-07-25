@@ -4,8 +4,9 @@ import BoardComment from './BoardComment';
 import BoardTextArea from './BoardTextArea';
 import { useRouter } from 'next/navigation';
 import { getComment, postComment } from '@/api/articleApi';
-import { useInView } from 'react-intersection-observer';
-import { useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import LoadingSpinner from '@/components/common/LoadingSpinner/LoadingSpinner';
+import { FaCommentDots as CommentImg } from 'react-icons/fa';
 
 export interface CommentWriterResponse {
   image: string;
@@ -21,6 +22,8 @@ export interface CommentResponse {
   id: number;
 }
 
+const LIMIT = 10;
+
 const BoardComments = ({
   id,
   userId,
@@ -31,33 +34,64 @@ const BoardComments = ({
   isAuthenticated: boolean;
 }) => {
   const [comments, setComments] = useState<CommentResponse[]>([]);
+  const [isCommentLoading, setIsCommentLoading] = useState<boolean>(false);
   const [cursor, setCursor] = useState<string | undefined>();
   const [commentCount, setCommentCount] = useState<number>();
 
+  const useElementInView = (options: IntersectionObserverInit = {}) => {
+    const [isInView, setIsInView] = useState(false);
+    const targetRef = useRef(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver((entries) => {
+        const [entry] = entries;
+        setIsInView(entry.isIntersecting);
+      }, options);
+
+      if (targetRef.current) {
+        observer.observe(targetRef.current);
+      }
+
+      return () => {
+        if (targetRef.current) {
+          observer.unobserve(targetRef.current);
+        }
+      };
+    }, [options]);
+
+    return [targetRef, isInView] as const;
+  };
+
+  const [targetRef, isInView] = useElementInView({ threshold: 1 });
+
   const router = useRouter();
-  const { ref, inView } = useInView();
 
   const fetchComments = useCallback(async () => {
-    if (!cursor) return;
+    if (cursor === null) return;
+
     try {
-      const response = await getComment(id, cursor);
+      setIsCommentLoading(true);
+      const response = await getComment(id, LIMIT, cursor);
       setComments((prev) => [...prev, ...response.list]);
       setCursor(response.nextCursor);
     } catch (error) {
       console.log(error);
       router.push('/error');
+    } finally {
+      setIsCommentLoading(false);
     }
   }, [id, cursor, router]);
 
-  const getAllComment = async () => {
+  const getAllComment = useCallback(async () => {
     try {
-      const response = await getComment(id, '9999');
-      setCommentCount(response.count);
+      const response = await getComment(id, 999);
+      console.log(response);
+      setCommentCount(response.list.length);
     } catch (error) {
       console.log(error);
       router.push('/error');
     }
-  };
+  }, [id, router]);
 
   const handleCommentSubmit = async (formData: { content: string }) => {
     try {
@@ -95,14 +129,16 @@ const BoardComments = ({
   };
 
   useEffect(() => {
-    getAllComment();
-  });
+    if (id) {
+      getAllComment();
+    }
+  }, [id, getAllComment]);
 
   useEffect(() => {
-    if (inView && cursor !== null) {
+    if (isInView && cursor !== null && !isCommentLoading) {
       fetchComments();
     }
-  }, [fetchComments, cursor, inView]);
+  }, [fetchComments, cursor, isInView, isCommentLoading]);
 
   return (
     <div
@@ -116,7 +152,10 @@ const BoardComments = ({
         onSubmit={handleCommentSubmit}
       />
       {commentCount === 0 ? (
-        <>댓글이 없습니다</>
+        <div className='flex flex-col justify-center items-center my-10'>
+          <CommentImg size={170} className='text-primary-green-200 animation-bounce-comment' />
+          <span className='my-5 text-grayscale-400'>댓글이 없습니다</span>
+        </div>
       ) : (
         comments.map((comment: CommentResponse) => {
           return (
@@ -130,7 +169,12 @@ const BoardComments = ({
           );
         })
       )}
-      <div ref={ref} className=' h-28' />
+      {isCommentLoading && (
+        <div className='flex items-center justify-center h-40'>
+          <LoadingSpinner.lineCircle lineWeight={8} distanceFromCenter={30} />
+        </div>
+      )}
+      <div ref={targetRef} className='p-24' />
     </div>
   );
 };
