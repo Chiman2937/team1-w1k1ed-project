@@ -30,7 +30,7 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
 
   const handleDeleteComment = async () => {
     try {
-      await deleteComment(comment.id);
+      await deleteComment(String(comment.id));
       onDelete(comment.id);
       // 댓글이 삭제되었습니다 토스트
     } catch (error) {
