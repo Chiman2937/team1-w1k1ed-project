@@ -60,7 +60,7 @@ const WikiListCard = ({ code, image, name, nationality, city, job }: Profile) =>
         <div className='flex flex-col gap-3.5'>
           <h1 className='text-grayscale-500 text-xl-regular md:text-2xl-semibold'>{name}</h1>
           <p className='text-xs-regular md:flex-row md:text-md-regular'>
-            {getLocationText(nationality, city)}
+            {getLocationText(nationality, city) || '\u00A0'}
           </p>
         </div>
         <div className='flex flex-col text-xs-regular md:flex-row md:justify-between md:text-md-regular'>
