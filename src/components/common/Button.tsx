@@ -45,7 +45,7 @@ const Button = ({ children, variant = 'primary', className, href, ...props }: Pr
     landingGray: 'bg-grayscale-500 text-white',
   };
 
-  const disabledStyles = clsx('bg-grayscale-300 hover:bg-grayscale-300 cursor-not-allowed');
+  const disabledStyles = clsx('bg-grayscale-300 hover:bg-grayscale-300 ');
 
   const composedClassName = twMerge(
     clsx(baseStyle, variantStyles[variant], isDisabled && disabledStyles),

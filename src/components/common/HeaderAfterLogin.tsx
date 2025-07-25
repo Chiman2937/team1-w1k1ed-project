@@ -15,7 +15,7 @@ const HeaderAfterLogin = () => {
 
   return (
     <>
-      <div className='bg-grayscale-50 shadow-lg sticky top-0 left-0 w-full z-50'>
+      <div className='bg-grayscale-50 shadow-md sticky top-0 left-0 w-full z-50'>
         <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
           <div className='mx-auto py-[25px] flex items-center justify-between'>
             <div className='flex items-center gap-[40px]'>

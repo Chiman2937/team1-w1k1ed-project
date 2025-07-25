@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
-import LinkPreview, { OgData, OgLinkData } from '../utils/components/LinkPreview';
+import LinkPreview, { OgData, OgLinkData } from './components/LinkPreview';
 import { truncateText } from '@/utils/truncateText';
+import LoadingSpinner from '@/components/common/LoadingSpinner/LoadingSpinner';
 
 interface Props {
   onModalClose: () => void;
@@ -53,7 +53,7 @@ const LinkModal = ({ onModalClose, ogData, setOgData }: Props) => {
 
   return (
     <div className='z-1'>
-      <div className='bg-grayscale-50 p-5 flex flex-col items-center w-fit'>
+      <div className='bg-grayscale-50 flex flex-col items-center w-fit'>
         <form className='flex flex-col items-center gap-4 pb-4' onSubmit={handleInputSubmit}>
           <label htmlFor='linkSearch' className='text-xl-bold text-grayscale-600'>
             링크
