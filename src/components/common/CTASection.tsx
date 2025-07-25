@@ -2,13 +2,14 @@ import Button from './Button';
 import { motion, useAnimation, easeOut } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 // 컨테이너와 아이템 variants 분리
 const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.3,
+      staggerChildren: 0.5,
     },
   },
 };
@@ -18,7 +19,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: easeOut },
+    transition: { duration: 1, ease: easeOut },
   },
 };
 
@@ -58,22 +59,24 @@ const CTASection = () => {
           <motion.h1
             variants={itemVariants}
             className='font-nexon-gothic-bold
-          text-[30px]
-          md:text-[60px]'
+            text-[30px]
+            md:text-[60px]'
           >
             나만의 위키 만들어 보기
           </motion.h1>
           {/* Button에 itemVariants 적용 */}
           <motion.div variants={itemVariants}>
-            <Button
-              variant='landingWhite'
-              className='mx-[40px] my-[40px] px-[30px] py-[15px] rounded-[15px]
-              transition cursor-pointer
-              text-[20px] font-pretendard font-semibold
-              md:text-[24px]'
-            >
-              지금 시작하기
-            </Button>
+            <Link href={'/mypage'}>
+              <Button
+                variant='landingWhite'
+                className='mx-[40px] my-[40px] px-[30px] py-[15px] rounded-[15px]
+                transition cursor-pointer
+                text-[20px] font-pretendard font-semibold
+                md:text-[24px]'
+              >
+                지금 시작하기
+              </Button>
+            </Link>
           </motion.div>
         </motion.div>
       </section>

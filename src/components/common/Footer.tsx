@@ -9,9 +9,7 @@ const Footer = () => {
       >
         <div
           className=' m-auto
-          w-[335px]
-          md:w-[646px] 
-          lg:w-[924px]'
+          '
         >
           <p
             className='

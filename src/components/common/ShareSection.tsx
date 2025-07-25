@@ -9,7 +9,7 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.3,
+      staggerChildren: 0.5,
     },
   },
 };
@@ -19,15 +19,15 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: easeOut },
+    transition: { duration: 1, ease: easeOut },
   },
 };
 
 const ShareSection = () => {
   const controls = useAnimation();
   // triggerOnce: true로 설정하여 한 번만 애니메이션이 실행
-  // threshold: 0.3는 요소의 30%가 보일 때 애니메이션을 트리거
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  // threshold: 0.2는 요소의 20%가 보일 때 애니메이션을 트리거
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   useEffect(() => {
     if (inView) {
@@ -37,7 +37,7 @@ const ShareSection = () => {
 
   const baseImageClass = `
   border border-none rounded-[10px] aspect-square shrink-0
-  md:w-[147px] lg:w-[360px]
+  w-[76px] md:w-[147px] lg:w-[360px]
 `;
 
   // 스크롤될 아이템 목록을 배열로 관리
