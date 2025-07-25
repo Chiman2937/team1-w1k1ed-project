@@ -1,7 +1,11 @@
 import React, { InputHTMLAttributes } from 'react';
 import clsx from 'clsx'; // clsx 임포트
 import { twMerge } from 'tailwind-merge';
-import { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
+import { FieldErrors, FieldValues, UseFormRegisterReturn } from 'react-hook-form';
+
+type TouchedFieldsType<TFieldValues extends FieldValues> = {
+  [K in keyof TFieldValues]?: boolean;
+};
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -13,6 +17,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   register?: UseFormRegisterReturn;
   errors?: FieldErrors;
+  touchedFields?: TouchedFieldsType<FieldValues>;
 }
 
 export default function Input({
@@ -24,10 +29,11 @@ export default function Input({
   name,
   register,
   errors,
+  touchedFields,
   ...rest
 }: InputProps) {
   const errorMessage = errors?.[name]?.message as string | undefined;
-  const hasError = !!errorMessage;
+  const hasError = !!errorMessage && touchedFields?.[name];
 
   const baseStyle = clsx(
     'h-[45px] rounded-[10px] px-[20px] py-[14px]',
@@ -35,12 +41,13 @@ export default function Input({
     'text-grayscale-500',
     'text-md-regular',
     'placeholder:text-grayscale-400',
-    'border:border-transparent',
+    'border border-transparent',
     'focus:outline-none',
     'focus:border-primary-green-200',
+    'transition-all duration-700',
   );
 
-  const errorClasses = clsx('bg-secondary-red-100', 'border-secondary-red-100');
+  const errorClasses = clsx('bg-secondary-red-100', 'focus:border-secondary-red-200');
 
   return (
     <div className={twMerge('flex flex-col gap-[10px]', className)}>
@@ -54,11 +61,7 @@ export default function Input({
         id={id || name}
         type={type}
         placeholder={placeholder}
-        className={twMerge(
-          baseStyle,
-          /*SIZE_CLASSES[variant],*/ hasError && errorClasses,
-          className,
-        )}
+        className={twMerge(baseStyle, hasError && errorClasses, className)}
         {...register}
         {...rest}
       />

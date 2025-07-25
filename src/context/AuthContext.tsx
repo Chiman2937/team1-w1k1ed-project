@@ -30,13 +30,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Access Token (유효 기간: 30분)
       // 30분은 하루의 30 / (24 * 60) = 30 / 1440 = 1/48 입니다.
       CookiesJs.set('accessToken', newAccessToken, {
-        expires: 30 / (24 * 60),
+        expires: 5 / (24 * 60),
         secure: process.env.NODE_ENV === 'production',
       }); // 30분
 
       // Refresh Token (유효 기간: 7일)
       CookiesJs.set('refreshToken', newRefreshToken, {
-        expires: 7,
+        expires: 10 / (24 * 60),
         secure: process.env.NODE_ENV === 'production',
       }); // 7일
 

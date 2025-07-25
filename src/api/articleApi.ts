@@ -1,4 +1,4 @@
-import instance from '../lib/axios';
+import instance from './clients/axios';
 
 type ArticleFormData = {
   image?: string | null;
@@ -64,9 +64,8 @@ export const deleteArticleLike = async (articleId: string) => {
   }
 };
 
-export const getComment = async (articleId: string, cursor?: string | null) => {
+export const getComment = async (articleId: string, limit: string, cursor?: string | null) => {
   try {
-    const limit = '10';
     const response = await instance.get(`/articles/${articleId}/comments`, {
       params: {
         limit,
@@ -97,7 +96,7 @@ export const patchComment = async (commentId: string, formData: CommentFormData)
   }
 };
 
-export const deleteComment = async (commentId: number) => {
+export const deleteComment = async (commentId: string) => {
   try {
     const response = await instance.delete(`/comments/${commentId}`);
     return response.data;

@@ -3,21 +3,15 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaBell } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
 import Logo from './Logo';
 import Nav from './Nav';
 import HeaderDropdown from './HeaderDropdown';
 import NotificationPanel from './NotificationPanel';
+import { useAuthContext } from '@/context/AuthContext';
 
 const HeaderAfterLogin = () => {
-  const router = useRouter();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  const handleLogout = () => {
-    console.log('로그아웃');
-    localStorage.removeItem('accessToken'); // 사용 중이라면
-    router.push('/login');
-  };
+  const { logout } = useAuthContext();
 
   return (
     <>
@@ -49,9 +43,8 @@ const HeaderAfterLogin = () => {
                 <HeaderDropdown
                   iconName='account'
                   menuItems={[
-                    { label: '위키 생성하기', href: '/mypage' },
-                    { label: '설정', href: '/passwordChangePage' },
-                    { label: '로그아웃', onClick: handleLogout },
+                    { label: '마이페이지', href: '/mypage' },
+                    { label: '로그아웃', onClick: logout },
                   ]}
                 />
               </div>
@@ -63,9 +56,8 @@ const HeaderAfterLogin = () => {
                     { label: '위키목록', href: '/wikilist' },
                     { label: '자유게시판', href: '/boards' },
                     { label: '알림' },
-                    { label: '위키 생성하기', href: '/mypage' },
-                    { label: '설정', href: '/passwordChangePage' },
-                    { label: '로그아웃', onClick: handleLogout },
+                    { label: '마이페이지', href: '/mypage' },
+                    { label: '로그아웃', onClick: logout },
                   ]}
                   onItemClick={(label) => {
                     if (label === '알림') {
