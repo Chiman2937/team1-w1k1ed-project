@@ -38,7 +38,7 @@ const BoardComments = ({
   const { ref, inView } = useInView();
 
   const fetchComments = useCallback(async () => {
-    if (cursor === null) return;
+    if (!cursor) return;
     try {
       const response = await getComment(id, cursor);
       setComments((prev) => [...prev, ...response.list]);

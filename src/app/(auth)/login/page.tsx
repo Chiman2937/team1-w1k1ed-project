@@ -14,8 +14,8 @@ import { useAuthContext } from '@/context/AuthContext';
 import { UserData } from '@/types/user';
 
 const loginSchema = z.object({
-  email: z.email('유효한 이메일 주소를 입력해주세요.'),
-  password: z.string().min(8, '8자 이상 입력해주세요.'),
+  email: z.email('이메일 형식으로 작성해 주세요.'),
+  password: z.string().min(8, '8자 이상 작성해 주세요.'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -27,10 +27,14 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: 'onBlur',
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onChange',
   });
 
   useEffect(() => {
@@ -77,6 +81,7 @@ export default function LoginPage() {
               name='email'
               register={register('email')}
               errors={errors}
+              touchedFields={touchedFields}
             />
             <Input
               className='w-[335px] md:w-[400px]'
@@ -86,6 +91,7 @@ export default function LoginPage() {
               name='password'
               register={register('password')}
               errors={errors}
+              touchedFields={touchedFields}
             />
           </div>
           <Button type='submit' className='flex items-center justify-center w-[335px] md:w-[400px]'>
