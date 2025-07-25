@@ -72,7 +72,10 @@ const BoardComments = ({
     try {
       setIsCommentLoading(true);
       const response = await getComment(id, LIMIT, cursor);
-      setComments((prev) => [...prev, ...response.list]);
+      setComments((prev) => {
+        if (prev === response.list) return prev;
+        return [...prev, ...response.list];
+      });
       setCursor(response.nextCursor);
     } catch (error) {
       console.log(error);
