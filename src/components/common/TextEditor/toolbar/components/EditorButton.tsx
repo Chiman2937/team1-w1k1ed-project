@@ -1,15 +1,15 @@
-import { HiMiniBold as IconBold } from 'react-icons/hi2';
-import { FaItalic as IconItalic } from 'react-icons/fa6';
-import { FaUnderline as IconUnderline } from 'react-icons/fa6';
-import { FaStrikethrough as IconStrike } from 'react-icons/fa6';
-import { MdFormatListBulleted as IconBullet } from 'react-icons/md';
-import { HiNumberedList as IconNumber } from 'react-icons/hi2';
-import { FaAlignLeft as IconAlignLeft } from 'react-icons/fa6';
-import { FaAlignCenter as IconAlignCenter } from 'react-icons/fa6';
-import { FaAlignRight as IconAlignRight } from 'react-icons/fa6';
-import { FaAlignJustify as IconAlignJustify } from 'react-icons/fa6';
-import { MdOutlineImage as IconImage } from 'react-icons/md';
-import { MdOutlineVideoCameraFront as IconVideo } from 'react-icons/md';
+import { FaBold as IconBold } from 'react-icons/fa';
+import { FaItalic as IconItalic } from 'react-icons/fa';
+import { FaUnderline as IconUnderline } from 'react-icons/fa';
+import { FaStrikethrough as IconStrike } from 'react-icons/fa';
+import { FaListUl as IconBullet } from 'react-icons/fa';
+import { FaListOl as IconNumber } from 'react-icons/fa';
+import { FaAlignLeft as IconAlignLeft } from 'react-icons/fa';
+import { FaAlignCenter as IconAlignCenter } from 'react-icons/fa';
+import { FaAlignRight as IconAlignRight } from 'react-icons/fa';
+import { FaAlignJustify as IconAlignJustify } from 'react-icons/fa';
+import { FaImage as IconImage } from 'react-icons/fa6';
+import { FaVideo as IconVideo } from 'react-icons/fa6';
 import { FaLink as IconLink } from 'react-icons/fa';
 import { FaYoutube as IconYoutube } from 'react-icons/fa';
 

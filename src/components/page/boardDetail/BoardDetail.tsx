@@ -11,6 +11,8 @@ import {
 import BoardEdit from './BoardEdit';
 import { BoardDeleteButton, BoardEditButton, BoardLikeButton } from './BoardDetailButton';
 import { useState, useEffect } from 'react';
+import Animation from '@/components/common/Animation';
+import BoardContent from './BoardContent';
 
 const BoardDetail = ({
   id,
@@ -86,45 +88,63 @@ const BoardDetail = ({
     setIsEditing(true);
   };
 
-  if (!article) return null; // 로딩바로 변경
+  if (!article) return <></>; // 로딩바로 변경
 
   const {
     title,
     content,
+    createdAt,
     updatedAt,
     writer: { name },
   } = article;
+  const date = dateFormater(createdAt);
+  const updatedDate = dateFormater(updatedAt);
 
-  const date = dateFormater(updatedAt);
-
-  if (isEditing) return <BoardEdit initalTitle={title} initalContent={content} />;
+  if (isEditing)
+    return (
+      <Animation>
+        <div className='flex flex-col items-center justify-center'>
+          <BoardContent>
+            <BoardEdit
+              setIsEditing={() => setIsEditing(false)}
+              userName={name}
+              date={date}
+              initalTitle={title}
+              initalContent={content}
+            />
+          </BoardContent>
+        </div>
+      </Animation>
+    );
 
   return (
-    <div className='p-5'>
-      <header className='flex flex-col gap-[30px]'>
-        <section className='flex justify-between items-center'>
-          <h1 className='text-3xl-semibold'>{title}</h1>
-          <div className='flex gap-[14px]'>
-            {userId !== writerId /* 수정해야함 */ && (
-              <>
-                <BoardEditButton onEdit={handleEdit} />
-                <BoardDeleteButton onDelete={handleDelete} />
-              </>
-            )}
-          </div>
-        </section>
-        <section className='flex justify-between items-center  text-grayscale-400 text-md-regular'>
-          <div className='flex gap-[10px]'>
-            <p>{name}</p>
-            <p>{date}</p>
-          </div>
-          <BoardLikeButton initialLikeCount={likeCount} onClick={handleLike} />
-        </section>
-        <main className='flex flex-col gap-[20px]'>
-          <span className='text-lg-regular text-grayscale-400'>{content}</span>
-        </main>
-      </header>
-    </div>
+    <BoardContent>
+      <div className='p-5'>
+        <header className='flex flex-col gap-[30px]'>
+          <section className='flex justify-between items-center'>
+            <h1 className='text-lg-semibold md:text-2xl-semibold  text-grayscale-600'>{title}</h1>
+            <div className='flex gap-[14px]'>
+              {userId !== writerId /* 수정해야함 */ && (
+                <>
+                  <BoardEditButton onEdit={handleEdit} />
+                  <BoardDeleteButton onDelete={handleDelete} />
+                </>
+              )}
+            </div>
+          </section>
+          <section className='flex justify-between items-center  text-grayscale-400 text-md-regular'>
+            <div className='flex gap-[10px]'>
+              <p>{name}</p>
+              <p>{updatedDate}</p>
+            </div>
+            <BoardLikeButton initialLikeCount={likeCount} onClick={handleLike} isLiked={isLiked} />
+          </section>
+          <main className='flex flex-col gap-[20px]'>
+            <span className='text-lg-regular text-grayscale-400'>{content}</span>
+          </main>
+        </header>
+      </div>
+    </BoardContent>
   );
 };
 

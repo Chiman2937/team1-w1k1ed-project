@@ -1,19 +1,19 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 
-export interface CustomImageOptions {
+export interface LocalImageOptions {
   HTMLAttributes: Record<string, HTMLImageElement>;
 }
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
-    customImage: {
-      insertCustomImage: (attrs: { src: string; alt?: string }) => ReturnType;
+    localImage: {
+      insertLocalImage: (attrs: { src: string; alt?: string }) => ReturnType;
     };
   }
 }
 
-export const CustomImageExtension = Node.create<CustomImageOptions>({
-  name: 'customImage',
+export const LocalImageExtension = Node.create<LocalImageOptions>({
+  name: 'localImage',
   group: 'block',
   atom: true,
   selectable: true,
@@ -84,7 +84,7 @@ export const CustomImageExtension = Node.create<CustomImageOptions>({
 
   addCommands() {
     return {
-      insertCustomImage:
+      insertLocalImage:
         (attrs) =>
         ({ commands }) => {
           return commands.insertContent({

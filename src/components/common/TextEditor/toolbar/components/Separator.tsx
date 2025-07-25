@@ -1,5 +1,7 @@
+import { seperatorStyle } from '../toolBarStyle';
+
 const Separator = () => {
-  return <div className='h-[20px] border-l-1 border-grayscale-200' />;
+  return <div className={seperatorStyle} />;
 };
 
 export default Separator;

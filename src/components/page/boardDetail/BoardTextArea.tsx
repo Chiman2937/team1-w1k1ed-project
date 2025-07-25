@@ -6,18 +6,21 @@ import Button from '@/components/common/Button';
 interface BoardTextAreaProps {
   count: number | undefined;
   isLogin: boolean | undefined;
+  onSubmit: (formData: { content: string }) => void;
 }
 
 const MAX_CHARACTERS = 500;
 
-const BoardTextArea = ({ count, isLogin }: BoardTextAreaProps) => {
+const BoardTextArea = ({ count, isLogin, onSubmit }: BoardTextAreaProps) => {
   const [content, setContent] = useState('');
   const [characterCount, setCharacterCount] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (content.length <= MAX_CHARACTERS) {
-      // 로직 추가허자~
+      await onSubmit({ content });
+      setContent('');
+      setCharacterCount(0);
     }
   };
 
@@ -26,10 +29,10 @@ const BoardTextArea = ({ count, isLogin }: BoardTextAreaProps) => {
     setCharacterCount(e.target.value.length);
   };
 
-  const handleGuestRedirect = () => {
-    // toast 알림
-    // redirect
-  };
+  // const handleGuestRedirect = () => {
+  //   toast 알림
+  //   redirect
+  // };
 
   return (
     <>
@@ -53,23 +56,13 @@ const BoardTextArea = ({ count, isLogin }: BoardTextAreaProps) => {
             {characterCount}/{MAX_CHARACTERS}
           </div>
           <div>
-            {isLogin ? (
-              <Button
-                variant='primary'
-                disabled={characterCount > MAX_CHARACTERS || !content}
-                type='submit'
-              >
-                댓글 작성
-              </Button>
-            ) : (
-              <Button
-                variant='primary'
-                disabled={characterCount > MAX_CHARACTERS || !content}
-                onClick={handleGuestRedirect}
-              >
-                댓글 작성
-              </Button>
-            )}
+            <Button
+              variant='primary'
+              disabled={characterCount > MAX_CHARACTERS || !content || !isLogin}
+              type='submit'
+            >
+              댓글 작성
+            </Button>
           </div>
         </div>
       </form>
