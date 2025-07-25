@@ -109,10 +109,10 @@ const SearchBar = ({
     <div className='relative flex flex-1 flex-shrink-0'>
       <FiSearch
         size={20}
-        className='absolute  left-3 top-1/2 -translate-y-1/2  text-grayscale-400 pointer-events-none'
+        className='absolute left-3 top-1/2 -translate-y-1/2  text-grayscale-400 pointer-events-none'
       />
       <input
-        className=' block pl-10 h-[45px] w-full rounded-[10px] text-grayscale-500 bg-grayscale-100 py-[9px] px-3'
+        className=' block pl-10 h-[45px] w-full rounded-[10px] text-grayscale-500 bg-grayscale-100 focus:outline-primary-green-200 py-[9px] px-3'
         placeholder={placeholder}
         onChange={(e) => {
           handleSearchWithDebounce(e.target.value);

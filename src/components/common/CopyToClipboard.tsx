@@ -11,8 +11,8 @@ export const COPY_TO_CLIPBOARD = {
   DEFAULT_SUFFIX: '...',
   MESSAGES: {
     WARN: '복사할 텍스트가 비어있습니다.',
-    ERROR: '내 위키 링크 복사에 실패했습니다.',
-    SUCCESS: '내 위키 링크가 복사되었습니다.',
+    ERROR: '위키 링크 복사에 실패했습니다.',
+    SUCCESS: '위키 링크가 복사되었습니다.',
     INFO: '브라우저에서 수동으로 복사해주세요.',
   },
   STYLES: {

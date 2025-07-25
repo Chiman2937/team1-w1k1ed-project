@@ -65,6 +65,11 @@
     --foreground: #ededed;
   }
 } */
+@layer components {
+  .hoverMotion {
+    @apply cursor-pointer transition-all duration-300 hover:scale-120;
+  }
+}
 
 @layer utilities {
   @keyframes slideDownIn {

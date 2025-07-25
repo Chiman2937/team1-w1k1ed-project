@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { CommentResponse } from '@/components/page/boardDetail/BoardComments';
+import { patchComment } from '@/api/articleApi';
 import Button from '@/components/common/Button';
 
 interface CommentEditProps {
   comment: CommentResponse;
   isEdit: React.Dispatch<React.SetStateAction<boolean>>;
-  // onCommentUpdated: (updatedComment: CommentResponse) => void;
+  onUpdate: (updatedComment: CommentResponse) => void;
 }
 
-const CommentEdit = ({ comment, isEdit }: CommentEditProps) => {
+const CommentEdit = ({ comment, isEdit, onUpdate }: CommentEditProps) => {
   const [characterCount, setCharacterCount] = useState(0);
   const [editedContent, setEditedContent] = useState(comment.content);
   const MAX_CHARACTERS = 500;
@@ -26,8 +27,9 @@ const CommentEdit = ({ comment, isEdit }: CommentEditProps) => {
 
   const handleSaveComment = async () => {
     try {
-      // const updatedComment = await API(comment.id, { content: editedContent });
-      // onCommentUpdated(updatedComment);
+      const updatedComment = await patchComment(String(comment.id), { content: editedContent });
+      onUpdate(updatedComment);
+      isEdit(false);
     } catch (error) {
       console.log(error);
       // ({ type: 'error', message: '댓글을 작성해주세요.' });
@@ -51,10 +53,19 @@ const CommentEdit = ({ comment, isEdit }: CommentEditProps) => {
             {characterCount}/{MAX_CHARACTERS}
           </div>
           <div className='flex gap-2'>
-            <Button variant='secondary' onClick={() => isEdit(false)}>
+            <Button
+              variant='secondary'
+              onClick={() => isEdit(false)}
+              className='flex items-center justify-center w-[70px]'
+            >
               취소
             </Button>
-            <Button variant='primary' onClick={handleSaveComment}>
+            <Button
+              variant='primary'
+              onClick={handleSaveComment}
+              type='submit'
+              className='flex items-center justify-center w-[70px]'
+            >
               수정
             </Button>
           </div>

@@ -1,30 +1,11 @@
+'use client';
+
 import BoardComment from './BoardComment';
 import BoardTextArea from './BoardTextArea';
-
-const BASE_URL = 'https://wikied-api.vercel.app/6-16/';
-
-export async function getAllComments(id: string) {
-  const res = await fetch(`${BASE_URL}/articles/${id}/comments?limit=9999`, {
-    cache: 'force-cache',
-  });
-  return res.json();
-}
-
-export async function postComment(id: string, data: string) {
-  const res = await fetch(`${BASE_URL}/articles/${id}/comments`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      //Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || 'Failed to post data');
-  }
-  return res.json();
-}
+import { useRouter } from 'next/navigation';
+import { getComment, postComment } from '@/api/articleApi';
+import { useInView } from 'react-intersection-observer';
+import { useState, useEffect, useCallback } from 'react';
 
 export interface CommentWriterResponse {
   image: string;
@@ -40,11 +21,88 @@ export interface CommentResponse {
   id: number;
 }
 
-export default async function BoardComments({ id }: { id: string }) {
-  const comments = await getAllComments(id);
-  console.log(comments);
-  const { list } = comments;
-  const commentCount = list.length;
+const BoardComments = ({
+  id,
+  userId,
+  isAuthenticated,
+}: {
+  id: string;
+  userId: number | undefined;
+  isAuthenticated: boolean;
+}) => {
+  const [comments, setComments] = useState<CommentResponse[]>([]);
+  const [cursor, setCursor] = useState<string | undefined>();
+  const [commentCount, setCommentCount] = useState<number>();
+
+  const router = useRouter();
+  const { ref, inView } = useInView();
+
+  const fetchComments = useCallback(async () => {
+    if (cursor === null) return;
+    try {
+      const response = await getComment(id, cursor);
+      setComments((prev) => [...prev, ...response.list]);
+      setCursor(response.nextCursor);
+    } catch (error) {
+      console.log(error);
+      router.push('/error');
+    }
+  }, [id, cursor, router]);
+
+  const getAllComment = async () => {
+    try {
+      const response = await getComment(id, '9999');
+      setCommentCount(response.count);
+    } catch (error) {
+      console.log(error);
+      router.push('/error');
+    }
+  };
+
+  const handleCommentSubmit = async (formData: { content: string }) => {
+    try {
+      if (isAuthenticated) {
+        const newComment = await postComment(id, formData);
+        setComments((prevData) => {
+          return [newComment, ...prevData];
+        });
+        getAllComment();
+      } else {
+        // 토스트 추가
+        router.push('/login');
+      }
+    } catch (e) {
+      // 댓글 작성 오류 토스트
+      console.log(e);
+    }
+  };
+
+  const handleDeleteComment = (commentId: number) => {
+    setComments((prevData) => {
+      return prevData.filter((comment) => {
+        return comment.id !== commentId;
+      });
+    });
+    getAllComment();
+  };
+
+  const handleCommentUpdated = (updatedComment: CommentResponse) => {
+    setComments((prevData) => {
+      return prevData.map((comment) => {
+        return comment.id === updatedComment.id ? updatedComment : comment;
+      });
+    });
+  };
+
+  useEffect(() => {
+    getAllComment();
+  });
+
+  useEffect(() => {
+    if (inView && cursor !== null) {
+      fetchComments();
+    }
+  }, [fetchComments, cursor, inView]);
 
   return (
     <div
@@ -52,14 +110,29 @@ export default async function BoardComments({ id }: { id: string }) {
       md:w-[624px]
       xl:w-[1060px]'
     >
-      <BoardTextArea count={commentCount} isLogin={false} />
+      <BoardTextArea
+        count={commentCount}
+        isLogin={isAuthenticated}
+        onSubmit={handleCommentSubmit}
+      />
       {commentCount === 0 ? (
         <>댓글이 없습니다</>
       ) : (
-        list.map((comment: CommentResponse) => {
-          return <BoardComment key={comment.id} comment={comment} id={123} />;
+        comments.map((comment: CommentResponse) => {
+          return (
+            <BoardComment
+              key={comment.id}
+              comment={comment}
+              id={userId}
+              onDelete={handleDeleteComment}
+              onUpdate={handleCommentUpdated}
+            />
+          );
         })
       )}
+      <div ref={ref} className=' h-28' />
     </div>
   );
-}
+};
+
+export default BoardComments;
