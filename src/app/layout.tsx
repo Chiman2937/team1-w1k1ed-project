@@ -6,6 +6,7 @@ import { Pretendard, nexonGothicBold, nexonGothicLight, nexonGothicRegular } fro
 import { AuthProvider } from '@/context/AuthContext';
 import AuthHeaderRenderer from '@/components/layout/AuthHeaderRenderer';
 import { Suspense } from 'react';
+import Animation from '@/components/common/Animation';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -30,8 +31,10 @@ export default function RootLayout({
       >
         <Suspense fallback={<div>앱 로딩증</div>}>
           <AuthProvider>
-            <AuthHeaderRenderer />
-            {children}
+            <Animation>
+              <AuthHeaderRenderer />
+              {children}
+            </Animation>
           </AuthProvider>
         </Suspense>
         <Analytics />

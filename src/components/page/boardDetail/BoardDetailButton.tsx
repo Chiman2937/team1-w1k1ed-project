@@ -1,8 +1,11 @@
 'use client';
 
-import { CiHeart } from 'react-icons/ci';
+import { IoHeartOutline as EmptyHeart } from 'react-icons/io5';
+import { IoHeart as FullHeart } from 'react-icons/io5';
 import { FiEdit2 as Edit } from 'react-icons/fi';
 import { FaRegTrashAlt as Delete } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+
 import Button from '@/components/common/Button';
 
 interface ButtonsProps {
@@ -13,6 +16,7 @@ interface ButtonsProps {
 interface LikeButtonProps {
   initialLikeCount: number;
   onClick: () => void;
+  isLiked: boolean;
 }
 
 // edit, delete button
@@ -24,7 +28,7 @@ export const BoardEditButton = ({ onEdit }: ButtonsProps) => {
           수정하기
         </Button>
         <button className='inline md:hidden' onClick={() => onEdit?.()}>
-          <Edit />
+          <Edit className='text-grayscale-400' />
         </button>
       </div>
     </>
@@ -38,17 +42,26 @@ export const BoardDeleteButton = ({ onDelete }: ButtonsProps) => {
         삭제하기
       </Button>
       <button className='inline md:hidden' onClick={() => onDelete?.()}>
-        <Delete />
+        <Delete className='text-grayscale-400' />
       </button>
     </div>
   );
 };
 
-export const BoardLikeButton = ({ initialLikeCount, onClick }: LikeButtonProps) => {
+export const BoardLikeButton = ({ initialLikeCount, onClick, isLiked }: LikeButtonProps) => {
   return (
-    <button className='flex items-center gap-[2px]' onClick={() => onClick()}>
-      <CiHeart className='w-[18px] h-[18px]' />
-      {initialLikeCount}
-    </button>
+    <motion.div whileTap={{ scale: 1.5 }}>
+      <button
+        className={`flex justify-center items-center gap-[2px] ${isLiked && 'text-primary-green-200'}`}
+        onClick={() => onClick()}
+      >
+        {isLiked ? (
+          <FullHeart size={18} className=' text-primary-green-300' />
+        ) : (
+          <EmptyHeart size={18} className=' text-grayscale-400' />
+        )}
+        <span className='w-[15px] text-center'>{initialLikeCount}</span>
+      </button>
+    </motion.div>
   );
 };
