@@ -25,15 +25,15 @@ export default function WikiListPage() {
 
   return (
     <main
-      className='flex flex-col gap-10 min-w-[334px]
-  md:min-w-[696px] md:gap-[100px] 
-  lg:min-w-[859px] lg:gap-[54px]
+      className='flex flex-col min-w-[334px]
+  md:min-w-[696px] md:gap-[15px] 
+  lg:min-w-[859px] lg:gap-[30px]
     '
     >
       <header
-        className='flex flex-col gap-4
-      md:gap-5
-      lg:gap-4
+        className='flex flex-col gap-4 pt-5
+      md:gap-5 md:pt-10
+      lg:gap-4 lg:pt-[60px]
       '
       >
         <SearchBar
@@ -44,7 +44,7 @@ export default function WikiListPage() {
         <SearchResultSummary searchTerm={searchTerm} resultCount={searchResults.length} />
       </header>
       <Pagination
-        className='gap-2.5'
+        className='gap-4'
         data={searchResults}
         pageSize={3}
         maxVisiblePages={5}

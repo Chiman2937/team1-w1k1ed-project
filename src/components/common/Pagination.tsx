@@ -76,56 +76,62 @@ function Pagination<T>({
 
   // 데이터가 없을 경우
   if (data.length === 0) {
-    return <div className={`text-center text-gray-500 py-8 ${className}`}>{emptyMessage}</div>;
+    return (
+      <div className={`flex flex-col min-h-[500px] ${className}`}>
+        <div className='h-[400px] flex items-center justify-center'>
+          <div className='text-center text-gray-500'>{emptyMessage}</div>
+        </div>
+        <div className='h-16 flex items-center justify-center mt-6'>
+          {/* 빈 페이지네이션 공간 */}
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className={className}>
-      {/* 현재 페이지 데이터 렌더링 */}
-      <div className='space-y-4 mb-6'>
-        {currentData.map((item, index) => (
-          <div key={startIndex + index}>{renderItem(item, startIndex + index)}</div>
-        ))}
+    <div className={`flex flex-col min-h-[500px] ${className}`}>
+      {/* 리스트 영역 - 고정 높이 */}
+      <div className='h-[400px] md:h-[500px]'>
+        <div className='space-y-2 md:space-y-4'>
+          {currentData.map((item, index) => (
+            <div key={startIndex + index}>{renderItem(item, startIndex + index)}</div>
+          ))}
+        </div>
       </div>
 
-      {/* 페이지가 1개보다 많을 때만 페이지네이션 표시 */}
-      {totalPages > 1 && (
-        <div className='flex items-center justify-center gap-2'>
-          {/* 이전 그룹 버튼 */}
-          <PaginationButton
-            variant='navigation'
-            disabled={groupStart === 1}
-            onClick={handlePrevGroup}
-          >
-            <PaginationPrev />
-          </PaginationButton>
-
-          {/* 페이지 번호들 */}
-          {pages.map((page) => (
+      {/* 페이지네이션 영역 - 항상 같은 위치 */}
+      <div className='h-16 flex items-center justify-center mt-12 md:mt-6 mb-8 md:mb-12'>
+        {totalPages > 1 && (
+          <div className='flex items-center gap-1 md:gap-2'>
             <PaginationButton
-              key={page}
-              variant='page'
-              active={page === currentPage}
-              onClick={() => handlePageChange(page)}
+              variant='navigation'
+              disabled={groupStart === 1}
+              onClick={handlePrevGroup}
             >
-              {page}
+              <PaginationPrev />
             </PaginationButton>
-          ))}
 
-          {/* 다음 그룹 버튼 */}
-          <PaginationButton
-            variant='navigation'
-            disabled={groupEnd === totalPages}
-            onClick={handleNextGroup}
-          >
-            <PaginationNext />
-          </PaginationButton>
-          {/* 페이지 정보 (확인용 TODO:개발 끝나면 지우기) */}
-          {/* <div className='ml-4 text-sm text-gray-600'>
-            {currentPage} / {totalPages} 페이지 (총 {data.length}개)
-          </div> */}
-        </div>
-      )}
+            {pages.map((page) => (
+              <PaginationButton
+                key={page}
+                variant='page'
+                active={page === currentPage}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </PaginationButton>
+            ))}
+
+            <PaginationButton
+              variant='navigation'
+              disabled={groupEnd === totalPages}
+              onClick={handleNextGroup}
+            >
+              <PaginationNext />
+            </PaginationButton>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
