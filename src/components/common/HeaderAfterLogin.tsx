@@ -43,7 +43,8 @@ const HeaderAfterLogin = () => {
                 <HeaderDropdown
                   iconName='account'
                   menuItems={[
-                    { label: '마이페이지', href: '/mypage' },
+                    { label: '위키 생성하기', href: '/mypage' },
+                    { label: '설정', href: '/passwordChangePage' },
                     { label: '로그아웃', onClick: logout },
                   ]}
                 />
@@ -56,7 +57,8 @@ const HeaderAfterLogin = () => {
                     { label: '위키목록', href: '/wikilist' },
                     { label: '자유게시판', href: '/boards' },
                     { label: '알림' },
-                    { label: '마이페이지', href: '/mypage' },
+                    { label: '위키 생성하기', href: '/mypage' },
+                    { label: '설정', href: '/passwordChangePage' },
                     { label: '로그아웃', onClick: logout },
                   ]}
                   onItemClick={(label) => {

@@ -2,171 +2,152 @@
 
 import Button from '@/components/common/Button';
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Input from '@/components/common/Input';
+import { profilesAPI } from '@/api/profile/postProfilesAPI';
+import LoadingSpinner from '@/components/common/LoadingSpinner/LoadingSpinner';
+import axios from 'axios';
+import QuestionSelection from '@/components/common/QuestionSelection';
+import AnswerInput from '@/components/common/AnswerInput';
 
 const MyPage = () => {
-  // 선택된 질문 텍스트를 저장하는 상태 (예: '좋아하는 계절은?')
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
-  // '직접 입력하기' 필드의 값을 저장하는 상태
   const [customInput, setCustomInput] = useState('');
-  // 선택된 질문에 대한 정답 필드의 값을 저장하는 상태
   const [answerInput, setAnswerInput] = useState('');
+  // API 로딩 + 에러처리를 위한 스테이트
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  // 퀴즈 버튼들을 감싸는 div 요소에 대한 참조 (외부 클릭 감지에 사용)
   const quizButtonsContainerRef = useRef<HTMLDivElement>(null);
-
-  // 사전 정의된 질문 목록
-  const questions = [
-    { emoji: '🥦', text: ['특별히 ', '싫어하는 음식은?'] },
-    { emoji: '🐶', text: ['키우고 있는', '반려동물의 이름은?'] },
-    { emoji: '🎵', text: ['요즘', '가장 많이 듣는 노래는?'] },
-    { emoji: '🍁', text: ['좋아하는 계절은?'] },
-  ];
 
   const primaryGreen300 = '#32a68a';
   const primaryGreen100 = '#eefff6';
 
   // 외부 클릭 감지 로직
-  // 컴포넌트 마운트 시 이벤트 리스너 추가, 언마운트 시 제거
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // 퀴즈 컨테이너 외부를 클릭했는지 확인
       if (
         quizButtonsContainerRef.current &&
         !quizButtonsContainerRef.current.contains(event.target as Node)
       ) {
-        // 클릭된 요소가 '직접 입력하기' 또는 '정답' 인풋 필드가 아닌 경우에만 선택 해제
         const targetName = (event.target as HTMLInputElement).name;
         if (targetName !== 'customQuestion' && targetName !== 'answer') {
-          setSelectedQuestion(null); // 선택된 질문 해제
-          setCustomInput(''); // 직접 입력 필드 초기화
-          setAnswerInput(''); // 정답 입력 필드 초기화
+          setSelectedQuestion(null);
+          setCustomInput('');
+          setAnswerInput('');
+          setMessage(null); // 외부 클릭 시 메시지 초기화
         }
       }
     };
 
-    // 문서 전체에 'mousedown' 이벤트 리스너 등록
     document.addEventListener('mousedown', handleClickOutside);
-
-    // 클린업 함수: 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [quizButtonsContainerRef]); // quizButtonsContainerRef 변경 시에만 이펙트 재실행
+  }, [quizButtonsContainerRef]);
 
-  // 버튼 애니메이션 variants 정의
-  const buttonVariants = {
-    selected: {
-      boxShadow: `0 0 0 4px ${primaryGreen300}B3`,
-      backgroundColor: primaryGreen100,
-      transition: { type: 'spring' as const, stiffness: 900, damping: 20 },
-    },
-    unselected: {
-      boxShadow: '0 0 0 0px rgba(0, 0, 0, 0)',
-      backgroundColor: 'transparent',
-      transition: { type: 'spring' as const, stiffness: 900, damping: 20 },
-    },
-  };
+  // 폼 제출 핸들러
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  // 정답 입력 필드 애니메이션을 위한 Framer Motion Variants 정의
-  const inputVariants = {
-    // 숨겨진 상태: 투명도 0, 높이 0, Y축 -20px 이동
-    hidden: { opacity: 0, height: 0, y: -20, transition: { duration: 0.2 } },
-    // 보이는 상태: 투명도 1, 높이 자동, Y축 0px 이동
-    visible: { opacity: 1, height: 'auto', y: 0, transition: { duration: 0.3 } },
+    const finalQuestion = customInput || selectedQuestion;
+    const finalAnswer = answerInput;
+
+    if (!finalQuestion) {
+      setMessage('질문을 선택하거나 직접 입력해주세요.');
+      return;
+    }
+
+    if (!finalAnswer) {
+      setMessage('정답을 입력해주세요.');
+      return;
+    }
+
+    setIsLoading(true);
+    setMessage(null);
+
+    try {
+      const response = await profilesAPI.createSecurityQuestion({
+        securityQuestion: finalQuestion,
+        securityAnswer: finalAnswer,
+      });
+      console.log('API 응답:', response);
+      setMessage('위키가 성공적으로 생성되었습니다!');
+      setSelectedQuestion(null);
+      setCustomInput('');
+      setAnswerInput('');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message || error.message;
+        console.error('위키 생성 실패 (AxiosError):', errorMessage);
+        setMessage(`위키 생성 실패: ${errorMessage}`);
+      } else if (error instanceof Error) {
+        console.error('위키 생성 실패 (일반 Error):', error.message);
+        setMessage(`위키 생성 실패: ${error.message}`);
+      } else {
+        console.error('위키 생성 실패 (알 수 없는 에러):', error);
+        setMessage('위키 생성 실패: 알 수 없는 오류가 발생했습니다.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className='font-pretendard'>
       <div
-        className='flex flex-col gap-[40px] my-[141px] mx-auto 
+        className='flex flex-col gap-[40px] my-[141px] mx-auto
         w-[335px] md:w-[400px]'
       >
         <h1 className='font-semibold text-center text-[24px]'>위키생성하기</h1>
         {/* 안내 메시지 섹션 */}
         <div
-          className='border-none rounded-[10px] px-[30px] py-[15px] 
+          className='border-none rounded-[10px] px-[5px] py-[15px]
           bg-primary-green-100 w-auto
-          text-center text-[14px]'
+          text-center text-[14px]
+          md:px-[30px]'
         >
           위키는 계정당 1회만 생성할 수 있습니다.
           <br />
           이미 생성된 위키가 있다면, 해당 위키를 이용해주세요.
         </div>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           {/* 폼 필드들을 감싸는 그리드 컨테이너. 외부 클릭 감지를 위한 ref 연결 */}
           <div className='grid grid-cols-2 gap-4' ref={quizButtonsContainerRef}>
-            {/* '직접 입력하기' 인풋 필드 (커스텀 Input 컴포넌트 사용) */}
-            <Input
-              className='col-span-2'
-              placeholder='직접 입력하기'
-              name='customQuestion'
-              value={customInput} // customInput 상태와 연결
-              onChange={(e) => {
-                setCustomInput(e.target.value);
-                setSelectedQuestion(e.target.value ? e.target.value : null);
-                setAnswerInput('');
-              }}
+            <QuestionSelection
+              selectedQuestion={selectedQuestion}
+              setSelectedQuestion={setSelectedQuestion}
+              customInput={customInput}
+              setCustomInput={setCustomInput}
+              setAnswerInput={setAnswerInput}
+              primaryGreen300={primaryGreen300}
+              primaryGreen100={primaryGreen100}
+              isLoading={isLoading}
             />
 
-            {/* 사전 정의된 퀴즈 질문 버튼들 렌더링 */}
-            {questions.map((q, index) => {
-              // 현재 버튼이 선택되었는지 확인
-              const isSelected = selectedQuestion === q.text.join('\n');
+            <AnswerInput
+              selectedQuestion={selectedQuestion}
+              answerInput={answerInput}
+              setAnswerInput={setAnswerInput}
+              isLoading={isLoading}
+            />
 
-              return (
-                <motion.button
-                  key={index} // 리스트 렌더링을 위한 고유 키
-                  type='button' // 폼 제출 방지
-                  onClick={() => {
-                    setCustomInput(''); // 사전 정의된 질문 선택 시 직접 입력 필드 비움
-                    setSelectedQuestion(q.text.join('\n')); // 선택된 질문 업데이트
-                    setAnswerInput(''); // 정답 필드 초기화
-                  }}
-                  className='relative p-3 bg-white border-[2px] border-primary-green-200 rounded-[10px] text-left text-sm cursor-pointer'
-                  // 선택 상태에 따른 그림자 애니메이션
-                  variants={buttonVariants}
-                  animate={isSelected ? 'selected' : 'unselected'}
-                >
-                  {/* 이모지 (절대 위치) */}
-                  <span className='text-xl inline-block mb-3'>{q.emoji}</span>
-                  <span className='pl-6'>
-                    {q.text.map((line, lineIndex) => (
-                      <p key={lineIndex} className='m-0 p-0 leading-tight'>
-                        {line}
-                      </p>
-                    ))}
-                  </span>
-                </motion.button>
-              );
-            })}
-
-            {/* 정답 입력 필드: selectedQuestion이 있을 때만 렌더링 및 애니메이션 적용 */}
-            <AnimatePresence>
-              {selectedQuestion && ( // selectedQuestion 값이 있을 때만 렌더링
-                <motion.div
-                  key='answer-input-container' // AnimatePresence 자식은 고유 키 필요
-                  variants={inputVariants}
-                  initial='hidden' // 초기 상태 (숨겨진 상태)
-                  animate='visible' // 나타날 때 (보이는 상태로 애니메이션)
-                  exit='hidden' // 사라질 때 (숨겨진 상태로 애니메이션)
-                  className='col-span-2' // 그리드에서 2칸 차지
-                >
-                  <Input
-                    placeholder={`"${selectedQuestion}"에 대한 정답을 입력해주세요`}
-                    name='answer' // 폼 데이터 식별을 위한 이름
-                    value={answerInput} // answerInput 상태와 연결
-                    onChange={(e) => setAnswerInput(e.target.value)} // answerInput 상태 업데이트
-                  />
-                </motion.div>
+            <Button className='col-span-2 flex items-center justify-center' type='submit'>
+              {isLoading ? (
+                <LoadingSpinner.lineCircle lineWeight={3} distanceFromCenter={6} />
+              ) : (
+                '생성하기'
               )}
-            </AnimatePresence>
-
-            <Button className='col-span-2' type='submit'>
-              생성하기
             </Button>
+
+            {message && (
+              <div
+                className={`col-span-2 text-center text-sm ${
+                  message.includes('성공') ? 'text-primary-green-500' : 'text-secondary-red-200'
+                }`}
+              >
+                {message}
+              </div>
+            )}
           </div>
         </form>
       </div>
