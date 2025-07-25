@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import clsx from 'clsx';
 import { motion, useAnimation, easeOut } from 'framer-motion'; // Framer Motion 임포트
 import { useInView } from 'react-intersection-observer'; // useInView 임포트
 import { useEffect } from 'react'; // useEffect 임포트
@@ -25,7 +26,7 @@ const itemVariants = {
 const ShareSection = () => {
   const controls = useAnimation();
   // triggerOnce: true로 설정하여 한 번만 애니메이션이 실행
-  // threshold: 0.3는 요소의 20%가 보일 때 애니메이션을 트리거
+  // threshold: 0.3는 요소의 30%가 보일 때 애니메이션을 트리거
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
 
   useEffect(() => {
@@ -33,6 +34,11 @@ const ShareSection = () => {
       controls.start('visible');
     }
   }, [controls, inView]); // controls와 inView가 변경될 때마다 이 효과를 다시 실행
+
+  const baseImageClass = `
+  border border-none rounded-[10px] aspect-square shrink-0
+  md:w-[147px] lg:w-[360px]
+`;
 
   // 스크롤될 아이템 목록을 배열로 관리
   const items = [
@@ -42,9 +48,7 @@ const ShareSection = () => {
       alt='공지 메가폰 아이콘'
       width={360}
       height={360}
-      className='bg-secondary-purple-50 border border-none rounded-[10px] aspect-square shrink-0
-      md:w-[147px]
-      lg:w-[360px]'
+      className={clsx(baseImageClass, 'bg-secondary-purple-50')}
     />,
     <Image
       key='image-8'
@@ -52,9 +56,7 @@ const ShareSection = () => {
       alt='회사 로고'
       width={360}
       height={360}
-      className='bg-primary-green-150 border border-none rounded-[10px] aspect-square shrink-0
-      md:w-[147px]
-      lg:w-[360px]'
+      className={clsx(baseImageClass, 'bg-primary-green-150')}
     />,
     <Image
       key='image-9'
@@ -62,9 +64,7 @@ const ShareSection = () => {
       alt='앱 업데이트 화면'
       width={360}
       height={360}
-      className='bg-grayscale-250 border border-none rounded-[10px] aspect-square shrink-0
-      md:w-[147px]
-      lg:w-[360px]'
+      className={clsx(baseImageClass, 'bg-grayscale-250')}
     />,
     <Image
       key='image-10'
@@ -72,9 +72,7 @@ const ShareSection = () => {
       alt='대화 말풍선'
       width={360}
       height={360}
-      className='bg-grayscale-250 border border-none rounded-[10px] aspect-square shrink-0
-      md:w-[147px]
-      lg:w-[360px]'
+      className={clsx(baseImageClass, 'bg-grayscale-250')}
     />,
     <Image
       key='image-13'
@@ -82,9 +80,7 @@ const ShareSection = () => {
       alt='웃는 이모지'
       width={360}
       height={360}
-      className='bg-pink-100 border border-none rounded-[10px] aspect-square shrink-0
-      md:w-[147px]
-      lg:w-[360px]'
+      className={clsx(baseImageClass, 'bg-pink-100')}
     />,
     <Image
       key='image-14'
@@ -92,9 +88,7 @@ const ShareSection = () => {
       alt='박수 환영'
       width={360}
       height={360}
-      className='bg-yellow-100 border border-none rounded-[10px] aspect-square shrink-0
-      md:w-[147px]
-      lg:w-[360px]'
+      className={clsx(baseImageClass, 'bg-yellow-100')}
     />,
   ];
 
@@ -172,7 +166,7 @@ const ShareSection = () => {
                 </span>
               ))}
               {items.map((item, index) => (
-                <span key={`third-${index}`} className='shrink-0'>
+                <span key={`fourth-${index}`} className='shrink-0'>
                   {item}
                 </span>
               ))}

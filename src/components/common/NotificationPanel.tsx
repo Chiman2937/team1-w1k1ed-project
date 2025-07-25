@@ -5,7 +5,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Button from '@/components/common/Button';
 import NotificationItem from '@/components/common/NotificationItem';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes as IconClose } from 'react-icons/fa';
 
 type Item = {
   id: number;
@@ -72,7 +72,7 @@ const NotificationPanel = ({ isOpen, onClose }: Props) => {
                 <div className='mb-4'>
                   <Button onClick={handleAddItem}>새 알림 추가</Button>
                 </div>
-                <FaTimes onClick={onClose} className='cursor-pointer text-grayscale-500' />
+                <IconClose onClick={onClose} className='cursor-pointer text-grayscale-500' />
               </div>
 
               {/* 알림 목록 */}
