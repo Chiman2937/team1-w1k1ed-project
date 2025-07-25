@@ -1,31 +1,47 @@
 import clsx from 'clsx';
 
+const defaultTextColor = 'text-gray-400';
+const accentTextColor = 'text-gray-600';
+const hoverTextColor = 'hover:text-primary-green-200';
+const activeColor = 'bg-gray-100 text-primary-green-200';
+
 export const toolbarStyle = clsx(
-  'flex flex-row items-center gap-[10px]',
-  'bg-grayscale-100 rounded-[10px] py-[10px] px-[30px]',
+  'flex flex-row items-center gap-[8px] flex-wrap',
+  'bg-white border-1 border-grayscale-200 shadow-sm',
+  'rounded-[15px] py-[5px] px-[20px]',
 );
+
+export const toolbarSectionStyle = 'flex flex-row items-center gap-[8px]';
+
+export const seperatorStyle = 'h-[20px] mx-[5px] border-l-1 border-grayscale-200';
 
 export const buttonDefaultStyle = clsx(
   'p-[5px] rounded-[5px] cursor-pointer',
-  'text-grayscale-400 hover:text-grayscale-500',
+  defaultTextColor,
+  hoverTextColor,
 );
-export const buttonActiveStyle = 'bg-grayscale-200';
+export const buttonActiveStyle = activeColor;
 
-export const comboBoxContainerDefaultStyle = 'font-medium text-grayscale-400';
+export const comboBoxContainerDefaultStyle = clsx('font-medium', defaultTextColor);
 
 export const comboBoxButtonDefaultStyle = clsx(
-  'h-[20px] w-[80px] bg-grayscale-100',
+  'h-[25px] w-[80px] bg-white',
   'px-1',
   'flex flex-row justify-between items-center gap-[5px]',
   'cursor-pointer',
+  hoverTextColor,
 );
 
 export const comboBoxListDefaultStyle = clsx(
   'absolute',
   'flex flex-col',
-  'w-[80px] bg-grayscale-50 border-1 border-grayscale-200 shadow-lg',
+  'w-[100px] bg-white border-1 border-grayscale-200 shadow-sm',
   'z-1',
 );
 
-export const comboBoxListItemDefaultStyle = clsx('px-1 py-1', 'text-left cursor-pointer');
-export const comboBoxListItemSelectedStyle = clsx('bg-grayscale-100 text-grayscale-500');
+export const comboBoxListItemDefaultStyle = clsx(
+  'px-2 py-1',
+  'text-left cursor-pointer',
+  hoverTextColor,
+);
+export const comboBoxListItemSelectedStyle = clsx('bg-grayscale-100', accentTextColor);

@@ -1,0 +1,37 @@
+.text-viewer {
+  outline: none;
+  box-sizing: border-box;
+}
+
+.text-viewer ul {
+  color: var(--color-grayscale-500);
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.text-viewer ol {
+  color: var(--color-grayscale-500);
+  list-style-type: decimal;
+  padding-left: 20px;
+}
+
+.text-viewer p {
+  color: var(--color-grayscale-500);
+}
+
+.text-viewer h1 {
+  color: var(--color-grayscale-500);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--color-grayscale-200);
+}
+
+.text-viewer blockquote {
+  color: var(--color-grayscale-500);
+  border-left: 4px solid var(--color-grayscale-500);
+  padding-left: 16px;
+  margin: 4px 0;
+}

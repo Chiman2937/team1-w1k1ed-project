@@ -1,0 +1,17 @@
+.text-viewer .image-outer-wrapper {
+  height: 100%; /* 예시: 원하는 높이 */
+  display: flex;
+  flex-direction: row;
+}
+
+.text-viewer .image-inner-wrapper {
+  height: 100%;
+  width: fit-content;
+}
+
+.text-viewer img {
+  height: 100%;
+  width: auto; /* 원본 비율 유지 */
+  object-fit: contain;
+  display: block;
+}

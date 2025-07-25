@@ -1,17 +1,24 @@
 'use client';
 
+import { MdOutlineCancel as CancelButton } from 'react-icons/md';
+import { MdAutoFixNormal as SubmitButton } from 'react-icons/md';
 import Button from '@/components/common/Button';
-import BoardContent from '@/components/page/boardDetail/BoardContent';
 import BoardInfoForm from '@/components/page/boardDetail/BoardInfo';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 const BoardEdit = ({
+  userName,
+  date,
   initalTitle,
   initalContent,
+  setIsEditing,
 }: {
+  userName: string;
+  date: string;
   initalTitle: string;
   initalContent: string;
+  setIsEditing: () => void;
 }) => {
   const [title, setTitle] = useState(initalTitle);
   // const [content, setContent] = useState(initalContent);
@@ -21,30 +28,46 @@ const BoardEdit = ({
   console.log(param);
   return (
     <>
-      <div className='flex flex-col items-center justify-center'>
-        <BoardContent>
-          <main className='md:profile-shadow flex w-full max-w-[1060px] flex-col gap-3 rounded-10 md:gap-5 md:px-[30px] md:py-[40px]'>
-            <div className='flex items-center justify-between'>
-              <h2 className='text-lg-semibold md:text-xl-semibold lg:text-2xl-semibold'>
-                게시물 수정하기
-              </h2>
-              <div>
-                <Button>취소</Button>
-                <Button disabled={true} variant='primary'>
-                  아무튼 버튼 {/* isEditing ? '등록 중...' : '등록하기' */}
-                </Button>
-              </div>
+      <div className='p-5'>
+        <main className='flex flex-col gap-[30px]'>
+          <div className='flex justify-between items-center'>
+            <h2 className='text-primary-green-300 text-lg-semibold md:text-2xl-semibold '>
+              게시물 수정하기
+            </h2>
+            <div className='flex gap-[14px]'>
+              <Button
+                onClick={() => setIsEditing()}
+                variant='secondary'
+                className={'hidden md:inline w-[120px]'}
+              >
+                취소
+              </Button>
+              <button onClick={() => setIsEditing()} className='inline md:hidden'>
+                <CancelButton className='text-grayscale-400' />
+              </button>
+              <Button
+                disabled={true}
+                variant='primary'
+                type='submit'
+                className={'hidden md:inline w-[120px]'}
+              >
+                수정중...{/* {isEditing ? '등록 중...' : '등록하기'} */}
+              </Button>
+              <button onClick={() => setIsEditing()} className='inline md:hidden'>
+                <SubmitButton className='text-grayscale-400' />
+              </button>
             </div>
+          </div>
 
-            <span className='text-xs-regular text-gray-400 md:text-lg-regular'>
-              {/* {user?.name} {dateToString(new Date())} */}
-            </span>
-            <BoardInfoForm title={title} setTitle={setTitle} />
-            {initalContent}
-            {/* TextEditor */}
-            {/* TextEditor */}
-          </main>
-        </BoardContent>
+          <span className='flex items-center gap-[10px] text-md-regular text-gray-400'>
+            <p>{userName}</p>
+            <p>{date}</p>
+          </span>
+          <BoardInfoForm title={title} setTitle={setTitle} />
+          {initalContent}
+          {/* TextEditor */}
+          {/* TextEditor */}
+        </main>
       </div>
     </>
   );

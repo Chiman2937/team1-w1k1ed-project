@@ -1,10 +1,11 @@
 'use client';
 
-//import BoardComments from '@/components/page/boardDetail/BoardComments';
-import BoardContent from '@/components/page/boardDetail/BoardContent';
+import BoardComments from '@/components/page/boardDetail/BoardComments';
+
 import BoardDetail from '@/components/page/boardDetail/BoardDetail';
 import { useAuthContext } from '@/context/AuthContext';
 import { useParams } from 'next/navigation';
+import Animation from '@/components/common/Animation';
 
 const Board = () => {
   const param = useParams();
@@ -15,12 +16,12 @@ const Board = () => {
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center'>
-        <BoardContent>
+      <Animation>
+        <div className='flex flex-col items-center justify-center'>
           <BoardDetail id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardDetail>
-        </BoardContent>
-        {/* <BoardComments id={id}></BoardComments> */}
-      </div>
+          <BoardComments id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardComments>
+        </div>
+      </Animation>
     </>
   );
 };
