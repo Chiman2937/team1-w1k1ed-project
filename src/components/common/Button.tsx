@@ -34,7 +34,7 @@ const Button = ({ children, variant = 'primary', className, href, ...props }: Pr
   const isDisabled = 'disabled' in props && props.disabled;
 
   const baseStyle = clsx(
-    'items-center inline-flex rounded-[10px] text-[14px] font-semibold transition',
+    'items-center inline-flex rounded-[10px] text-[14px] font-semibold transition-all duration-700',
     isDisabled ? '' : 'cursor-pointer',
   );
 

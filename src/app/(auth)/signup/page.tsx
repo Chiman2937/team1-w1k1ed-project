@@ -82,7 +82,7 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[32px] items-center'>
           <div className='flex flex-col gap-[24px]'>
             <Input
-              className='w-[335px] md:w-[400px] transition-all duration-700'
+              className='w-[335px] md:w-[400px]'
               label='이름'
               type='text'
               placeholder='이름을 입력하세요'
@@ -92,7 +92,7 @@ export default function SignupPage() {
               touchedFields={touchedFields}
             />
             <Input
-              className='w-[335px] md:w-[400px] transition-all duration-700'
+              className='w-[335px] md:w-[400px]'
               label='이메일'
               type='email'
               placeholder='이메일을 입력하세요'
@@ -102,7 +102,7 @@ export default function SignupPage() {
               touchedFields={touchedFields}
             />
             <Input
-              className='w-[335px] md:w-[400px] transition-all duration-700'
+              className='w-[335px] md:w-[400px]'
               label='비밀번호'
               type='password'
               placeholder='비밀번호를 입력하세요'
@@ -112,7 +112,7 @@ export default function SignupPage() {
               touchedFields={touchedFields}
             />
             <Input
-              className='w-[335px] md:w-[400px] transition-all duration-700'
+              className='w-[335px] md:w-[400px]'
               label='비밀번호 확인'
               type='password'
               placeholder='비밀번호를 다시 입력하세요'
@@ -122,10 +122,7 @@ export default function SignupPage() {
               touchedFields={touchedFields}
             />
           </div>
-          <Button
-            type='submit'
-            className='flex items-center justify-center w-[335px] md:w-[400px] transition-all duration-700'
-          >
+          <Button type='submit' className='flex items-center justify-center w-[335px] md:w-[400px]'>
             회원가입
           </Button>
         </form>

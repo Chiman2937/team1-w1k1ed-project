@@ -44,6 +44,7 @@ export default function Input({
     'border border-transparent',
     'focus:outline-none',
     'focus:border-primary-green-200',
+    'transition-all duration-700',
   );
 
   const errorClasses = clsx('bg-secondary-red-100', 'focus:border-secondary-red-200');
