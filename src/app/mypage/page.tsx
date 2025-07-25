@@ -1,9 +1,9 @@
-'use client'; // 클라이언트 컴포넌트임을 명시
+'use client';
 
-import Button from '@/components/common/Button'; // 공통 버튼 컴포넌트 임포트
-import { useState, useRef, useEffect } from 'react'; // React 훅 임포트: 상태, 참조, 사이드 이펙트
-import { motion, AnimatePresence } from 'framer-motion'; // Framer Motion 임포트: 애니메이션 처리
-import Input from '@/components/common/Input'; // 커스텀 Input 컴포넌트 임포트
+import Button from '@/components/common/Button';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Input from '@/components/common/Input';
 
 const MyPage = () => {
   // 선택된 질문 텍스트를 저장하는 상태 (예: '좋아하는 계절은?')
@@ -25,6 +25,7 @@ const MyPage = () => {
   ];
 
   const primaryGreen300 = '#32a68a';
+  const primaryGreen100 = '#eefff6';
 
   // 외부 클릭 감지 로직
   // 컴포넌트 마운트 시 이벤트 리스너 추가, 언마운트 시 제거
@@ -53,6 +54,20 @@ const MyPage = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [quizButtonsContainerRef]); // quizButtonsContainerRef 변경 시에만 이펙트 재실행
+
+  // 버튼 애니메이션 variants 정의
+  const buttonVariants = {
+    selected: {
+      boxShadow: `0 0 0 4px ${primaryGreen300}B3`,
+      backgroundColor: primaryGreen100,
+      transition: { type: 'spring' as const, stiffness: 900, damping: 20 },
+    },
+    unselected: {
+      boxShadow: '0 0 0 0px rgba(0, 0, 0, 0)',
+      backgroundColor: 'transparent',
+      transition: { type: 'spring' as const, stiffness: 900, damping: 20 },
+    },
+  };
 
   // 정답 입력 필드 애니메이션을 위한 Framer Motion Variants 정의
   const inputVariants = {
@@ -85,15 +100,14 @@ const MyPage = () => {
           <div className='grid grid-cols-2 gap-4' ref={quizButtonsContainerRef}>
             {/* '직접 입력하기' 인풋 필드 (커스텀 Input 컴포넌트 사용) */}
             <Input
-              className='col-span-2' // 그리드에서 2칸 차지
+              className='col-span-2'
               placeholder='직접 입력하기'
-              name='customQuestion' // 폼 데이터 식별을 위한 이름
+              name='customQuestion'
               value={customInput} // customInput 상태와 연결
               onChange={(e) => {
                 setCustomInput(e.target.value);
-                // 입력 값이 있으면 해당 값을 선택된 질문으로 설정, 없으면 해제
                 setSelectedQuestion(e.target.value ? e.target.value : null);
-                setAnswerInput(''); // 정답 필드 초기화
+                setAnswerInput('');
               }}
             />
 
@@ -113,16 +127,11 @@ const MyPage = () => {
                   }}
                   className='relative p-3 bg-white border-[2px] border-primary-green-200 rounded-[10px] text-left text-sm cursor-pointer'
                   // 선택 상태에 따른 그림자 애니메이션
-                  animate={{
-                    boxShadow: isSelected
-                      ? `0 0 0 4px ${primaryGreen300}B3` // 선택 시 초록색 그림자 (60% 투명도)
-                      : '0 0 0 0px rgba(0, 0, 0, 0)', // 선택 해제 시 그림자 없음
-                  }}
-                  transition={{ type: 'spring', stiffness: 900, damping: 20 }} // 애니메이션 효과
+                  variants={buttonVariants}
+                  animate={isSelected ? 'selected' : 'unselected'}
                 >
                   {/* 이모지 (절대 위치) */}
                   <span className='text-xl inline-block mb-3'>{q.emoji}</span>
-                  {/* 질문 텍스트 (이모지 옆에 배치 및 줄 바꿈 처리) */}
                   <span className='pl-6'>
                     {q.text.map((line, lineIndex) => (
                       <p key={lineIndex} className='m-0 p-0 leading-tight'>
@@ -139,7 +148,7 @@ const MyPage = () => {
               {selectedQuestion && ( // selectedQuestion 값이 있을 때만 렌더링
                 <motion.div
                   key='answer-input-container' // AnimatePresence 자식은 고유 키 필요
-                  variants={inputVariants} // 정의된 애니메이션 variants 적용
+                  variants={inputVariants}
                   initial='hidden' // 초기 상태 (숨겨진 상태)
                   animate='visible' // 나타날 때 (보이는 상태로 애니메이션)
                   exit='hidden' // 사라질 때 (숨겨진 상태로 애니메이션)
@@ -155,7 +164,6 @@ const MyPage = () => {
               )}
             </AnimatePresence>
 
-            {/* '생성하기' 버튼 */}
             <Button className='col-span-2' type='submit'>
               생성하기
             </Button>
