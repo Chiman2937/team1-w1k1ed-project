@@ -6,7 +6,7 @@ import Logo from './Logo';
 const HeaderBeforeLogin = () => {
   return (
     <div
-      className='bg-grayscale-50 shadow-lg
+      className='bg-grayscale-50 shadow-md
         sticky top-0 left-0 w-full z-50'
     >
       <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
