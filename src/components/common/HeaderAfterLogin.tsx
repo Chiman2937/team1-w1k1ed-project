@@ -8,6 +8,7 @@ import Nav from './Nav';
 import HeaderDropdown from './HeaderDropdown';
 import NotificationPanel from './NotificationPanel';
 import { useAuthContext } from '@/context/AuthContext';
+import Button from './Button';
 
 // NotificationItem에서 사용하는 Item 타입 정의
 type Item = {
@@ -74,7 +75,10 @@ const HeaderAfterLogin = () => {
                 <Nav />
               </div>
             </div>
-
+            {/* 알림 추가 버튼 */}
+            <div className='mb-4'>
+              <Button onClick={handleAddNotification}>새 알림 추가</Button>
+            </div>
             <div className='flex items-center gap-4'>
               <motion.button
                 whileHover={{ scale: 1.1 }}
@@ -89,7 +93,7 @@ const HeaderAfterLogin = () => {
                 />
                 {hasNewNotifications && ( // 조건부로 빨간 점 렌더링
                   <span
-                    className='absolute top-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white bg-secondary-red-200'
+                    className='absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-secondary-red-200'
                     aria-hidden='true'
                   ></span>
                 )}
@@ -109,10 +113,11 @@ const HeaderAfterLogin = () => {
               {/* 모바일 메뉴 */}
               <div className='inline md:hidden'>
                 <HeaderDropdown
+                  hasNewNotifications={hasNewNotifications}
                   menuItems={[
                     { label: '위키목록', href: '/wikilist' },
                     { label: '자유게시판', href: '/boards' },
-                    { label: '알림' },
+                    { label: '알림', hasNewNotifications: hasNewNotifications },
                     { label: '위키 생성하기', href: '/mypage' },
                     { label: '설정', href: '/passwordChangePage' },
                     { label: '로그아웃', onClick: logout },
@@ -133,7 +138,6 @@ const HeaderAfterLogin = () => {
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
         list={notifications} // 알림 목록 전달
-        onAddItem={handleAddNotification} // 알림 추가 함수 전달
         onDeleteItem={handleDeleteNotification} // 알림 삭제 함수 전달
       />
     </>

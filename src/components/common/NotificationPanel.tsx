@@ -2,7 +2,6 @@
 
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import Button from '@/components/common/Button';
 import NotificationItem from '@/components/common/NotificationItem';
 import { FaTimes as IconClose } from 'react-icons/fa';
 
@@ -16,11 +15,10 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   list: Item[]; // 알림 목록을 prop으로 받음
-  onAddItem: () => void; // 알림 추가 함수를 prop으로 받음
   onDeleteItem: (id: number) => void; // 알림 삭제 함수를 prop으로 받음
 };
 
-const NotificationPanel = ({ isOpen, onClose, list, onAddItem, onDeleteItem }: Props) => {
+const NotificationPanel = ({ isOpen, onClose, list, onDeleteItem }: Props) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -47,10 +45,7 @@ const NotificationPanel = ({ isOpen, onClose, list, onAddItem, onDeleteItem }: P
                 <DialogTitle className='text-lg font-semibold text-grayscale-500'>
                   알림 {list.length}개
                 </DialogTitle>
-                {/* 알림 추가 버튼 */}
-                <div className='mb-4'>
-                  <Button onClick={onAddItem}>새 알림 추가</Button>
-                </div>
+
                 <IconClose onClick={onClose} className='cursor-pointer text-grayscale-500' />
               </div>
 
