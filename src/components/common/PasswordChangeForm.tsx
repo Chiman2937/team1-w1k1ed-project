@@ -98,8 +98,6 @@ const PasswordChangeForm = () => {
       <div className='flex justify-end mt-[16px]'>
         <Button type='submit'>변경하기</Button>
       </div>
-
-      <hr className='mt-[32px] border-t border-grayscale-200' />
     </form>
   );
 };

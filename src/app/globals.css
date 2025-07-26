@@ -65,6 +65,11 @@
     --foreground: #ededed;
   }
 } */
+@layer components {
+  .hoverMotion {
+    @apply cursor-pointer transition-all duration-300 hover:scale-120;
+  }
+}
 
 @layer utilities {
   @keyframes slideDownIn {
@@ -97,12 +102,41 @@
     animation: slideDownOut 0.2s ease-in;
   }
 
-  /* 스크롤바 숨기기 유틸리티 */
-  .scrollbar-hide {
-    &::-webkit-scrollbar {
-      display: none;
+  /* --- 추가된 무한 스크롤 애니메이션 --- */
+  @keyframes scroll-left {
+    from {
+      transform: translateX(0);
     }
-    scrollbar-width: none;
+    to {
+      transform: translateX(-50%); /* 전체 너비의 절반만큼 이동 (복제된 콘텐츠까지) */
+    }
+  }
+
+  .animate-scroll-left {
+    animation: scroll-left 5s linear infinite; /* 기본 속도: 5초 */
+  }
+
+  /* 미디어 쿼리를 사용하여 반응형 속도 조절 */
+  @media (min-width: 768px) {
+    /* md */
+    .md\:animate-scroll-left {
+      animation-duration: 10s; /* md 사이즈 이상에서는 10초 */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    /* lg */
+    .lg\:animate-scroll-left {
+      animation-duration: 15s; /* lg 사이즈 이상에서는 15초 */
+    }
+
+    /* 스크롤바 숨기기 유틸리티 */
+    .scrollbar-hide {
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      scrollbar-width: none;
+    }
   }
 }
 
@@ -111,4 +145,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #f7f7fa inset !important;
+
+  -webkit-text-fill-color: #474d66 !important;
+  transition: background-color 5000s ease-in-out 0s;
 }

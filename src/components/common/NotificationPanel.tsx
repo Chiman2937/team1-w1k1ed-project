@@ -40,7 +40,7 @@ const NotificationPanel = ({ isOpen, onClose }: Props) => {
       content: `새 알림 ${new Date().toLocaleTimeString()}`,
       createdAt: new Date().toISOString(),
     };
-    setList([...list, newItem]);
+    setList([newItem, ...list]);
   };
 
   // 알림 삭제 함수
@@ -61,16 +61,18 @@ const NotificationPanel = ({ isOpen, onClose }: Props) => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.3 }}
-            className='fixed top-0 right-0 w-[368px] h-full bg-gray-100 shadow-xl'
+            className='fixed top-0 right-0 w-[380px] h-full bg-gray-100 shadow-xl'
           >
             <DialogPanel className='h-full flex flex-col p-4'>
               <div className='flex justify-between items-center mb-4'>
-                <DialogTitle className='text-lg font-semibold'>알림 {list.length}개</DialogTitle>
+                <DialogTitle className='text-lg font-semibold text-grayscale-500'>
+                  알림 {list.length}개
+                </DialogTitle>
                 {/* 알림 추가 버튼 */}
                 <div className='mb-4'>
                   <Button onClick={handleAddItem}>새 알림 추가</Button>
                 </div>
-                <FaTimes onClick={onClose} className='cursor-pointer text-gray-400' />
+                <FaTimes onClick={onClose} className='cursor-pointer text-grayscale-500' />
               </div>
 
               {/* 알림 목록 */}

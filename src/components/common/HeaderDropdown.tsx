@@ -1,11 +1,11 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import Link from 'next/link';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { VscAccount } from 'react-icons/vsc';
 import clsx from 'clsx';
-import { useAuthContext } from '@/context/AuthContext';
 
 const ICONS = {
   hamburger: GiHamburgerMenu,
@@ -26,13 +26,7 @@ type Props = {
 
 const HeaderDropdown = ({ iconName = 'hamburger', menuItems, onItemClick }: Props) => {
   const Icon = ICONS[iconName];
-  const { logout } = useAuthContext();
-
-  const _handleLogout = () => {
-    console.log('로그아웃');
-    logout();
-    // 여기에 실제 로그아웃 처리 로직 작성 (예: signOut(), removeToken() 등)
-  };
+  const pathname = usePathname();
 
   return (
     <Menu as='div' className='relative font-pretendard text-[14px] font-normal'>
@@ -42,50 +36,45 @@ const HeaderDropdown = ({ iconName = 'hamburger', menuItems, onItemClick }: Prop
 
       <MenuItems className='absolute right-0 mt-2 w-[140px] text-center text-grayscale-500 bg-grayscale-50 rounded-[10px] shadow-lg z-50'>
         <div className='p-1'>
-          {menuItems.map((item, idx) => (
-            <MenuItem key={idx}>
-              {({ active }) => {
-                if (item.onClick) {
-                  return (
-                    <button
-                      onClick={item.onClick}
-                      className={clsx(
-                        'w-full px-4 py-2 text-sm',
-                        active && 'bg-grayscale-100 text-black rounded-[10px]',
-                      )}
-                    >
-                      {item.label}
-                    </button>
+          {menuItems.map((item, idx) => {
+            const isActive = pathname === item.href;
+
+            return (
+              <MenuItem key={idx}>
+                {({ active }) => {
+                  const commonClass = clsx(
+                    'block px-4 py-2 text-sm w-full',
+                    active && 'bg-grayscale-100 rounded-[10px]',
+                    isActive && 'text-primary-green-200 font-bold',
                   );
-                } else if (item.href) {
-                  return (
-                    <Link
-                      href={item.href}
-                      onClick={() => onItemClick?.(item.label)}
-                      className={clsx(
-                        'block px-4 py-2 text-sm',
-                        active && 'bg-grayscale-100 text-black rounded-[10px]',
-                      )}
-                    >
-                      {item.label}
-                    </Link>
-                  );
-                } else {
-                  return (
-                    <button
-                      onClick={() => onItemClick?.(item.label)}
-                      className={clsx(
-                        'w-full px-4 py-2 text-sm',
-                        active && 'bg-grayscale-100 text-black rounded-[10px]',
-                      )}
-                    >
-                      {item.label}
-                    </button>
-                  );
-                }
-              }}
-            </MenuItem>
-          ))}
+
+                  if (item.onClick) {
+                    return (
+                      <button onClick={item.onClick} className={commonClass}>
+                        {item.label}
+                      </button>
+                    );
+                  } else if (item.href) {
+                    return (
+                      <Link
+                        href={item.href}
+                        onClick={() => onItemClick?.(item.label)}
+                        className={commonClass}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  } else {
+                    return (
+                      <button onClick={() => onItemClick?.(item.label)} className={commonClass}>
+                        {item.label}
+                      </button>
+                    );
+                  }
+                }}
+              </MenuItem>
+            );
+          })}
         </div>
       </MenuItems>
     </Menu>

@@ -1,5 +1,5 @@
 import { FaTimes } from 'react-icons/fa';
-import { AiFillNotification } from 'react-icons/ai';
+import { FaBell } from 'react-icons/fa';
 
 type NotificationItemProps = {
   id: number; // 알림을 식별하기 위한 id 추가
@@ -22,18 +22,17 @@ const NotificationItem = ({ id, content, createdAt, onDelete }: NotificationItem
   };
   return (
     <>
-      <div className='w-[328px] px-[12px] py-[16px] rounded-[5px] bg-white '>
-        <header className='flex justify-between'>
-          <AiFillNotification size={20} />
-          <FaTimes
-            className='cursor-pointer' // 클릭 가능한 요소임을 표시
-            onClick={() => onDelete(id)} // X 아이콘 클릭 시 onDelete 호출
-          />
+      <div className='w-[330px] px-[12px] py-[16px] rounded-[5px] bg-white text-grayscale-500'>
+        <header className='flex justify-end'>
+          <FaTimes className='cursor-pointer ' onClick={() => onDelete(id)} />
         </header>
-        <div>
-          <p>내 위키가 수정되었습니다.</p>
-          <p>{content}</p> {/* content prop 사용 */}
-          <p>{formatTimeAgo(createdAt)}</p> {/* createdAt prop 사용 및 시간 포맷팅 */}
+        <div className='flex gap-2'>
+          <FaBell size={50} className='m-2 p-2 rounded-2xl bg-grayscale-200' />
+          <div>
+            <p>내 위키가 수정되었습니다.</p>
+            <p>{content}</p>
+            <p>{formatTimeAgo(createdAt)}</p>
+          </div>
         </div>
       </div>
     </>

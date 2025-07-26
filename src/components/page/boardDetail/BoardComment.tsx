@@ -7,17 +7,37 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 import BasicProfileImage from '@/assets/images/default_profile.svg';
+import { Modal } from 'react-simplified-package';
+import { useRouter } from 'next/navigation';
+import { deleteComment } from '@/api/articleApi';
 import { FiEdit2 as Edit } from 'react-icons/fi';
 import { FaRegTrashAlt as Delete } from 'react-icons/fa';
 import CommentEdit from './CommentEdit';
+import Button from '@/components/common/Button';
 
 interface CommentItemProps {
   id: number | undefined;
   comment: CommentResponse;
+  onDelete: (commentId: number) => void;
+  onUpdate: (updatedComment: CommentResponse) => void;
 }
 
-const BoardComment = ({ id, comment }: CommentItemProps) => {
+const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const router = useRouter();
+
+  const handleDeleteComment = async () => {
+    try {
+      await deleteComment(String(comment.id));
+      onDelete(comment.id);
+      // 댓글이 삭제되었습니다 토스트
+    } catch (error) {
+      console.log(error);
+      router.push('/500');
+    }
+  };
 
   const {
     content,
@@ -47,13 +67,13 @@ const BoardComment = ({ id, comment }: CommentItemProps) => {
             </div>
           </div>
           <div className=' absolute right-5 top-4 flex justify-end gap-2'>
-            {id === id && (
+            {id === comment.writer.id && (
               // edit, delete 컴포넌트 분리 고려해보기
               <>
                 <motion.div className='hoverMotion' onClick={() => setIsEditing(true)}>
                   <Edit className='text-grayscale-400' />
                 </motion.div>
-                <motion.div className='hoverMotion' onClick={() => setIsEditing(true)}>
+                <motion.div className='hoverMotion' onClick={() => setIsModalOpen(true)}>
                   <Delete className='text-grayscale-400' />
                 </motion.div>
               </>
@@ -79,8 +99,31 @@ const BoardComment = ({ id, comment }: CommentItemProps) => {
               </div>
             </div>
           </div>
-          <CommentEdit comment={comment} isEdit={setIsEditing} />
+          <CommentEdit comment={comment} isEdit={setIsEditing} onUpdate={onUpdate} />
         </div>
+      )}
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <div className='flex flex-col gap-2 min-w-[300px]'>
+            <h3 className='text-21g-semibold text-grayscale-600'>댓글 삭제</h3>
+            <p className='my-5 text-lg-medium text-grayscale-600'>댓글을 삭제하시겠습니까?</p>
+            <div className='flex justify-end gap-[10px]'>
+              <Button
+                variant='secondary'
+                className='flex items-center justify-center w-[70px]'
+                onClick={() => setIsModalOpen(false)}
+              >
+                취소
+              </Button>
+              <Button
+                className='flex items-center justify-center w-[70px]'
+                onClick={handleDeleteComment}
+              >
+                삭제
+              </Button>
+            </div>
+          </div>
+        </Modal>
       )}
     </>
   );

@@ -19,31 +19,25 @@ import {
   comboBoxListDefaultStyle,
   comboBoxListItemDefaultStyle,
   comboBoxListItemSelectedStyle,
+  toolbarSectionStyle,
   toolbarStyle,
 } from './toolbar/toolBarStyle';
 import EditorButton from './toolbar/components/EditorButton';
 import Separator from './toolbar/components/Separator';
 import { ComboBox, ComboContainer, ComboButton, ComboList, ComboListItem } from 'cy-combobox';
 import { IoMdArrowDropdown as IconDropdown } from 'react-icons/io';
-import LinkModal from './modals/LinkModal';
-import { OgLinkData } from './utils/components/LinkPreview';
-import { Modal } from 'react-simplified-package';
-import { CiCamera as IconCamera } from 'react-icons/ci';
-import { MdOutlineVideoCameraFront as IconVideo } from 'react-icons/md';
-import Button from '../Button';
+import { OgLinkData } from './toolbar/components/LinkModal/components/LinkPreview';
+import LinkModal from './toolbar/components/LinkModal/LinkModal';
 
 interface Props {
   editor: Editor;
+  setTempFiles: React.Dispatch<React.SetStateAction<Record<string, File>>>;
 }
 
-const ToolBar = ({ editor }: Props) => {
-  const [_videos, setVideos] = useState<Record<string, File>>({});
-  const [_images, setImages] = useState<Record<string, File>>({});
+const ToolBar = ({ editor, setTempFiles }: Props) => {
   const [ogData, setOgData] = useState<OgLinkData | null>(null);
 
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -108,189 +102,144 @@ const ToolBar = ({ editor }: Props) => {
   return (
     // Tool Bar 컴포넌트
     <div id='tool-bar' className={toolbarStyle}>
-      {/* 굵게 버튼 */}
-      <EditorButton
-        variant='bold'
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={clsx(buttonDefaultStyle, editor.isActive('bold') && buttonActiveStyle)}
-      />
-      {/* 기울임 버튼 */}
-      <EditorButton
-        variant='italic'
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={clsx(buttonDefaultStyle, editor.isActive('italic') && buttonActiveStyle)}
-      />
-      {/* 밑줄 버튼 */}
-      <EditorButton
-        variant='underline'
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        className={clsx(buttonDefaultStyle, editor.isActive('underline') && buttonActiveStyle)}
-      />
-      {/* 취소선 버튼 */}
-      <EditorButton
-        variant='strike'
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        className={clsx(buttonDefaultStyle, editor.isActive('strike') && buttonActiveStyle)}
-      />
-      {/* 구분선 */}
+      <div className={toolbarSectionStyle}>
+        {/* 문단 서식 변경 콤보박스 */}
+        <ComboBox>
+          <ComboContainer className={comboBoxContainerDefaultStyle}>
+            <ComboButton className={comboBoxButtonDefaultStyle} value={blockType}>
+              <IconDropdown className='pointer-events-none' />
+            </ComboButton>
+            <ComboList className={comboBoxListDefaultStyle}>
+              <ComboListItem
+                className={clsx(
+                  comboBoxListItemDefaultStyle,
+                  blockType === 'heading' && comboBoxListItemSelectedStyle,
+                )}
+                value='heading'
+                onClick={() =>
+                  editor.chain().focus().unsetBlockquote().setNode('heading', { level: 1 }).run()
+                }
+              >
+                제목
+              </ComboListItem>
+              <ComboListItem
+                className={clsx(
+                  comboBoxListItemDefaultStyle,
+                  blockType === 'paragraph' && comboBoxListItemSelectedStyle,
+                )}
+                value='paragraph'
+                onClick={() => editor.chain().focus().setParagraph().run()}
+              >
+                본문
+              </ComboListItem>
+              <ComboListItem
+                className={clsx(
+                  comboBoxListItemDefaultStyle,
+                  blockType === 'blockquote' && comboBoxListItemSelectedStyle,
+                )}
+                value='blockquote'
+                onClick={() => editor.chain().focus().setParagraph().toggleBlockquote().run()}
+              >
+                인용구
+              </ComboListItem>
+            </ComboList>
+          </ComboContainer>
+        </ComboBox>
+        <Separator />
+        {/* 굵게 버튼 */}
+        <EditorButton
+          variant='bold'
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={clsx(buttonDefaultStyle, editor.isActive('bold') && buttonActiveStyle)}
+        />
+        {/* 기울임 버튼 */}
+        <EditorButton
+          variant='italic'
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={clsx(buttonDefaultStyle, editor.isActive('italic') && buttonActiveStyle)}
+        />
+        {/* 밑줄 버튼 */}
+        <EditorButton
+          variant='underline'
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={clsx(buttonDefaultStyle, editor.isActive('underline') && buttonActiveStyle)}
+        />
+        {/* 취소선 버튼 */}
+        <EditorButton
+          variant='strike'
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={clsx(buttonDefaultStyle, editor.isActive('strike') && buttonActiveStyle)}
+        />
+        {/* 구분선 */}
+        <Separator />
+        {/* 리스트 버튼 */}
+        <EditorButton
+          variant='bullet'
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={clsx(
+            buttonDefaultStyle,
+            (editor?.isActive('bulletList') || editor?.isActive({ bulletList: true })) &&
+              buttonActiveStyle,
+          )}
+        />
+        {/* 숫자 리스트 버튼 */}
+        <EditorButton
+          variant='number'
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={clsx(buttonDefaultStyle, editor.isActive('orderedList') && buttonActiveStyle)}
+        />
+      </div>
       <Separator />
-      {/* 문단 서식 변경 콤보박스 */}
-      <ComboBox>
-        <ComboContainer className={comboBoxContainerDefaultStyle}>
-          <ComboButton className={comboBoxButtonDefaultStyle} value={blockType}>
-            <IconDropdown className='pointer-events-none' />
-          </ComboButton>
-          <ComboList className={comboBoxListDefaultStyle}>
-            <ComboListItem
-              className={clsx(
-                comboBoxListItemDefaultStyle,
-                blockType === 'heading' && comboBoxListItemSelectedStyle,
-              )}
-              value='heading'
-              onClick={() =>
-                editor.chain().focus().unsetBlockquote().setNode('heading', { level: 1 }).run()
-              }
-            >
-              제목
-            </ComboListItem>
-            <ComboListItem
-              className={clsx(
-                comboBoxListItemDefaultStyle,
-                blockType === 'paragraph' && comboBoxListItemSelectedStyle,
-              )}
-              value='paragraph'
-              onClick={() => editor.chain().focus().setParagraph().run()}
-            >
-              본문
-            </ComboListItem>
-            <ComboListItem
-              className={clsx(
-                comboBoxListItemDefaultStyle,
-                blockType === 'blockquote' && comboBoxListItemSelectedStyle,
-              )}
-              value='blockquote'
-              onClick={() => editor.chain().focus().setParagraph().toggleBlockquote().run()}
-            >
-              인용구
-            </ComboListItem>
-          </ComboList>
-        </ComboContainer>
-      </ComboBox>
-      {/* 리스트 버튼 */}
-      <EditorButton
-        variant='bullet'
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={clsx(
-          buttonDefaultStyle,
-          (editor?.isActive('bulletList') || editor?.isActive({ bulletList: true })) &&
-            buttonActiveStyle,
-        )}
-      />
-      {/* 숫자 리스트 버튼 */}
-      <EditorButton
-        variant='number'
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={clsx(buttonDefaultStyle, editor.isActive('orderedList') && buttonActiveStyle)}
-      />
-      {/* 구분선 */}
-      <Separator />
-      {/* 왼쪽 정렬 버튼 */}
-      <EditorButton
-        variant='left'
-        onClick={() => editor.chain().focus().setTextAlign('left').run()}
-        className={clsx(buttonDefaultStyle, alignType === 'left' && buttonActiveStyle)}
-      />
-      {/* 가운데 정렬 버튼 */}
-      <EditorButton
-        variant='center'
-        onClick={() => editor.chain().focus().setTextAlign('center').run()}
-        className={clsx(buttonDefaultStyle, alignType === 'center' && buttonActiveStyle)}
-      />
-      {/* 오른쪽 정렬 버튼 */}
-      <EditorButton
-        variant='right'
-        onClick={() => editor.chain().focus().setTextAlign('right').run()}
-        className={clsx(buttonDefaultStyle, alignType === 'right' && buttonActiveStyle)}
-      />
-      {/* 구분선 */}
-      <Separator />
-      {/* <button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={clsx(editor.isActive('codeBlock') && activeButtonStyle)}
-        >
-          코드블럭
-        </button> */}
-      {/* 링크 버튼 */}
-      {/* <EditorButton
+      <div className={toolbarSectionStyle}>
+        {/* 구분선 */}
+        {/* 왼쪽 정렬 버튼 */}
+        <EditorButton
+          variant='left'
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={clsx(buttonDefaultStyle, alignType === 'left' && buttonActiveStyle)}
+        />
+        {/* 가운데 정렬 버튼 */}
+        <EditorButton
+          variant='center'
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={clsx(buttonDefaultStyle, alignType === 'center' && buttonActiveStyle)}
+        />
+        {/* 오른쪽 정렬 버튼 */}
+        <EditorButton
+          variant='right'
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={clsx(buttonDefaultStyle, alignType === 'right' && buttonActiveStyle)}
+        />
+        {/* 구분선 */}
+        <Separator />
+        {/* 링크 버튼 */}
+        <EditorButton
           variant='link'
-          onClick={() => handleLinkSelect(editor)}
-          className={clsx(buttonDefaultStyle, editor.isActive('link') && buttonActiveStyle)}
-        /> */}
-      <EditorButton
-        variant='link'
-        onClick={handleLinkButtonClick}
-        className={clsx(buttonDefaultStyle)}
-      />
-      <Modal isOpen={isLinkModalOpen} onClose={() => setIsLinkModalOpen(false)}>
-        <LinkModal ogData={ogData} setOgData={setOgData} onModalClose={handleLinkSubmit} />
-      </Modal>
-      {/* 이미지 버튼 */}
-
-      <EditorButton
-        variant='image'
-        onClick={() => setIsImageModalOpen(true)}
-        className={clsx(buttonDefaultStyle)}
-      />
-      <Modal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)}>
-        <div className='flex justify-center flex-col'>
-          <h3 className='mt-[10px] center text-lg-semibold md:text-2lg-semibold text-grayscale-500 m-auto'>
-            이미지
-          </h3>
-          <div
-            className='my-5 min-w-[240px] w-[354px] h-[160px] bg-grayscale-100 rounded-lg flex items-center justify-center cursor-pointer'
-            onClick={addImage}
-          >
-            <IconCamera className='text-grayscale-400 w-[36px] h-[36px]' />
-            <input
-              ref={imageInputRef}
-              type='file'
-              onChange={(e) => handleImageSelect(e, editor, setImages)}
-              style={{ display: 'none' }}
-            />
-          </div>
-          <div className='flex justify-end'>
-            <Button>삽입하기</Button>
-          </div>
-        </div>
-      </Modal>
-      {/* 로컬 비디오 버튼 */}
-      <EditorButton
-        variant='video'
-        onClick={() => setIsVideoModalOpen(true)}
-        className={clsx(buttonDefaultStyle)}
-      ></EditorButton>
-      <Modal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)}>
-        <div className='flex justify-center flex-col'>
-          <h3 className='mt-[10px] center text-lg-semibold md:text-2lg-semibold text-grayscale-500 m-auto'>
-            이미지
-          </h3>
-          <div
-            className='my-5 min-w-[240px] w-[354px] h-[160px] bg-grayscale-100 rounded-lg flex items-center justify-center cursor-pointer'
-            onClick={addVideo}
-          >
-            <IconVideo className='text-grayscale-400 w-[36px] h-[36px]' />
-            <input
-              ref={videoInputRef}
-              type='file'
-              onChange={(e) => handleVideoSelect(e, editor, setVideos)}
-              style={{ display: 'none' }}
-            />
-          </div>
-          <div className='flex justify-end'>
-            <Button>삽입하기</Button>
-          </div>
-        </div>
-      </Modal>
+          onClick={handleLinkButtonClick}
+          className={clsx(buttonDefaultStyle)}
+        />
+        {isLinkModalOpen && (
+          <LinkModal ogData={ogData} setOgData={setOgData} onModalClose={handleLinkSubmit} />
+        )}
+        {/* 이미지 버튼 */}
+        <EditorButton variant='image' onClick={addImage} className={clsx(buttonDefaultStyle)}>
+          <input
+            ref={imageInputRef}
+            type='file'
+            onChange={(e) => handleImageSelect(e, editor, setTempFiles)}
+            style={{ display: 'none' }}
+          />
+        </EditorButton>
+        {/* 로컬 비디오 버튼 */}
+        <EditorButton variant='video' onClick={addVideo} className={clsx(buttonDefaultStyle)}>
+          <input
+            ref={videoInputRef}
+            type='file'
+            onChange={(e) => handleVideoSelect(e, editor, setTempFiles)}
+            style={{ display: 'none' }}
+          />
+        </EditorButton>
+      </div>
     </div>
   );
 };
