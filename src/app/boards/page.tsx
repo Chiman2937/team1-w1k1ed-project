@@ -1,5 +1,6 @@
 import BoardsBest from '@/components/page/boards/BoardsBest';
 import BoardsHeader from '@/components/page/boards/BoardsHeader';
+import BoardsLists from '@/components/page/boards/BoardsLists';
 import { Suspense } from 'react';
 
 export default function Boards() {
@@ -19,6 +20,7 @@ export default function Boards() {
         }
       >
         <BoardsBest />
+        <BoardsLists />
       </Suspense>
     </main>
   );
