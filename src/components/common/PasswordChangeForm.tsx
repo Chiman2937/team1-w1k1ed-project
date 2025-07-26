@@ -7,6 +7,8 @@ import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import { AxiosError } from 'axios';
 import { authAPI } from '@/api/authAPI';
+import { toast } from 'cy-toast';
+import SnackBar from '../../components/common/Snackbar'; // SnackBar 컴포넌트 임포트
 
 // ----------------------------------------------
 // 비밀번호 변경용 zod 스키마 정의
@@ -51,7 +53,12 @@ const PasswordChangeForm = () => {
       const responseData = await authAPI.resetPassword(payload);
 
       console.log('비밀번호 변경 성공:', responseData);
-      alert('비밀번호가 성공적으로 변경됨'); // 토스트
+      // alert 대신 성공 토스트 메시지 표시
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
+          비밀번호가 성공적으로 변경되었습니다.
+        </SnackBar>
+      ));
     } catch (error) {
       const axiosError = error as AxiosError;
 
@@ -61,7 +68,12 @@ const PasswordChangeForm = () => {
         '알 수 없는 오류';
 
       console.error('비밀번호 변경 실패:', errorMessage);
-      alert(`비밀번호 변경 실패: ${errorMessage}`);
+      // alert 대신 실패 토스트 메시지 표시
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          비밀번호 변경 실패: {errorMessage}
+        </SnackBar>
+      ));
     }
   };
 
