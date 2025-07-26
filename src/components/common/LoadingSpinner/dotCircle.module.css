@@ -8,15 +8,15 @@
   position: absolute;
   top: var(--distance);
   left: var(--distance);
-  background-color: var(--color-primary-green-300);
+  background-color: var(--theme-color);
   opacity: 0.2;
-  border-radius: 20px;
+  border-radius: 999px;
   transform: rotate(calc(var(--degree) * var(--i))) translateX(var(--distance));
   animation-name: blink;
   animation-duration: var(--total-animation-duration);
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  animation-delay: calc(var(--i) * 0.1s);
+  animation-delay: var(--animation-delay);
 }
 
 @keyframes rotate {
