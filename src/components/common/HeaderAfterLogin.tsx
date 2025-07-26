@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaBell } from 'react-icons/fa';
 import Logo from './Logo';
@@ -8,10 +8,70 @@ import Nav from './Nav';
 import HeaderDropdown from './HeaderDropdown';
 import NotificationPanel from './NotificationPanel';
 import { useAuthContext } from '@/context/AuthContext';
+import Button from './Button';
+import { useNotificationStore } from '@/store/notificationStore';
+
+// NotificationItem에서 사용하는 Item 타입 정의
+type Item = {
+  id: number;
+  content: string;
+  createdAt: string;
+};
 
 const HeaderAfterLogin = () => {
+  // Zustand 상태와 함수 가져오기
+  const { notificationsEnabled, hasNewNotifications, setHasNewNotifications } =
+    useNotificationStore();
+
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Item[]>([
+    // 알림 목록 상태를 HeaderAfterLogin으로 옮김
+    {
+      id: 1,
+      content: '첫 번째 알림입니다.',
+      createdAt: '2025-07-19T12:39:23.618Z',
+    },
+    {
+      id: 2,
+      content: '두 번째 알림이 도착했어요!',
+      createdAt: '2025-07-19T12:45:00.000Z',
+    },
+  ]);
+
   const { logout } = useAuthContext();
+
+  // 새 알림 추가 함수 (NotificationPanel로 전달)
+  const handleAddNotification = () => {
+    // 알림이 비활성화 상태일 때는 함수 실행 중단
+    if (!notificationsEnabled) {
+      return;
+    }
+
+    const newItem: Item = {
+      id: notifications.length > 0 ? Math.max(...notifications.map((item) => item.id)) + 1 : 1,
+      content: `새 알림 ${new Date().toLocaleTimeString()}`,
+      createdAt: new Date().toISOString(),
+    };
+    setNotifications([newItem, ...notifications]);
+    setHasNewNotifications(true); // 새 알림이 추가되었음을 표시
+  };
+
+  // 알림 삭제 함수 (NotificationPanel로 전달)
+  const handleDeleteNotification = (id: number) => {
+    setNotifications((prevList) => prevList.filter((item) => item.id !== id));
+    // 모든 알림을 삭제했을 때 빨간 점 없애기
+    if (notifications.length === 1 && notifications[0].id === id) {
+      // 마지막 알림이 삭제될 때
+      setHasNewNotifications(false);
+    }
+  };
+
+  // 알림 패널이 열리면 새 알림 표시를 해제
+  useEffect(() => {
+    if (isPanelOpen) {
+      setHasNewNotifications(false);
+    }
+  }, [isPanelOpen, setHasNewNotifications]);
 
   return (
     <>
@@ -24,26 +84,36 @@ const HeaderAfterLogin = () => {
                 <Nav />
               </div>
             </div>
-
+            {/* 알림 추가 버튼 */}
+            <div className='mb-4'>
+              <Button onClick={handleAddNotification}>새 알림 추가</Button>
+            </div>
             <div className='flex items-center gap-4'>
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsPanelOpen(true)}
-                className='hidden md:inline'
+                className='hidden md:inline relative'
               >
                 <FaBell
                   className='text-gray-300 cursor-pointer
                     w-[24px] h-[24px]
                     md:w-[32px] md:h-[32px]'
                 />
+                {hasNewNotifications && ( // 조건부로 빨간 점 렌더링
+                  <span
+                    className='absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-secondary-red-200'
+                    aria-hidden='true'
+                  ></span>
+                )}
               </motion.button>
 
               <div className='hidden md:flex items-center gap-2 cursor-pointer'>
                 <HeaderDropdown
                   iconName='account'
                   menuItems={[
-                    { label: '마이페이지', href: '/mypage' },
+                    { label: '위키 생성하기', href: '/mypage' },
+                    { label: '설정', href: '/settings' },
                     { label: '로그아웃', onClick: logout },
                   ]}
                 />
@@ -52,11 +122,13 @@ const HeaderAfterLogin = () => {
               {/* 모바일 메뉴 */}
               <div className='inline md:hidden'>
                 <HeaderDropdown
+                  hasNewNotifications={hasNewNotifications}
                   menuItems={[
                     { label: '위키목록', href: '/wikilist' },
                     { label: '자유게시판', href: '/boards' },
-                    { label: '알림' },
-                    { label: '마이페이지', href: '/mypage' },
+                    { label: '알림', hasNewNotifications: hasNewNotifications },
+                    { label: '위키 생성하기', href: '/mypage' },
+                    { label: '설정', href: '/settings' },
                     { label: '로그아웃', onClick: logout },
                   ]}
                   onItemClick={(label) => {
@@ -71,7 +143,12 @@ const HeaderAfterLogin = () => {
         </div>
       </div>
 
-      <NotificationPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
+      <NotificationPanel
+        isOpen={isPanelOpen}
+        onClose={() => setIsPanelOpen(false)}
+        list={notifications} // 알림 목록 전달
+        onDeleteItem={handleDeleteNotification} // 알림 삭제 함수 전달
+      />
     </>
   );
 };

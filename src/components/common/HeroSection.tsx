@@ -9,7 +9,7 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.3,
+      staggerChildren: 0.5,
     },
   },
 };
@@ -19,14 +19,14 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: easeOut },
+    transition: { duration: 1, ease: easeOut },
   },
 };
 
 const HeroSection = () => {
   // 메인 HeroSection의 애니메이션 컨트롤
   const mainControls = useAnimation();
-  const [mainRef, mainInView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  const [mainRef, mainInView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   useEffect(() => {
     if (mainInView) {
@@ -36,7 +36,7 @@ const HeroSection = () => {
 
   // WRITE 섹션 (선택된 부분)의 독립적인 애니메이션 컨트롤
   const writeSectionControls = useAnimation();
-  const [writeSectionRef, writeSectionInView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  const [writeSectionRef, writeSectionInView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   useEffect(() => {
     if (writeSectionInView) {
@@ -86,6 +86,7 @@ const HeroSection = () => {
 
           <motion.div variants={itemVariants} className='relative z-10'>
             <Button
+              href='/mypage'
               variant='landingGray'
               className='mx-[40px] rounded-[15px] transition font-pretendard font-bold
               px-[30px] py-[15px] text-[20px]
@@ -93,12 +94,14 @@ const HeroSection = () => {
             >
               위키 만들기
             </Button>
+
             <Image
               src='/images/type=image1.png'
               alt='사용자 온보딩 문서'
               width={498}
               height={590}
-              className='my-[44px] mx-auto
+              priority
+              className='mt-[44px] mx-auto
               w-[336px] h-[389px]
               md:w-[498px] md:h-[590px]'
             />
@@ -115,7 +118,7 @@ const HeroSection = () => {
             lg:gap-[40px] lg:py-[193px]'
           >
             {/* 이 div는 이제 writeSectionControls의 자식이므로 itemVariants를 그대로 유지 */}
-            <motion.div variants={itemVariants} className='z-10 text-left'>
+            <motion.div variants={itemVariants} className='z-10 text-left flex flex-col'>
               <motion.h3
                 variants={itemVariants}
                 className='text-primary-green-200 font-nexon-gothic-bold
@@ -138,16 +141,14 @@ const HeroSection = () => {
                 직접 작성해 봐요
               </motion.h2>
 
-              <motion.div variants={itemVariants} className='relative z-10'>
+              <motion.div variants={itemVariants} className='relative z-10 w-full h-full'>
                 <Image
                   src='/images/type=image2.png'
                   alt='키보드 타이핑'
-                  width={364}
-                  height={450}
+                  fill
+                  sizes='(min-width: 1024px) calc(100vw - 160px), (min-width: 768px) calc(100vw - 80px), calc(100vw - 40px)'
                   className='bg-primary-green-200 border border-none rounded-[10px]
-                  w-[113px] h-[162px]]
-                  md:w-[262px] md:h-[322px]
-                  lg:w-[364px] lg:h-[450px]'
+                  object-cover'
                 />
               </motion.div>
             </motion.div>
@@ -161,7 +162,7 @@ const HeroSection = () => {
                 height={681}
                 unoptimized
                 className='
-                w-[192px] h-[250px]]
+                w-[192px] h-[250px]
                 md:w-[365px] md:h-[479px]
                 lg:w-[520px] lg:h-[681px]'
               />
