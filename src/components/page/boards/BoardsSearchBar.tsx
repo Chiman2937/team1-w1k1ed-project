@@ -1,25 +1,8 @@
 'use client';
+import { ArticleResponse, getArticlesAPI, OrderByType } from '@/api/article/getArticlesAPI';
 import axios from 'axios';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
-
-// TODO: 재사용 가능하게 분리하기
-export interface ArticleWriterResponse {
-  name: string;
-  id: number;
-}
-
-export interface ArticleResponse {
-  createdAt: Date | string;
-  id: number;
-  image: string;
-  likeCount: number;
-  title: string;
-  updatedAt: Date | string;
-  writer: ArticleWriterResponse;
-}
-
-type OrderByType = 'recent' | 'like';
 
 const BoardsSearchBar = ({
   placeholder,
@@ -53,27 +36,14 @@ const BoardsSearchBar = ({
         // 새로운 AbortController 생성
         abortControllerRef.current = new AbortController();
 
-        // TODO: 하드코딩을 상수로 변경하기
-        const params = {
-          page: 1,
-          pageSize: 500,
-          orderBy: sortBy, // 동적으로 변경
-          ...(trimmedKeyword && { keyword: trimmedKeyword }), // name에서 keyword로 변경
-        };
+        const articles = await getArticlesAPI(
+          trimmedKeyword,
+          sortBy,
+          abortControllerRef.current.signal,
+        );
 
-        // TODO: API호출 함수는 재사용 가능하게 분리하기
-        const response = await axios.get('https://wikied-api.vercel.app/6-16/articles', {
-          params,
-          signal: abortControllerRef.current.signal,
-        });
-
-        // 가져온 데이터
-        const data = response.data;
-        // 검색어를 API파라미터의 keyword에 입력해서 가져온 데이터를 부모에게 넘겨주기
-        onSearchResults?.(data.list || []);
-
-        // TODO:개발끝나면 지우기
-        console.log('검색 결과:', data.list);
+        onSearchResults?.(articles);
+        console.log('검색 결과:', articles);
         console.log('정렬 기준:', sortBy);
         console.log('검색어:', trimmedKeyword);
       } catch (error) {

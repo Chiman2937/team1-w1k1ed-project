@@ -2,22 +2,11 @@
 
 import { useState } from 'react';
 import Pagination from '@/components/common/Pagination';
-import SearchBar from '@/components/common/SearchBar';
 import WikiListCard from '@/components/page/wikilist/WikiListCard';
 import SearchResultSummary from '@/components/page/wikilist/SearchResultSummary';
 import NoResultFallback from '@/components/page/wikilist/NoResultFallback';
-
-// TODO:재사용 가능하니까 따로 분리
-export interface Profile {
-  id: number;
-  code: string;
-  image: string;
-  city: string;
-  nationality: string;
-  job: string;
-  updatedAt: Date | string;
-  name: string;
-}
+import { Profile } from '@/api/profile/getProfilesAPI';
+import WikiListSearchBar from '@/components/page/wikilist/WikiListSearchBar';
 
 export default function WikiListPage() {
   const [searchResults, setSearchResults] = useState<Profile[]>([]);
@@ -36,7 +25,7 @@ export default function WikiListPage() {
       lg:gap-4 lg:pt-[60px]
       '
       >
-        <SearchBar
+        <WikiListSearchBar
           placeholder='검색어 입력해주세요'
           onSearchResults={setSearchResults}
           onSearchTerm={setCurrentSearchTerm}
