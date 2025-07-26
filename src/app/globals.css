@@ -83,6 +83,19 @@
     }
   }
 
+  @keyframes bounce {
+    0% {
+      transform: translateY(-3%); /* 이후에 높이 조절 */
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .animation-bounce-comment {
+    animation: bounce 1s infinite;
+  }
+
   .animation-slide-down-in {
     animation: slideDownIn 0.2s ease-out;
   }

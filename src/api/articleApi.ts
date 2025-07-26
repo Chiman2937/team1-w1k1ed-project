@@ -64,7 +64,7 @@ export const deleteArticleLike = async (articleId: string) => {
   }
 };
 
-export const getComment = async (articleId: string, limit: string, cursor?: string | null) => {
+export const getComment = async (articleId: string, limit: number, cursor?: string | null) => {
   try {
     const response = await instance.get(`/articles/${articleId}/comments`, {
       params: {
@@ -96,7 +96,7 @@ export const patchComment = async (commentId: string, formData: CommentFormData)
   }
 };
 
-export const deleteComment = async (commentId: string) => {
+export const deleteComment = async (commentId: number) => {
   try {
     const response = await instance.delete(`/comments/${commentId}`);
     return response.data;
