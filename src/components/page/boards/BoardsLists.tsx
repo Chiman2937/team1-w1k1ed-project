@@ -2,9 +2,9 @@
 import { useCallback, useState } from 'react';
 import BoardsSearchBar from './BoardsSearchBar';
 import { renderBoardItem } from './BoardsList';
-import BoardsPagination from './BoardsPagination';
 import BoardsOrderDropdown from './BoardsOrderDropdown';
 import { ArticleResponse, OrderByType } from '@/api/article/getArticlesAPI';
+import Pagination from '../../common/Pagination/Pagination';
 
 const BoardsLists = () => {
   const [searchResults, setSearchResults] = useState<ArticleResponse[]>([]);
@@ -42,11 +42,16 @@ const BoardsLists = () => {
         </div>
       </div>
       {/* Pagination 컴포넌트 사용 */}
-      <BoardsPagination
+      <Pagination
         data={searchResults}
         renderItem={renderBoardItem}
         pageSize={10}
         emptyMessage='검색 결과가 없습니다.'
+        itemSpacing={false} // 게시판은 간격 없음
+        listHeight={{
+          mobile: 'h-[500px]',
+          desktop: 'md:h-[500px]',
+        }}
       />
     </>
   );

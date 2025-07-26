@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { ArticleResponse } from './BoardsSearchBar';
 import { dateFormater } from '@/utils/date';
+import { ArticleResponse } from '@/api/article/getArticlesAPI';
 
 // 개별 게시글 아이템 컴포넌트
 interface BoardsListItemProps {

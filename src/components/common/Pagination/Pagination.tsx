@@ -1,5 +1,5 @@
 'use client';
-import PaginationButton from '@/components/page/wikilist/PaginationButton';
+import PaginationButton from '@/components/common/Pagination/PaginationButton';
 import { FaAngleLeft as PaginationPrev } from 'react-icons/fa6';
 import { FaAngleRight as PaginationNext } from 'react-icons/fa6';
 import { useState, useEffect, ReactNode } from 'react';
@@ -18,7 +18,7 @@ interface PaginationProps<T> {
   emptyMessage?: ReactNode;
   // 추가 스타일링
   className?: string;
-  // 리스트 아이템 간 간격 사용 여부
+  // 리스트 아이템 간격 사용 여부
   itemSpacing?: boolean;
   // 리스트 영역 높이 커스터마이징
   listHeight?: {
@@ -27,7 +27,7 @@ interface PaginationProps<T> {
   };
 }
 
-function TestPagination<T>({
+function Pagination<T>({
   data,
   pageSize = 3,
   maxVisiblePages = 5,
@@ -146,4 +146,4 @@ function TestPagination<T>({
   );
 }
 
-export default TestPagination;
+export default Pagination;

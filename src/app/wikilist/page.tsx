@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Pagination from '@/components/common/Pagination';
 import WikiListCard from '@/components/page/wikilist/WikiListCard';
-import SearchResultSummary from '@/components/page/wikilist/SearchResultSummary';
-import NoResultFallback from '@/components/page/wikilist/NoResultFallback';
+import SearchResultSummary from '@/components/common/SearchResultSummary';
+import NoResultFallback from '@/components/common/Pagination/NoResultFallback';
 import { Profile } from '@/api/profile/getProfilesAPI';
 import WikiListSearchBar from '@/components/page/wikilist/WikiListSearchBar';
+import Pagination from '@/components/common/Pagination/Pagination';
 
 export default function WikiListPage() {
   const [searchResults, setSearchResults] = useState<Profile[]>([]);
