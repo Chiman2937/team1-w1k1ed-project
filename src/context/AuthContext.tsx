@@ -27,18 +27,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // 로그인 함수 정의: 외부에서 로그인 API 호출 성공 시 이 함수를 호출
   const login = useCallback(
     (newAccessToken: string, newRefreshToken: string, newUser: UserData) => {
-      // Access Token (유효 기간: 30분)
-      // 30분은 하루의 30 / (24 * 60) = 30 / 1440 = 1/48 입니다.
+      // Access Token (유효 기간: 5분)
       CookiesJs.set('accessToken', newAccessToken, {
         expires: 5 / (24 * 60),
         secure: process.env.NODE_ENV === 'production',
-      }); // 30분
+      }); //
 
-      // Refresh Token (유효 기간: 7일)
+      // Refresh Token (유효 기간: 1일)
       CookiesJs.set('refreshToken', newRefreshToken, {
-        expires: 10 / (24 * 60),
+        expires: 1,
         secure: process.env.NODE_ENV === 'production',
-      }); // 7일
+      }); //
 
       // 사용자 정보를 로컬 스토리지에 JSON 문자열 형태로 저장합니다.
       localStorage.setItem('user', JSON.stringify(newUser));
