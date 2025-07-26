@@ -4,6 +4,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NotificationItem from '@/components/common/NotificationItem';
 import { FaTimes as IconClose } from 'react-icons/fa';
+import { useNotificationStore } from '@/store/notificationStore'; // Zustand 스토어 임포트
 
 type Item = {
   id: number;
@@ -19,6 +20,9 @@ type Props = {
 };
 
 const NotificationPanel = ({ isOpen, onClose, list, onDeleteItem }: Props) => {
+  // Zustand 스토어에서 알림 활성화 상태를 가져옵니다.
+  const { notificationsEnabled } = useNotificationStore();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -51,7 +55,12 @@ const NotificationPanel = ({ isOpen, onClose, list, onDeleteItem }: Props) => {
 
               {/* 알림 목록 */}
               <div className='flex-1 overflow-y-auto flex flex-col gap-[8px]'>
-                {list.length > 0 ? (
+                {/* 알림 활성화 상태에 따라 다른 메시지 표시 */}
+                {!notificationsEnabled ? (
+                  <p className='text-gray-500 text-center py-[16px] bg-gray-50 rounded-[5px]'>
+                    알림 기능이 비활성화되어 있습니다.
+                  </p>
+                ) : list.length > 0 ? (
                   list.map((item) => (
                     <NotificationItem
                       key={item.id}

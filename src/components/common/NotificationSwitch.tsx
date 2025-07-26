@@ -1,15 +1,20 @@
+'use client'; // 클라이언트 컴포넌트임을 명시
+
 import { Switch } from '@headlessui/react';
-import { useState } from 'react';
+import { useNotificationStore } from '@/store/notificationStore'; // Zustand 스토어 임포트
 
 const NotificationSwitch = () => {
-  const [enabled, setEnabled] = useState(false);
+  // Zustand 스토어에서 상태와 상태를 업데이트하는 함수를 임폴트
+  const { notificationsEnabled, setNotificationsEnabled } = useNotificationStore();
 
   return (
     <div className='flex justify-between items-center text-grayscale-500 text-md-regular'>
       <div>서비스 알림</div>
       <Switch
-        checked={enabled}
-        onChange={setEnabled}
+        // `checked` 속성을 로컬 상태 `enabled` 대신 전역 상태 `notificationsEnabled`로 연결
+        checked={notificationsEnabled}
+        // `onChange` 핸들러를 로컬 상태 업데이트 함수 대신 전역 상태 업데이트 함수로 연결
+        onChange={setNotificationsEnabled}
         className='group relative flex h-7 w-14 cursor-pointer rounded-full items-center
         p-1 ease-in-out focus:not-data-focus:outline-none 
         data-focus:outline data-focus:outline-white

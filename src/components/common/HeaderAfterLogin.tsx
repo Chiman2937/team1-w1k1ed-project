@@ -9,6 +9,7 @@ import HeaderDropdown from './HeaderDropdown';
 import NotificationPanel from './NotificationPanel';
 import { useAuthContext } from '@/context/AuthContext';
 import Button from './Button';
+import { useNotificationStore } from '@/store/notificationStore';
 
 // NotificationItem에서 사용하는 Item 타입 정의
 type Item = {
@@ -18,6 +19,10 @@ type Item = {
 };
 
 const HeaderAfterLogin = () => {
+  // Zustand 상태와 함수 가져오기
+  const { notificationsEnabled, hasNewNotifications, setHasNewNotifications } =
+    useNotificationStore();
+
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [notifications, setNotifications] = useState<Item[]>([
     // 알림 목록 상태를 HeaderAfterLogin으로 옮김
@@ -32,12 +37,16 @@ const HeaderAfterLogin = () => {
       createdAt: '2025-07-19T12:45:00.000Z',
     },
   ]);
-  const [hasNewNotifications, setHasNewNotifications] = useState(false); // 새 알림 유무 상태
 
   const { logout } = useAuthContext();
 
   // 새 알림 추가 함수 (NotificationPanel로 전달)
   const handleAddNotification = () => {
+    // 알림이 비활성화 상태일 때는 함수 실행 중단
+    if (!notificationsEnabled) {
+      return;
+    }
+
     const newItem: Item = {
       id: notifications.length > 0 ? Math.max(...notifications.map((item) => item.id)) + 1 : 1,
       content: `새 알림 ${new Date().toLocaleTimeString()}`,
@@ -62,7 +71,7 @@ const HeaderAfterLogin = () => {
     if (isPanelOpen) {
       setHasNewNotifications(false);
     }
-  }, [isPanelOpen]);
+  }, [isPanelOpen, setHasNewNotifications]);
 
   return (
     <>
@@ -104,7 +113,7 @@ const HeaderAfterLogin = () => {
                   iconName='account'
                   menuItems={[
                     { label: '위키 생성하기', href: '/mypage' },
-                    { label: '설정', href: '/passwordChangePage' },
+                    { label: '설정', href: '/settings' },
                     { label: '로그아웃', onClick: logout },
                   ]}
                 />
@@ -119,7 +128,7 @@ const HeaderAfterLogin = () => {
                     { label: '자유게시판', href: '/boards' },
                     { label: '알림', hasNewNotifications: hasNewNotifications },
                     { label: '위키 생성하기', href: '/mypage' },
-                    { label: '설정', href: '/passwordChangePage' },
+                    { label: '설정', href: '/settings' },
                     { label: '로그아웃', onClick: logout },
                   ]}
                   onItemClick={(label) => {
