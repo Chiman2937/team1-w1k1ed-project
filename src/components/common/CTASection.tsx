@@ -2,7 +2,6 @@ import Button from './Button';
 import { motion, useAnimation, easeOut } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
-import Link from 'next/link';
 
 // 컨테이너와 아이템 variants 분리
 const containerVariants = {
@@ -66,17 +65,16 @@ const CTASection = () => {
           </motion.h1>
           {/* Button에 itemVariants 적용 */}
           <motion.div variants={itemVariants}>
-            <Link href={'/mypage'}>
-              <Button
-                variant='landingWhite'
-                className='mx-[40px] my-[40px] px-[30px] py-[15px] rounded-[15px]
+            <Button
+              href={'/mypage'}
+              variant='landingWhite'
+              className='mx-[40px] my-[40px] px-[30px] py-[15px] rounded-[15px]
                 transition cursor-pointer
                 text-[20px] font-pretendard font-semibold
                 md:text-[24px]'
-              >
-                지금 시작하기
-              </Button>
-            </Link>
+            >
+              지금 시작하기
+            </Button>
           </motion.div>
         </motion.div>
       </section>

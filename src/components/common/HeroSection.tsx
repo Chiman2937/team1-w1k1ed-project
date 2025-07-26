@@ -3,7 +3,6 @@ import Button from './Button';
 import { motion, useAnimation, easeOut } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
-import Link from 'next/link';
 
 // 컨테이너와 아이템 variants 분리
 const containerVariants = {
@@ -86,16 +85,15 @@ const HeroSection = () => {
           </motion.div>
 
           <motion.div variants={itemVariants} className='relative z-10'>
-            <Link href='/mypage'>
-              <Button
-                variant='landingGray'
-                className='mx-[40px] rounded-[15px] transition font-pretendard font-bold
+            <Button
+              href='/mypage'
+              variant='landingGray'
+              className='mx-[40px] rounded-[15px] transition font-pretendard font-bold
               px-[30px] py-[15px] text-[20px]
               md:font-[24px] md:text-[24px]'
-              >
-                위키 만들기
-              </Button>
-            </Link>
+            >
+              위키 만들기
+            </Button>
 
             <Image
               src='/images/type=image1.png'
