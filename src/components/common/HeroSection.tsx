@@ -100,6 +100,7 @@ const HeroSection = () => {
               alt='사용자 온보딩 문서'
               width={498}
               height={590}
+              priority
               className='mt-[44px] mx-auto
               w-[336px] h-[389px]
               md:w-[498px] md:h-[590px]'
@@ -145,6 +146,7 @@ const HeroSection = () => {
                   src='/images/type=image2.png'
                   alt='키보드 타이핑'
                   fill
+                  sizes='(min-width: 1024px) calc(100vw - 160px), (min-width: 768px) calc(100vw - 80px), calc(100vw - 40px)'
                   className='bg-primary-green-200 border border-none rounded-[10px]
                   object-cover'
                 />

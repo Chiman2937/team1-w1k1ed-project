@@ -78,7 +78,11 @@ const PasswordChangeForm = () => {
   };
 
   return (
-    <form className='flex flex-col gap-[8px] mx-auto' onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className='flex flex-col gap-[8px] mx-auto 
+      w-[335px] md:w-[400px] transition-all duration-700'
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Input
         className='w-[335px] md:w-[400px]'
         label='비밀번호 변경'
