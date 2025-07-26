@@ -21,7 +21,8 @@ const BoardInfoForm: React.FC<PostFormProps> = ({ title, setTitle }) => {
             maxLength={TITLE_MAX_LEN}
           />
           <span className='text-xs-medium md:text-md-medium text-gray-500'>
-            {title.length}/<span className='text-primary-green-200'>{TITLE_MAX_LEN}</span>
+            {!title ? 0 : title.length}/
+            <span className='text-primary-green-200'>{TITLE_MAX_LEN}</span>
           </span>
         </div>
         <div className='border-t  border-grayscale-200' />

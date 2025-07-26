@@ -30,7 +30,7 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
 
   const handleDeleteComment = async () => {
     try {
-      await deleteComment(String(comment.id));
+      await deleteComment(comment.id);
       onDelete(comment.id);
       // 댓글이 삭제되었습니다 토스트
     } catch (error) {
@@ -68,7 +68,6 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
           </div>
           <div className=' absolute right-5 top-4 flex justify-end gap-2'>
             {id === comment.writer.id && (
-              // edit, delete 컴포넌트 분리 고려해보기
               <>
                 <motion.div className='hoverMotion' onClick={() => setIsEditing(true)}>
                   <Edit className='text-grayscale-400' />
@@ -105,8 +104,8 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <div className='flex flex-col gap-2 min-w-[300px]'>
-            <h3 className='text-21g-semibold text-grayscale-600'>댓글 삭제</h3>
-            <p className='my-5 text-lg-medium text-grayscale-600'>댓글을 삭제하시겠습니까?</p>
+            <h3 className='text-xl-semibold text-grayscale-500'>댓글 삭제</h3>
+            <p className='my-5 text-lg-medium text-grayscale-500'>댓글을 삭제하시겠습니까?</p>
             <div className='flex justify-end gap-[10px]'>
               <Button
                 variant='secondary'
