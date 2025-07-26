@@ -13,7 +13,7 @@ interface PaginationProps<T> {
   // 한 번에 보여줄 페이지 갯수
   maxVisiblePages?: number;
   // 보여줄 데이터의 형식
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number, totalCount?: number) => React.ReactNode;
   // 데이터가 없을 때 보여줄 것
   emptyMessage?: ReactNode;
   // 추가 스타일링
@@ -106,7 +106,7 @@ function Pagination<T>({
       <div className={clsx(listHeight.mobile, listHeight.desktop)}>
         <div className={itemSpacing ? 'space-y-2 md:space-y-4' : ''}>
           {currentData.map((item, index) => (
-            <div key={startIndex + index}>{renderItem(item, startIndex + index)}</div>
+            <div key={startIndex + index}>{renderItem(item, startIndex + index, data.length)}</div>
           ))}
         </div>
       </div>
