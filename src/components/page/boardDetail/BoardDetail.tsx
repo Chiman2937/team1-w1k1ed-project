@@ -13,6 +13,10 @@ import { BoardDeleteButton, BoardEditButton, BoardLikeButton } from './BoardDeta
 import { useState, useEffect } from 'react';
 import Animation from '@/components/common/Animation';
 import BoardContent from './BoardContent';
+import Button from '@/components/common/Button';
+import { Modal } from 'react-simplified-package';
+import BoardSkeleton from './BoardSkeleton';
+import ContentViewer from '@/components/common/TextEditor/ContentViewer';
 
 const BoardDetail = ({
   id,
@@ -28,7 +32,7 @@ const BoardDetail = ({
   const [isLiked, setIsLiked] = useState(false);
   const [writerId, setWriterId] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
 
@@ -74,7 +78,6 @@ const BoardDetail = ({
   const handleDelete = async () => {
     try {
       await deleteArticle(id);
-      // modal 삭제하시겟습니까?
       // toast 삭제되었습니다
       router.push('/boards');
     } catch (error) {
@@ -88,7 +91,12 @@ const BoardDetail = ({
     setIsEditing(true);
   };
 
-  if (!article) return <></>; // 로딩바로 변경
+  if (!article)
+    return (
+      <Animation>
+        <BoardSkeleton />
+      </Animation>
+    );
 
   const {
     title,
@@ -103,48 +111,78 @@ const BoardDetail = ({
   if (isEditing)
     return (
       <Animation>
-        <div className='flex flex-col items-center justify-center'>
-          <BoardContent>
-            <BoardEdit
-              setIsEditing={() => setIsEditing(false)}
-              userName={name}
-              date={date}
-              initalTitle={title}
-              initalContent={content}
-            />
-          </BoardContent>
-        </div>
+        <BoardContent>
+          <BoardEdit
+            setIsEditing={setIsEditing}
+            userName={name}
+            id={id}
+            userId={userId}
+            date={date}
+            initalTitle={title}
+            initalContent={content}
+          />
+        </BoardContent>
       </Animation>
     );
 
   return (
-    <BoardContent>
-      <div className='p-5'>
-        <header className='flex flex-col gap-[30px]'>
-          <section className='flex justify-between items-center'>
-            <h1 className='text-lg-semibold md:text-2xl-semibold  text-grayscale-600'>{title}</h1>
-            <div className='flex gap-[14px]'>
-              {userId !== writerId /* 수정해야함 */ && (
-                <>
-                  <BoardEditButton onEdit={handleEdit} />
-                  <BoardDeleteButton onDelete={handleDelete} />
-                </>
-              )}
+    <Animation>
+      <BoardContent>
+        <div className='p-5'>
+          <header className='flex flex-col gap-[30px]'>
+            <section className='flex justify-between items-center'>
+              <h1 className='text-lg-semibold md:text-2xl-semibold  text-grayscale-600'>{title}</h1>
+              <div className='flex gap-[14px]'>
+                {userId === writerId && (
+                  <>
+                    <BoardEditButton onEdit={handleEdit} />
+                    <BoardDeleteButton onDelete={() => setIsModalOpen(true)} />
+                  </>
+                )}
+              </div>
+            </section>
+            <section className='flex justify-between items-center  text-grayscale-400 text-md-regular pb-5 border-b border-grayscale-200'>
+              <div className='flex gap-[10px] '>
+                <p>{name}</p>
+                <p>{updatedDate}</p>
+              </div>
+              <BoardLikeButton
+                initialLikeCount={likeCount}
+                onClick={handleLike}
+                isLiked={isLiked}
+              />
+            </section>
+            <main className='flex flex-col gap-[20px] min-h-52 overflow-auto md:min-h-72 xl:min-h-100 text-ellipsis'>
+              <ContentViewer content={content} />
+            </main>
+          </header>
+        </div>
+
+        {isModalOpen && (
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <div className='flex flex-col gap-2 min-w-[300px]'>
+              <h3 className='text-2xl-semibold text-grayscale-500'>게시물 삭제</h3>
+              <p className='my-5 text-lg-medium text-grayscale-500'>게시물을 삭제하시겠습니까?</p>
+              <div className='flex justify-end gap-[10px]'>
+                <Button
+                  variant='secondary'
+                  className='flex items-center justify-center w-[70px]'
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  취소
+                </Button>
+                <Button
+                  className='flex items-center justify-center w-[70px]'
+                  onClick={handleDelete}
+                >
+                  삭제
+                </Button>
+              </div>
             </div>
-          </section>
-          <section className='flex justify-between items-center  text-grayscale-400 text-md-regular'>
-            <div className='flex gap-[10px]'>
-              <p>{name}</p>
-              <p>{updatedDate}</p>
-            </div>
-            <BoardLikeButton initialLikeCount={likeCount} onClick={handleLike} isLiked={isLiked} />
-          </section>
-          <main className='flex flex-col gap-[20px]'>
-            <span className='text-lg-regular text-grayscale-400'>{content}</span>
-          </main>
-        </header>
-      </div>
-    </BoardContent>
+          </Modal>
+        )}
+      </BoardContent>
+    </Animation>
   );
 };
 
