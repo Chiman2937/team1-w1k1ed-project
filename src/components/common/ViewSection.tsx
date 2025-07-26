@@ -8,7 +8,7 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.3, // 자식들이 0.3초 간격으로 등장
+      staggerChildren: 0.5, // 자식들이 0.5초 간격으로 등장
     },
   },
 };
@@ -18,15 +18,15 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: easeOut },
+    transition: { duration: 1, ease: easeOut },
   },
 };
 
 const ViewSection = () => {
   const controls = useAnimation();
   // triggerOnce: true로 설정하여 한 번만 애니메이션이 실행되도록 합니다.
-  // threshold: 0.3는 요소의 30%가 보일 때 애니메이션을 트리거합니다.
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  // threshold: 0.2는 요소의 20%가 보일 때 애니메이션을 트리거합니다.
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   useEffect(() => {
     if (inView) {
