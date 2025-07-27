@@ -45,7 +45,6 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     console.log('폼 제출됨:', data);
-    // setIsLoading(true);
 
     try {
       const responseData = await authAPI.signIn(data);
