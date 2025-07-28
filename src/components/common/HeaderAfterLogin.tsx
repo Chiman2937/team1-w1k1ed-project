@@ -9,7 +9,7 @@ import HeaderDropdown from './HeaderDropdown';
 import NotificationPanel from './NotificationPanel';
 import { useAuthContext } from '@/context/AuthContext';
 import Button from './Button';
-import { useNotificationStore } from '@/store/notificationStore';
+import { useNotificationStore } from '@/store/useNotificationStore';
 
 // NotificationItem에서 사용하는 Item 타입 정의
 type Item = {
