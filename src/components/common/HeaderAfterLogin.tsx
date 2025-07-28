@@ -95,11 +95,22 @@ const HeaderAfterLogin = () => {
                 onClick={() => setIsPanelOpen(true)}
                 className='hidden md:inline relative'
               >
-                <FaBell
-                  className='text-gray-300 cursor-pointer
-                    w-[24px] h-[24px]
-                    md:w-[32px] md:h-[32px]'
-                />
+                {notificationsEnabled ? ( // notificationsEnabled에 따라 아이콘을 조건부 렌더링
+                  <FaBell
+                    className='text-gray-300 cursor-pointer
+                      w-6 h-6
+                      md:w-[32px] md:h-[32px]'
+                  />
+                ) : (
+                  <div className='relative w-6 h-6 md:w-[32px] md:h-[32px]'>
+                    <FaBell className='text-gray-300 w-full h-full' />
+                    {/* Diagonal Line (사선) */}
+                    <div
+                      className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                      w-[120%] h-[2px] bg-gray-300 rotate-45 ring-2 ring-white'
+                    ></div>
+                  </div>
+                )}
                 {hasNewNotifications && ( // 조건부로 빨간 점 렌더링
                   <span
                     className='absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-secondary-red-200'
