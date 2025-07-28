@@ -91,7 +91,7 @@ export default function SignupSection() {
         (
           { isClosing, isOpening, index }, // close 함수도 받아서 닫기 버튼에 활용 가능
         ) => (
-          <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
+          <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
             회원가입 실패: {errorMessage}
           </SnackBar>
         ),

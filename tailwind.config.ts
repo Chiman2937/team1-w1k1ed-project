@@ -1,5 +1,5 @@
 import { type Config } from 'tailwindcss';
-import forms from '@tailwindcss/forms';
+//import forms from '@tailwindcss/forms';
 
 const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx}', './styles/**/*.{css,scss}'],
@@ -42,16 +42,16 @@ const config: Config = {
       boxShadow: {
         card: '0px 4px 20px rgba(0, 0, 0, 0.08)',
       },
-      forms: {
-        DEFAULT: {
-          checkbox: {
-            color: 'primary-green-200',
-          },
-        },
-      },
+      // forms: {
+      //   DEFAULT: {
+      //     checkbox: {
+      //       color: 'primary-green-200',
+      //     },
+      //   },
+      // },
     },
   },
-  plugins: [forms],
+  plugins: [],
 };
 
 export default config;

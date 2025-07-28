@@ -1,6 +1,6 @@
 'use client';
 import { ToastRender } from 'cy-toast';
-import SignupSection from './signup';
+import SignupSection from './signUp';
 const SignupPage = () => {
   return (
     <>
