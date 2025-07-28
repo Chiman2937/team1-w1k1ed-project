@@ -17,10 +17,8 @@ const Board = () => {
   return (
     <>
       <Animation>
-        <div className='flex flex-col items-center justify-center'>
-          <BoardDetail id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardDetail>
-          <BoardComments id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardComments>
-        </div>
+        <BoardDetail id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardDetail>
+        <BoardComments id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardComments>
       </Animation>
     </>
   );

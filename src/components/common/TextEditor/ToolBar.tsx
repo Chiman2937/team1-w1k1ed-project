@@ -172,6 +172,8 @@ const ToolBar = ({ editor, setTempFiles }: Props) => {
         />
         {/* 구분선 */}
         <Separator />
+      </div>
+      <div className={toolbarSectionStyle}>
         {/* 리스트 버튼 */}
         <EditorButton
           variant='bullet'
@@ -188,8 +190,8 @@ const ToolBar = ({ editor, setTempFiles }: Props) => {
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={clsx(buttonDefaultStyle, editor.isActive('orderedList') && buttonActiveStyle)}
         />
+        <Separator />
       </div>
-      <Separator />
       <div className={toolbarSectionStyle}>
         {/* 구분선 */}
         {/* 왼쪽 정렬 버튼 */}

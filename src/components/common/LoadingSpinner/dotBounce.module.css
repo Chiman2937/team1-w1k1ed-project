@@ -3,10 +3,10 @@
     transform: translateY(0);
   }
   20% {
-    transform: translateY(-15px);
+    transform: translateY(var(--jump-distance));
   }
   40% {
-    transform: translateY(10px);
+    transform: translateY(var(--fall-distance));
   }
   60% {
     transform: translateY(0);
@@ -19,15 +19,15 @@
 }
 
 .dot {
-  background-color: var(--color-primary-green-300);
+  background-color: var(--theme-color);
   aspect-ratio: 1 / 1;
   border-radius: 999px;
-  animation: bounce 1.5s ease-in-out infinite;
+  animation: bounce var(--bounce-speed) ease-in-out infinite;
 
   animation-name: bounce;
   animation-duration: var(--total-animation-duration);
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 
-  animation-delay: calc(var(--i) * 0.15s);
+  animation-delay: calc(var(--i) * var(--bounce-speed));
 }

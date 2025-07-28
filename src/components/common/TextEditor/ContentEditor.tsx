@@ -6,7 +6,7 @@ interface Props {
 
 const ContentEditor = ({ editor }: Props) => {
   return (
-    <div className='px-5'>
+    <div>
       <EditorContent editor={editor} />
     </div>
   );

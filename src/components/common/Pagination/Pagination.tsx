@@ -1,9 +1,9 @@
 'use client';
-
-import PaginationButton from '@/components/page/wikilist/PaginationButton';
+import PaginationButton from '@/components/common/Pagination/PaginationButton';
 import { FaAngleLeft as PaginationPrev } from 'react-icons/fa6';
 import { FaAngleRight as PaginationNext } from 'react-icons/fa6';
 import { useState, useEffect, ReactNode } from 'react';
+import clsx from 'clsx';
 
 interface PaginationProps<T> {
   // 총 데이터
@@ -13,11 +13,18 @@ interface PaginationProps<T> {
   // 한 번에 보여줄 페이지 갯수
   maxVisiblePages?: number;
   // 보여줄 데이터의 형식
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number, totalCount?: number) => React.ReactNode;
   // 데이터가 없을 때 보여줄 것
   emptyMessage?: ReactNode;
   // 추가 스타일링
   className?: string;
+  // 리스트 아이템 간격 사용 여부
+  itemSpacing?: boolean;
+  // 리스트 영역 높이 커스터마이징
+  listHeight?: {
+    mobile?: string;
+    desktop?: string;
+  };
 }
 
 function Pagination<T>({
@@ -27,6 +34,11 @@ function Pagination<T>({
   renderItem,
   emptyMessage = '데이터가 없습니다.',
   className = '',
+  itemSpacing = true,
+  listHeight = {
+    mobile: 'h-[400px]',
+    desktop: 'md:h-[500px]',
+  },
 }: PaginationProps<T>) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -91,10 +103,10 @@ function Pagination<T>({
   return (
     <div className={`flex flex-col min-h-[500px] ${className}`}>
       {/* 리스트 영역 - 고정 높이 */}
-      <div className='h-[400px] md:h-[500px]'>
-        <div className='space-y-2 md:space-y-4'>
+      <div className={clsx(listHeight.mobile, listHeight.desktop)}>
+        <div className={itemSpacing ? 'space-y-2 md:space-y-4' : ''}>
           {currentData.map((item, index) => (
-            <div key={startIndex + index}>{renderItem(item, startIndex + index)}</div>
+            <div key={startIndex + index}>{renderItem(item, startIndex + index, data.length)}</div>
           ))}
         </div>
       </div>
@@ -110,7 +122,6 @@ function Pagination<T>({
             >
               <PaginationPrev />
             </PaginationButton>
-
             {pages.map((page) => (
               <PaginationButton
                 key={page}
@@ -121,7 +132,6 @@ function Pagination<T>({
                 {page}
               </PaginationButton>
             ))}
-
             <PaginationButton
               variant='navigation'
               disabled={groupEnd === totalPages}
