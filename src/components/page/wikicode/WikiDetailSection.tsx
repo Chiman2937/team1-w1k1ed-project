@@ -17,6 +17,7 @@ import { getHtmlHeadings } from '@/components/common/TextEditor/utils/handlers/g
 import WikiInfo from './WikiInfo/WikiInfo';
 import { ToastRender } from 'cy-toast';
 import { useRouter } from 'next/navigation';
+import { useUnloadAlert } from '@/hooks/useUnloadAlert';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -31,6 +32,8 @@ const WikiDetailSection = ({ wikiData }: Props) => {
   });
 
   const [isExpiredModalOpen, setIsExpiredtModalOpen] = useState(false);
+
+  useUnloadAlert({ activeBy: isEditing });
 
   const router = useRouter();
 
@@ -75,21 +78,6 @@ const WikiDetailSection = ({ wikiData }: Props) => {
     };
     getProfilePing();
   }, [setEditingInfo, wikiData]);
-
-  // 새로고침/닫기 시 브라우저 확인창 띄우기
-  useEffect(() => {
-    if (!isEditing) return;
-
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = ''; // 브라우저 기본 메시지 표시
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [isEditing]);
 
   if (!editor) return;
 
