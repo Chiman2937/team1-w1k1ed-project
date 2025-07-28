@@ -1,4 +1,4 @@
-import { Node, mergeAttributes } from '@tiptap/core';
+import { mergeAttributes, Node } from '@tiptap/core';
 
 export interface LocalImageOptions {
   HTMLAttributes: Record<string, HTMLImageElement>;
@@ -53,17 +53,19 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
   renderHTML({ HTMLAttributes }) {
     return [
       'div',
-      {
-        'data-image-outer': '',
-        class: 'image-outer-wrapper',
-      },
+      { 'data-image-outer': '', class: 'image-outer-wrapper' },
       [
         'div',
-        {
-          'data-image-inner': '',
-          class: 'image-inner-wrapper',
-        },
-        ['img', mergeAttributes(HTMLAttributes)],
+        { 'data-image-inner': '', class: 'image-inner-wrapper' },
+        [
+          'img',
+          mergeAttributes({
+            src: HTMLAttributes.src,
+            alt: HTMLAttributes.alt,
+            width: String(HTMLAttributes.width),
+            height: String(HTMLAttributes.height),
+          }),
+        ],
       ],
     ];
   },
@@ -82,9 +84,14 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
       const img = document.createElement('img');
       img.setAttribute('src', node.attrs.src);
       if (node.attrs.alt) img.setAttribute('alt', node.attrs.alt);
-      if (node.attrs.width) img.style.width = `${node.attrs.width}px`;
-      if (node.attrs.height) img.style.height = `${node.attrs.height}px`;
-
+      if (node.attrs.width) {
+        img.style.width = `${node.attrs.width}px`;
+        img.setAttribute('width', String(node.attrs.width));
+      }
+      if (node.attrs.height) {
+        img.style.height = `${node.attrs.height}px`;
+        img.setAttribute('height', String(node.attrs.height));
+      }
       const resizeHandle = document.createElement('div');
       resizeHandle.className = 'resize-handle';
       resizeHandle.style.position = 'absolute';
@@ -102,14 +109,14 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
 
       // Resize 이벤트 로직
       let startX = 0;
-      let startY = 0;
       let startWidth = 0;
       let startHeight = 0;
+
+      const maxWidth = editor.view.dom.clientWidth;
 
       const handleMouseDown = (event: MouseEvent) => {
         event.preventDefault();
         startX = event.clientX;
-        startY = event.clientY;
         startWidth = img.offsetWidth;
         startHeight = img.offsetHeight;
 
@@ -119,9 +126,14 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
 
       const handleMouseMove = (event: MouseEvent) => {
         const dx = event.clientX - startX;
-        const dy = event.clientY - startY;
-        const newWidth = Math.max(50, startWidth + dx);
-        const newHeight = Math.max(50, startHeight + dy);
+        const newWidth = Math.min(Math.max(50, startWidth + dx), maxWidth);
+
+        const aspectRatio =
+          node.attrs.width && node.attrs.height
+            ? node.attrs.width / node.attrs.height
+            : startWidth / startHeight;
+
+        const newHeight = newWidth / aspectRatio;
 
         img.style.width = `${newWidth}px`;
         img.style.height = `${newHeight}px`;
@@ -134,7 +146,6 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
         const newWidth = img.offsetWidth;
         const newHeight = img.offsetHeight;
 
-        // 실제 Node 속성 업데이트
         const pos = getPos?.();
         if (typeof pos === 'number') {
           editor.commands.command(({ tr }) => {
@@ -142,6 +153,7 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
               ...node.attrs,
               width: newWidth,
               height: newHeight,
+              // ❌ aspectRatio 저장 불필요
             });
             return true;
           });

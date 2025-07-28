@@ -18,13 +18,12 @@ export const handleImageSelect = (
   const img = new Image();
 
   const editorWidth = editor.view.dom.clientWidth;
-  const aspectRatio = img.naturalWidth / img.naturalHeight;
-  const nextWidth = editorWidth < img.naturalWidth ? editorWidth : img.naturalWidth;
-  const nextHeight = nextWidth / aspectRatio;
 
   img.onload = () => {
-    console.log(img.naturalHeight);
-    console.log(img.naturalWidth);
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
+    const nextWidth = editorWidth < img.naturalWidth ? editorWidth : img.naturalWidth;
+    const nextHeight = nextWidth / aspectRatio;
+
     editor
       ?.chain()
       .focus()
