@@ -7,6 +7,9 @@ import QuestionModal from './components/QuestionModal';
 import Button from '@/components/common/Button';
 import { useWikiContext } from '@/context/WikiContext';
 import { useAuthContext } from '@/context/AuthContext';
+import { getProfilePingAPI } from '@/api/profile/getProfilePingAPI';
+import { toast } from 'cy-toast';
+import SnackBar from '@/components/common/Snackbar';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -15,11 +18,28 @@ interface Props {
 }
 
 const ProfileTitle = ({ wikiData, handleCancelClick, handleUpdateProfileSubmit }: Props) => {
-  const { isEditing, editingInfo } = useWikiContext();
+  const { isEditing, editingInfo, setEditingInfo } = useWikiContext();
   const { user } = useAuthContext();
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   // 위키 참여하기 가능한 조건
   const [canEdit, setCanEdit] = useState(true);
+
+  const handleQuizModalOpen = async () => {
+    const { code } = wikiData;
+    const res = await getProfilePingAPI({ code });
+
+    setEditingInfo(res);
+
+    if (!res?.userId) {
+      setIsQuizModalOpen(true);
+    } else {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          다른 친구가 편집하고 있어요. 나중에 다시 시도해 주세요.
+        </SnackBar>
+      ));
+    }
+  };
 
   useEffect(() => {
     if (!editingInfo) {
@@ -35,7 +55,7 @@ const ProfileTitle = ({ wikiData, handleCancelClick, handleUpdateProfileSubmit }
   }, [isEditing, editingInfo?.userId, user?.id, editingInfo]);
 
   return (
-    <div className='flex flex-col mb-[24px] gap-[24px] md:gap-[32px]'>
+    <div className={clsx('flex flex-col pb-[20px] gap-[24px]', 'md:gap-[32px]')}>
       <div className='flex flex-row justify-between items-center'>
         <h1
           className='text-grayscale-500
@@ -58,18 +78,18 @@ const ProfileTitle = ({ wikiData, handleCancelClick, handleUpdateProfileSubmit }
             </Button>
           </div>
         )}
-        {!isEditing && (
+        {!isEditing && !!user && (
           <Button
             variant='primary'
             className={clsx('py-[9.5px] px-[22px]', 'md:py-[10.5px] md:px-[42px]')}
-            onClick={() => setIsQuizModalOpen(true)}
+            onClick={handleQuizModalOpen}
             disabled={!canEdit}
           >
             {canEdit ? '위키 참여하기' : '편집중...'}
           </Button>
         )}
         <Modal isOpen={isQuizModalOpen} onClose={() => setIsQuizModalOpen(false)}>
-          <QuestionModal wikiData={wikiData} onSubmitSuccess={() => setIsQuizModalOpen(false)} />
+          <QuestionModal wikiData={wikiData} onClose={() => setIsQuizModalOpen(false)} />
         </Modal>
       </div>
       <div>
