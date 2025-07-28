@@ -12,10 +12,15 @@ import { useRouter } from 'next/navigation';
 import { authAPI } from '@/api/authAPI';
 import { useAuthContext } from '@/context/AuthContext';
 import { UserData } from '@/types/user';
+import CookiesJs from 'js-cookie';
+
+// 이메일 기억하기 쿠키 이름 정의
+const REMEMBER_EMAIL_KEY = 'rememberedEmail';
 
 const loginSchema = z.object({
   email: z.email('이메일 형식으로 작성해 주세요.'),
   password: z.string().min(8, '8자 이상 작성해 주세요.'),
+  rememberEmail: z.boolean().default(false).optional(),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -27,15 +32,30 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, touchedFields },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
+      rememberEmail: false,
     },
     mode: 'onChange',
   });
+
+  // 컴포넌트가 마운트될 때 (한 번만) 실행
+  // ✨ 저장된 이메일 주소가 있다면 불러와서 폼 필드에 채우기
+  useEffect(() => {
+    const rememberedEmail = CookiesJs.get(REMEMBER_EMAIL_KEY);
+    if (rememberedEmail) {
+      // 'email' 필드에 저장된 이메일 값 설정
+      // shouldValidate: true 로 설정하여 값을 설정한 후 즉시 유효성 검사를 수행하도록 합니다.
+      setValue('email', rememberedEmail, { shouldValidate: true });
+      // 'rememberEmail' 체크박스도 자동으로 체크
+      setValue('rememberEmail', true);
+    }
+  }, [setValue]); // setValue는 useForm에서 제공하며 안정적인 함수이므로 의존성 배열에 포함
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -47,10 +67,20 @@ export default function LoginPage() {
     console.log('폼 제출됨:', data);
 
     try {
-      const responseData = await authAPI.signIn(data);
+      const { email, password } = data;
+      const responseData = await authAPI.signIn({ email, password });
       console.log('로그인 성공:', responseData);
 
       login(responseData.accessToken, responseData.refreshToken, responseData.user as UserData);
+
+      // ✨ '이메일 기억하기' 로직 처리
+      if (data.rememberEmail) {
+        // 체크박스가 체크되어 있다면 이메일을 쿠키에 1년(365일) 동안 저장
+        CookiesJs.set(REMEMBER_EMAIL_KEY, data.email, { expires: 365 });
+      } else {
+        // 체크박스가 해제되어 있다면 저장된 이메일 쿠키 삭제
+        CookiesJs.remove(REMEMBER_EMAIL_KEY);
+      }
 
       // alert('로그인 되었습니다.');
     } catch (error) {
@@ -92,6 +122,18 @@ export default function LoginPage() {
               errors={errors}
               touchedFields={touchedFields}
             />
+          </div>
+          {/* ✨ '이메일 기억하기' 체크박스 UI 추가 */}
+          <div className='w-[335px] md:w-[400px] flex justify-start items-center'>
+            <input
+              id='rememberEmail' // 라벨과 연결될 ID
+              type='checkbox'
+              {...register('rememberEmail')} // react-hook-form에 필드 등록
+              className='mr-2 h-4 w-4 text-primary-green-200 border-gray-300 rounded focus:ring-primary-green-200'
+            />
+            <label htmlFor='rememberEmail' className='text-sm text-gray-700 select-none'>
+              이메일 기억하기
+            </label>
           </div>
           <Button type='submit' className='flex items-center justify-center w-[335px] md:w-[400px]'>
             로그인
