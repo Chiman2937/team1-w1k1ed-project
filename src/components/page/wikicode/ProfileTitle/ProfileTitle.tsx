@@ -30,9 +30,9 @@ const ProfileTitle = ({ wikiData, handleCancelClick, handleUpdateProfileSubmit }
 
     setEditingInfo(res);
 
-    if (!res?.userId) {
+    if (!res?.userId || res?.userId === user?.id) {
       setIsQuizModalOpen(true);
-    } else {
+    } else if (res?.userId !== user?.id) {
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
           다른 친구가 편집하고 있어요. 나중에 다시 시도해 주세요.

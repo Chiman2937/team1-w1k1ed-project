@@ -23,7 +23,8 @@ const ProfileCard = ({ wikiData }: Props) => {
   return (
     <article
       className={clsx(
-        'border-1 border-gray-300',
+        'rounded-[10px]  shadow-card',
+        // 'border-1 border-gray-300',
         'flex flex-col gap-[10px]',
         'w-full',
         'xs:flex-row xs:items-start',
@@ -34,17 +35,17 @@ const ProfileCard = ({ wikiData }: Props) => {
     >
       <div
         className={clsx(
-          'lg:bg-white lg:border-1 lg:border-gray-300',
+          // 'lg:bg-white lg:border-1 lg:border-gray-300',
           'relative flex flex-col gap-[5px]',
+          'pt-[20px] px-[20px]',
           'w-full',
-          'md:max-w-[300px]',
+          'xs:w-[150px]',
+          'sm:w-[150px]',
+          'md:w-[200px]',
           'lg:w-full',
-          'p-[5px]',
-          'xs:p-[20px]',
-          'lg:p-[5px]',
         )}
       >
-        <div className={clsx('relative aspect-square overflow-hidden', 'w-full')}>
+        <div className={clsx('rounded-full', 'relative aspect-square overflow-hidden', 'w-full')}>
           <Image className='object-cover' src={wikiData.image} alt='프로필 이미지' layout='fill' />
         </div>
         <div className='text-center w-full'>
@@ -56,7 +57,9 @@ const ProfileCard = ({ wikiData }: Props) => {
       </div>
       <div
         className={clsx(
-          'lg:bg-white lg:border-1 lg:border-gray-300 lg:w-full py-[20px] grow',
+          // 'lg:bg-white lg:border-1 lg:border-gray-300',
+
+          'lg:w-full py-[20px] grow',
           'px-[20px]',
           'xs:px-0',
           'lg:px-[20px]',
