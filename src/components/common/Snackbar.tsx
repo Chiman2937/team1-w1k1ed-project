@@ -45,7 +45,7 @@ const SnackBar = ({ variant, isClosing, isOpening, index, children }: Props) => 
   );
 
   const variantStyle = {
-    info: clsx('bg-grayscale-50 text-grayscale-500', 'w-full'),
+    info: clsx('bg-grayscale-50 text-grayscale-500', 'border-1 border-grayscale-500'),
     success: clsx(
       'bg-primary-green-100 text-primary-green-300',
       'border-1 border-primary-green-200',

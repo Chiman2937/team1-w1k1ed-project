@@ -1,4 +1,4 @@
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes as IconClose } from 'react-icons/fa';
 import { FaBell } from 'react-icons/fa';
 
 type NotificationItemProps = {
@@ -24,7 +24,7 @@ const NotificationItem = ({ id, content, createdAt, onDelete }: NotificationItem
     <>
       <div className='w-[330px] px-[12px] py-[16px] rounded-[5px] bg-white text-grayscale-500'>
         <header className='flex justify-end'>
-          <FaTimes className='cursor-pointer ' onClick={() => onDelete(id)} />
+          <IconClose className='cursor-pointer ' onClick={() => onDelete(id)} />
         </header>
         <div className='flex gap-2'>
           <FaBell size={50} className='m-2 p-2 rounded-2xl bg-grayscale-200' />
