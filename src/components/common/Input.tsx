@@ -45,7 +45,7 @@ export default function Input({
   };
 
   const baseStyle = clsx(
-    'h-[45px] rounded-[10px] px-[20px] py-[14px]',
+    'w-full h-[45px] rounded-[10px] px-[20px] py-[14px]',
     'bg-grayscale-100',
     'text-grayscale-500',
     'text-md-regular',
@@ -53,14 +53,13 @@ export default function Input({
     'border border-transparent',
     'focus:outline-none',
     'focus:border-primary-green-200',
-    'transition-all duration-700',
     { 'pr-12': isPasswordType },
   );
 
   const errorClasses = clsx('bg-secondary-red-100', 'focus:border-secondary-red-200');
 
   return (
-    <div className={twMerge('flex flex-col gap-[10px]', className)}>
+    <div className={twMerge('flex flex-col gap-[10px] transition-all duration-700', className)}>
       {label && (
         <label htmlFor={id || name} className='text-md-regular text-grayscale-500'>
           {label}
@@ -71,7 +70,7 @@ export default function Input({
           id={id || name}
           type={isPasswordType && showPassword ? 'text' : type}
           placeholder={placeholder}
-          className={twMerge(baseStyle, hasError && errorClasses, className)}
+          className={twMerge(baseStyle, hasError && errorClasses)}
           {...register}
           {...rest}
         />

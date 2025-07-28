@@ -137,7 +137,7 @@ export default function LoginSection() {
               touchedFields={touchedFields}
             />
           </div>
-          <div className='w-[335px] md:w-[400px] flex items-center gap-[5px]'>
+          <div className='w-[335px] md:w-[400px] flex items-center gap-[5px] transition-all duration-700'>
             <span
               onClick={() => setValue('rememberEmail', !watch('rememberEmail'))}
               className='cursor-pointer flex items-center justify-center'
