@@ -3,23 +3,28 @@ import { InputHTMLAttributes } from 'react';
 
 interface Props {
   children: React.ReactNode;
+  className?: string;
 }
 
-const ProfileField = ({ children }: Props) => {
-  return <div className='flex flex-row gap-[10px] items-center'>{children}</div>;
+const ProfileField = ({ children, className }: Props) => {
+  return <div className={clsx('flex flex-row gap-[10px] items-center', className)}>{children}</div>;
 };
 
 interface LabelProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-const ProfileLabel = ({ children }: LabelProps) => {
+const ProfileLabel = ({ children, className }: LabelProps) => {
   return (
     <label
       className={clsx(
         'text-grayscale-400',
         'text-xs-regular w-[55px]',
-        'md:text-xs-regular md:w-[55px]',
+        'md:text-md-regular md:w-[55px]',
+        'xl:text-md-regular xl:w-[60px]',
+        'shrink-0',
+        className,
       )}
     >
       {children}
@@ -29,11 +34,21 @@ const ProfileLabel = ({ children }: LabelProps) => {
 
 interface ValueProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-const ProfileValue = ({ children }: ValueProps) => {
+const ProfileValue = ({ children, className }: ValueProps) => {
   return (
-    <label className={clsx('text-grayscale-500 whitespace-nowrap', 'text-xs-regular')}>
+    <label
+      className={clsx(
+        'text-grayscale-500 whitespace-nowrap',
+        'text-xs-regular',
+        'md:text-md-regular',
+        'xl:text-md-regular',
+        'grow',
+        className,
+      )}
+    >
       {children}
     </label>
   );
@@ -41,15 +56,20 @@ const ProfileValue = ({ children }: ValueProps) => {
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
+  className?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ProfileInput = ({ id, value, onChange }: InputProps) => {
+const ProfileInput = ({ id, className, value, onChange }: InputProps) => {
   return (
     <input
       id={id}
-      className='bg-grayscale-100 rounded-[10px] text-xs-regular px-[16px] py-[10px] w-full'
+      className={clsx(
+        'bg-grayscale-100 rounded-[10px] text-xs-regular px-[16px] py-[10px] w-full',
+        'grow',
+        className,
+      )}
       value={value}
       onChange={onChange}
     />

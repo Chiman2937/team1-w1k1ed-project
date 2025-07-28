@@ -53,7 +53,7 @@ const Timer = ({ registeredAt, onTimerFinish }: Props) => {
 
   // 수정 상태가 등록되어 registeredAt이 falsy 값이 아니면 timerInterval 실행
   useEffect(() => {
-    console.log(`registeredAt 변화 감지: ${registeredAt}`);
+    // console.log(`registeredAt 변화 감지: ${registeredAt}`);
     if (!registeredAt) return;
     const remainSeconds = getRemaingSeconds(registeredAt);
     setTimer(remainSeconds);
@@ -68,7 +68,7 @@ const Timer = ({ registeredAt, onTimerFinish }: Props) => {
 
   if (!registeredAt === null || timer === null) return;
 
-  return <div>남은시간: {formatMinutesFromSeconds(timer)}</div>;
+  return <p className='text-blue-600'>{formatMinutesFromSeconds(timer)}</p>;
 };
 
 export default Timer;
