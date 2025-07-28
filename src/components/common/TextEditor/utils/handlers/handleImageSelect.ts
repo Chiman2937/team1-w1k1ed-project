@@ -15,14 +15,29 @@ export const handleImageSelect = (
     [imageBlobURL]: file,
   }));
 
-  editor
-    ?.chain()
-    .focus()
-    .insertLocalImage({
-      src: imageBlobURL,
-      alt: file.name,
-    })
-    .run();
+  const img = new Image();
+
+  const editorWidth = editor.view.dom.clientWidth;
+  const aspectRatio = img.naturalWidth / img.naturalHeight;
+  const nextWidth = editorWidth < img.naturalWidth ? editorWidth : img.naturalWidth;
+  const nextHeight = nextWidth / aspectRatio;
+
+  img.onload = () => {
+    console.log(img.naturalHeight);
+    console.log(img.naturalWidth);
+    editor
+      ?.chain()
+      .focus()
+      .insertLocalImage({
+        src: imageBlobURL,
+        alt: file.name,
+        width: nextWidth,
+        height: nextHeight,
+      })
+      .run();
+  };
+
+  img.src = imageBlobURL;
 
   e.target.value = '';
 };
