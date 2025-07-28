@@ -3,7 +3,14 @@ import circleStyles from './dotCircle.module.css';
 import lineCircleStyles from './lineCircle.module.css';
 const LoadingSpinner = () => null;
 
-const DotBounce = ({ dotCount = 5, dotSize = 15, dotGap = 10 }) => {
+const DotBounce = ({
+  themeColor = '#ffffff',
+  dotCount = 5,
+  dotSize = 15,
+  dotGap = 10,
+  bounceHeight = 10,
+  bounceSpeed = 0.15,
+}) => {
   const containerStyle = {
     gap: `${dotGap}px`,
   };
@@ -11,9 +18,13 @@ const DotBounce = ({ dotCount = 5, dotSize = 15, dotGap = 10 }) => {
   const dotStyle = (i: number) => {
     return {
       '--i': i,
+      '--theme-color': themeColor,
+      '--total-animation-duration': `${bounceSpeed * (dotCount + 3)}s`,
+      '--jump-distance': `${-bounceHeight}px`,
+      '--fall-distance': `${bounceHeight * 0.66}px`,
+      '--bounce-speed': `${bounceSpeed}s`,
       opacity: (i + 1) / dotCount,
       width: `${dotSize}px`,
-      '--total-animation-duration': `${0.15 * (dotCount + 3)}s`,
     };
   };
 
@@ -26,7 +37,13 @@ const DotBounce = ({ dotCount = 5, dotSize = 15, dotGap = 10 }) => {
   );
 };
 
-const DotCircle = ({ dotCount = 8, dotSize = 12, distanceFromCenter = 30 }) => {
+const DotCircle = ({
+  themeColor = '#ffffff',
+  dotCount = 8,
+  dotSize = 12,
+  distanceFromCenter = 30,
+  spinSpeed = 1,
+}) => {
   const containerStyle = {
     width: distanceFromCenter * 2 + dotSize,
   };
@@ -34,10 +51,13 @@ const DotCircle = ({ dotCount = 8, dotSize = 12, distanceFromCenter = 30 }) => {
   const dotStyle = (i: number) => {
     return {
       '--i': i,
+      '--theme-color': themeColor,
       width: `${dotSize}px`,
       '--distance': `${distanceFromCenter}px`,
       '--degree': `${360 / dotCount}deg`,
-      '--total-animation-duration': `${0.1 * dotCount}s`,
+      '--animation-duration': `${spinSpeed}`,
+      '--total-animation-duration': `${(spinSpeed / 10) * dotCount}s`,
+      '--animation-delay': `${i * (spinSpeed / 10)}s`,
     };
   };
 
@@ -50,10 +70,17 @@ const DotCircle = ({ dotCount = 8, dotSize = 12, distanceFromCenter = 30 }) => {
   );
 };
 
-const LineCircle = ({ lineWeight = 8, distanceFromCenter = 30 }) => {
+const LineCircle = ({
+  themeColor = '#ffffff',
+  lineWeight = 8,
+  distanceFromCenter = 30,
+  spinSpeed = 1,
+}) => {
   const containerStyle = {
+    '--theme-color': themeColor,
     width: `${distanceFromCenter * 2 + lineWeight}px`,
     '--lineWeight': `${lineWeight}px`,
+    '--spin-speed': `${spinSpeed}s`,
   };
 
   return <div className={lineCircleStyles['container']} style={containerStyle}></div>;
