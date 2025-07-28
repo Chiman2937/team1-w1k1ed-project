@@ -37,3 +37,17 @@
   padding-left: 16px;
   margin: 4px 0;
 }
+
+.text-viewer {
+  counter-reset: heading-counter;
+}
+
+.text-viewer h1 {
+  counter-increment: heading-counter;
+}
+
+/* 핵심: display: inline; 으로 줄 흐름에 자연스럽게 삽입 */
+.text-viewer h1::before {
+  content: counter(heading-counter) '. ';
+  color: var(--color-grayscale-500);
+}
