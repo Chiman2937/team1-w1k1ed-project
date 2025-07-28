@@ -73,6 +73,13 @@ const HeaderAfterLogin = () => {
     }
   }, [isPanelOpen, setHasNewNotifications]);
 
+  // notificationsEnabled 상태가 false로 변경되면 hasNewNotifications도 false로 설정
+  useEffect(() => {
+    if (!notificationsEnabled) {
+      setHasNewNotifications(false);
+    }
+  }, [notificationsEnabled, setHasNewNotifications]);
+
   return (
     <>
       <div className='bg-grayscale-50 shadow-md sticky top-0 left-0 w-full z-50'>
