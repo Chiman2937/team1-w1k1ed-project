@@ -32,7 +32,7 @@ const ProfileItemListEditor = () => {
   ];
 
   return (
-    <div className='flex flex-col gap-[10px] grow'>
+    <div className='flex flex-col gap-[10px] w-full'>
       {fieldMap.map(([label, id, value]) => (
         <ProfileField key={label}>
           <ProfileField.label>{label}</ProfileField.label>
