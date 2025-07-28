@@ -123,15 +123,14 @@ export default function LoginPage() {
               touchedFields={touchedFields}
             />
           </div>
-          {/* ✨ '이메일 기억하기' 체크박스 UI 추가 */}
           <div className='w-[335px] md:w-[400px] flex justify-start items-center'>
             <input
-              id='rememberEmail' // 라벨과 연결될 ID
+              id='rememberEmail'
               type='checkbox'
-              {...register('rememberEmail')} // react-hook-form에 필드 등록
-              className='mr-2 h-4 w-4 text-primary-green-200 border-gray-300 rounded focus:ring-primary-green-200'
+              {...register('rememberEmail')}
+              className='mr-2 h-4 w-4 border-grayscale-400 rounded focus:outline-none !outline-none'
             />
-            <label htmlFor='rememberEmail' className='text-sm text-gray-700 select-none'>
+            <label htmlFor='rememberEmail' className='text-md-regular text-grayscale-500'>
               이메일 기억하기
             </label>
           </div>
@@ -139,7 +138,8 @@ export default function LoginPage() {
             로그인
           </Button>
         </form>
-        <div>
+        <div className='flex gap-[10px] justify-center items-center'>
+          <p className='text-md-regular text-grayscale-400'>아직 회원이 아니신가요?</p>
           <Link href='/signup'>
             <p className='text-md-regular text-primary-green-200'>회원가입</p>
           </Link>
