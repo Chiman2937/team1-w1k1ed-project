@@ -27,7 +27,7 @@ interface NotificationStore {
   // 동작 함수
   fetchNotifications: (opts?: { reset?: boolean }) => Promise<void>;
   deleteNotification: (id: number) => Promise<void>;
-  resetNotifications: () => void;
+  clearNotifications: () => void;
 }
 
 export const useNotificationStore = create<NotificationStore>()(
@@ -90,7 +90,7 @@ export const useNotificationStore = create<NotificationStore>()(
       },
 
       // 초기화 전부 삭제
-      resetNotifications: () => {
+      clearNotifications: () => {
         set({
           list: [],
           totalCount: 0,
