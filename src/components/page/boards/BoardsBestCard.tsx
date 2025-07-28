@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Article } from './BoardsBest';
 import { CiHeart } from 'react-icons/ci';
+import { dateFormater } from '@/utils/date';
 interface BoardsBestCardProps {
   article: Article;
 }
@@ -14,11 +15,11 @@ const BoardsBestCard = ({ article }: BoardsBestCardProps) => {
     >
       {/* 이미지 영역 */}
       {article.image ? (
-        <div className='w-full h-[140px] bg-gray-100'>
+        <div className='w-full h-[130px] bg-gray-100'>
           <img src={article.image} alt={article.title} className='w-full h-full object-cover' />
         </div>
       ) : (
-        <div className='w-full h-[140px] bg-gray-200'></div>
+        <div className='w-full h-[130px] bg-primary-green-200'></div>
       )}
 
       {/* 텍스트 영역 */}
@@ -28,9 +29,9 @@ const BoardsBestCard = ({ article }: BoardsBestCardProps) => {
         <div className='flex items-center justify-between text-xs text-gray-500'>
           <div className='flex items-center gap-4'>
             <span>{article.writer.name}</span>
-            <span>2024.02.24.</span>
+            <span>{dateFormater(article.updatedAt)}</span>
           </div>
-          <div className='flex items-center gap-1'>
+          <div className='flex items-center  gap-1'>
             <CiHeart size={15} />
             <span>{article.likeCount}</span>
           </div>

@@ -12,6 +12,7 @@ const NoResultFallback = ({ searchTerm }: { searchTerm: string }) => {
       <Image
         src={NoResultImg}
         alt='탐색기 이미지'
+        priority
         className='h-[108px] w-[108px]
           md:h-36 md:w-36
           '

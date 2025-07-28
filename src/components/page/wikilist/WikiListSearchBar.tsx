@@ -1,20 +1,11 @@
 'use client';
 
+import { getProfilesAPI, Profile } from '@/api/profile/getProfilesAPI';
 import axios from 'axios';
 import { useCallback, useEffect, useRef } from 'react';
 import { FiSearch } from 'react-icons/fi';
-// TODO: 재사용 가능하게 분리하기
-interface Profile {
-  id: number;
-  code: string;
-  image: string;
-  city: string;
-  nationality: string;
-  job: string;
-  updatedAt: Date | string;
-  name: string;
-}
-const SearchBar = ({
+
+const WikiListSearchBar = ({
   placeholder,
   onSearchResults,
   onSearchTerm,
@@ -44,26 +35,9 @@ const SearchBar = ({
       // 새로운 AbortController 생성
       abortControllerRef.current = new AbortController();
 
-      // TODO: 하드코딩을 상수로 변경하기
-      const params = {
-        page: 1,
-        pageSize: 500,
-        ...(trimmedKeyword && { name: trimmedKeyword }),
-      };
-
-      // TODO: API호출 함수는 재사용 가능하게 분리하기
-      const response = await axios.get('https://wikied-api.vercel.app/6-16/profiles', {
-        params,
-        signal: abortControllerRef.current.signal,
-      });
-
-      // 가져온 데이터
-      const data = response.data;
-
-      // 검색어를 API파라미터의 keyword에 입력해서 가져온 데이터를 부모에게 넘겨주기
-      onSearchResults?.(data.list || []);
-      // TODO:개발끝나면 지우기
-      console.log('검색 결과:', data.list);
+      const results = await getProfilesAPI(trimmedKeyword, abortControllerRef.current.signal);
+      onSearchResults?.(results);
+      console.log('검색 결과:', results);
     } catch (error) {
       if (axios.isCancel(error)) {
         // TODO:개발끝나면 지우기
@@ -121,4 +95,4 @@ const SearchBar = ({
     </div>
   );
 };
-export default SearchBar;
+export default WikiListSearchBar;

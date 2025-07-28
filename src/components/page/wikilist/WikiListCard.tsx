@@ -2,9 +2,9 @@
 
 import CopyToClipboard from '@/components/common/CopyToClipboard';
 import { IoPersonCircle } from 'react-icons/io5';
-import { Profile } from '../../../app/wikilist/page';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Profile } from '@/api/profile/getProfilesAPI';
 
 // nationality와 city를 조건에 따라 표시
 const getLocationText = (nationality: string, city: string) => {
