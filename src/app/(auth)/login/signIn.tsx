@@ -15,6 +15,7 @@ import { UserData } from '@/types/user';
 import CookiesJs from 'js-cookie';
 import { toast } from 'cy-toast';
 import SnackBar from '@/components/common/Snackbar';
+import { IoCheckbox, IoSquareOutline } from 'react-icons/io5';
 
 // 이메일 기억하기 쿠키 이름 정의
 const REMEMBER_EMAIL_KEY = 'rememberedEmail';
@@ -36,6 +37,7 @@ export default function LoginSection() {
     handleSubmit,
     setValue,
     formState: { errors, touchedFields },
+    watch,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -135,13 +137,17 @@ export default function LoginSection() {
               touchedFields={touchedFields}
             />
           </div>
-          <div className='w-[335px] md:w-[400px] flex justify-start items-center'>
-            <input
-              id='rememberEmail'
-              type='checkbox'
-              {...register('rememberEmail')}
-              className='mr-2 h-4 w-4 border-grayscale-400 rounded focus:outline-none !outline-none'
-            />
+          <div className='w-[335px] md:w-[400px] flex items-center gap-[5px]'>
+            <span
+              onClick={() => setValue('rememberEmail', !watch('rememberEmail'))}
+              className='cursor-pointer flex items-center justify-center'
+            >
+              {watch('rememberEmail') ? (
+                <IoCheckbox size={20} color='#4cbfa4' />
+              ) : (
+                <IoSquareOutline size={20} color='#8f95b2' />
+              )}
+            </span>
             <label htmlFor='rememberEmail' className='text-md-regular text-grayscale-500'>
               이메일 기억하기
             </label>
