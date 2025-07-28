@@ -2,35 +2,39 @@
 import { GetProfileItemResponse } from '@/api/profile/getProfileAPI';
 import { getProfilePingAPI } from '@/api/profile/getProfilePingAPI';
 import { useWikiContext } from '@/context/WikiContext';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ProfileTitle from './ProfileTitle/ProfileTitle';
 import ProfileCard from './ProfileCard/ProfileCard';
 import ProfileContent from './ProfileContent.tsx/ProfileContent';
 import { useTextEditor } from '@/components/common/TextEditor/utils/hooks/useTextEditor';
 import { handlehtmlParse } from '@/components/common/TextEditor/utils/handlers/handleHtmlParse';
 import { patchProfileItemAPI } from '@/api/profile/patchProfileAPI';
-import Timer from './Timer/Timer';
-import { useAuthContext } from '@/context/AuthContext';
+import { Modal } from 'react-simplified-package';
+import ExpiredModal from './components/ExpiredModal';
+import clsx from 'clsx';
+import ProfileIndex from './ProfileIndex/ProfileIndex';
+import { getHtmlHeadings } from '@/components/common/TextEditor/utils/handlers/getHtmlHeadings';
+import WikiInfo from './WikiInfo/WikiInfo';
+import { ToastRender } from 'cy-toast';
 
 interface Props {
   wikiData: GetProfileItemResponse;
 }
 
 const WikiDetailSection = ({ wikiData }: Props) => {
-  const { wikiProfile, setWikiProfile, setIsEditing, editingInfo, isEditing, setEditingInfo } =
-    useWikiContext();
-
-  const { user } = useAuthContext();
+  const { wikiProfile, setWikiProfile, setIsEditing, isEditing, setEditingInfo } = useWikiContext();
 
   //textEditor 인스턴스 객체 호출
   const { editor, tempFiles, setTempFiles } = useTextEditor({
     initialContent: wikiData.content,
   });
 
+  const [isExpiredModalOpen, setIsExpiredtModalOpen] = useState(false);
+
   const onTimerFinish = useCallback(() => {
     setEditingInfo(null);
     if (!isEditing) return;
-    alert('시간 만료');
+    setIsExpiredtModalOpen(true);
     setIsEditing(false);
   }, [isEditing, setEditingInfo, setIsEditing]);
 
@@ -53,13 +57,6 @@ const WikiDetailSection = ({ wikiData }: Props) => {
     window.location.reload();
   };
 
-  // Timer 컴포넌트가 보이는 조건
-  const timerVisibleCondition =
-    //내가 수정중일 경우
-    isEditing === true ||
-    //뷰어 상태에서 누군가 수정중인데 그 사람이 내가 아닌 경우
-    (!isEditing && !!editingInfo && editingInfo?.userId !== user?.id);
-
   // 수정 중 현황 정보 전역 state에 등록
   useEffect(() => {
     const getProfilePing = async () => {
@@ -77,17 +74,30 @@ const WikiDetailSection = ({ wikiData }: Props) => {
   if (!editor) return;
 
   return (
-    <section>
-      {timerVisibleCondition && (
-        <Timer registeredAt={editingInfo?.registeredAt} onTimerFinish={onTimerFinish} />
-      )}
+    <section className={clsx('bg-white', 'p-[20px]', 'lg:border-1 lg:border-gray-300 mx-auto')}>
+      <ToastRender />
       <ProfileTitle
         handleCancelClick={handleCancelClick}
         handleUpdateProfileSubmit={handleUpdateProfileSubmit}
         wikiData={wikiData}
       />
-      <ProfileCard wikiData={wikiData} />
+      <WikiInfo onTimerFinish={onTimerFinish} />
+      <div
+        className={clsx(
+          'border-y-1 border-gray-200',
+          'flex flex-col-reverse items-start gap-[30px]',
+          'w-full py-[20px]',
+          'sm:flex-row',
+          'xl:py-0 xl:border-0',
+        )}
+      >
+        <ProfileIndex indexList={getHtmlHeadings(wikiData.content)} />
+        <ProfileCard wikiData={wikiData} />
+      </div>
       <ProfileContent editor={editor} setTempFiles={setTempFiles} wikiData={wikiData} />
+      <Modal isOpen={isExpiredModalOpen} onClose={() => setIsExpiredtModalOpen(false)}>
+        <ExpiredModal onClose={() => setIsExpiredtModalOpen(false)} />
+      </Modal>
     </section>
   );
 };
