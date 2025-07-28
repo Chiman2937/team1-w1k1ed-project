@@ -66,7 +66,7 @@ export const authAPI = {
   },
 
   resetPassword: async (payload: ResetPasswordPayload): Promise<ResetPasswordResponse> => {
-    const response = await instance.post('/users/me/password', payload);
+    const response = await instance.patch<ResetPasswordResponse>('/users/me/password', payload);
     return response.data;
   },
 };

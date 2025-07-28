@@ -49,14 +49,17 @@ const Button = ({ children, variant = 'primary', className, href, ...props }: Pr
 
   const composedClassName = twMerge(
     clsx(baseStyle, variantStyles[variant], isDisabled && disabledStyles),
-
     className,
   );
 
   // 만약 href가 프롭스에 있다면 composedClassName속성이 적용됩니다.
   if (href) {
     return (
-      <Link href={href} legacyBehavior passHref>
+      <Link
+        href={href}
+        className={composedClassName}
+        {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+      >
         {children}
       </Link>
     );
