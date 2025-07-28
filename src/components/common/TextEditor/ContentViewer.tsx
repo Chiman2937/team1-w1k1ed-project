@@ -15,7 +15,7 @@ const ContentViewer = ({ content }: Props) => {
   const sanitized = DOMPurify.sanitize(htmlString);
 
   return (
-    <div className='px-5'>
+    <div>
       <div className='text-viewer' dangerouslySetInnerHTML={{ __html: sanitized }} />
     </div>
   );
