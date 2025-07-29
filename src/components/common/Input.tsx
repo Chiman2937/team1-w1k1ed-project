@@ -3,7 +3,7 @@ import clsx from 'clsx'; // clsx 임포트
 import { twMerge } from 'tailwind-merge';
 import { FieldErrors, FieldValues, UseFormRegisterReturn } from 'react-hook-form';
 // Font Awesome 아이콘을 사용합니다.
-import { LuEye, LuEyeClosed } from 'react-icons/lu';
+import { LuEye as IconEyeOpen, LuEyeClosed as IconEyeClosed } from 'react-icons/lu';
 
 type TouchedFieldsType<TFieldValues extends FieldValues> = {
   [K in keyof TFieldValues]?: boolean;
@@ -40,6 +40,13 @@ export default function Input({
   const [showPassword, setShowPassword] = React.useState(false);
   const isPasswordType = type === 'password';
 
+  const passwordIconMap = {
+    true: IconEyeOpen,
+    false: IconEyeClosed,
+  };
+
+  const IconEye = passwordIconMap[`${showPassword}`];
+
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -74,19 +81,12 @@ export default function Input({
           {...register}
           {...rest}
         />
-        {/* ✨ ADDED: 비밀번호 타입일 경우에만 아이콘 렌더링 */}
         {isPasswordType && (
           <span
-            className='absolute right-[15px] top-1/2 -translate-y-1/2 cursor-pointer' // ✨ ADDED: 아이콘 위치 조정
-            onClick={togglePasswordVisibility} // ✨ ADDED: 클릭 이벤트 핸들러
+            className='absolute right-[15px] top-1/2 -translate-y-1/2 cursor-pointer'
+            onClick={togglePasswordVisibility}
           >
-            {showPassword ? (
-              // ✨ ADDED: 눈 뜬 아이콘
-              <LuEye size={20} color='#888888' />
-            ) : (
-              // ✨ ADDED: 눈 감은 아이콘
-              <LuEyeClosed size={20} color='#888888' />
-            )}
+            <IconEye size={20} color='#888888' />
           </span>
         )}
       </div>
