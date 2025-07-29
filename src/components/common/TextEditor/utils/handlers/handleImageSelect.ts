@@ -17,11 +17,16 @@ export const handleImageSelect = (
 
   const img = new Image();
 
-  const editorWidth = editor.view.dom.clientWidth;
+  const { from } = editor.state.selection;
+  const domAtPos = editor.view.domAtPos(from);
+  const container = (domAtPos.node as HTMLElement)?.closest?.(
+    '[data-node-view-wrapper], .ProseMirror > *',
+  ) as HTMLElement;
+  const containerWidth = container?.clientWidth ?? editor.view.dom.clientWidth;
 
   img.onload = () => {
     const aspectRatio = img.naturalWidth / img.naturalHeight;
-    const nextWidth = editorWidth < img.naturalWidth ? editorWidth : img.naturalWidth;
+    const nextWidth = containerWidth < img.naturalWidth ? containerWidth : img.naturalWidth;
     const nextHeight = nextWidth / aspectRatio;
 
     editor
