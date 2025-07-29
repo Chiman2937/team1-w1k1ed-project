@@ -42,13 +42,6 @@ const config: Config = {
       boxShadow: {
         card: '0px 4px 20px rgba(0, 0, 0, 0.08)',
       },
-      // forms: {
-      //   DEFAULT: {
-      //     checkbox: {
-      //       color: 'primary-green-200',
-      //     },
-      //   },
-      // },
     },
   },
   plugins: [],
