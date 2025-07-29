@@ -15,7 +15,7 @@ import SnackBar from '@/components/common/Snackbar';
 // 폼 데이터의 유효성 검사를 위한 Zod 스키마 정의
 const signUpSchema = z
   .object({
-    name: z.string().trim().max(10, '열 자 이하로 작성해주세요.'),
+    name: z.string().trim().max(10, '8자 이하로 작성해주세요.'), //뒤의 랜덤 숫자 2자리를 위해 8자로 수정
     email: z.email('이메일 형식으로 작성해 주세요.'),
     password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 8자 이상
     passwordConfirmation: z.string(), // 비밀번호 확인은 최소 1자 이상
@@ -28,6 +28,21 @@ const signUpSchema = z
 
 // Zod 스키마로부터 폼 데이터의 TypeScript 타입 추론
 type SignUpFormData = z.infer<typeof signUpSchema>;
+
+// 이름 + 랜덤2자리 숫자의 이름 생성 함수
+const generateName = (baseName: string): string => {
+  const randomNumber = Math.floor(10 + Math.random() * 90); //10부터 99까지의 랜덤 숫자 생성
+  return `${baseName}${randomNumber}`; // baseName 뒤에 랜덤 숫자를
+};
+
+// Display에선 숫자를 제외한 이름만 표시하는 함수
+// const DisplayName = (storedName: string): string => {
+//   const match = storedName.match(/(\D+)(\d{2})/);
+//   if (match && match[1]) {
+//     return match[1];
+//   }
+//   return storedName;
+// };
 
 export default function SignupSection() {
   const router = useRouter();
@@ -58,8 +73,16 @@ export default function SignupSection() {
   const onSubmit = async (data: SignUpFormData) => {
     console.log('폼 제출됨:', data);
 
+    const nameForAPI = generateName(data.name);
+    console.log('API에 보낼 이름:', nameForAPI);
+
     try {
-      const responseData = await authAPI.signUp(data);
+      const responseData = await authAPI.signUp({
+        name: nameForAPI, //변환된
+        email: data.email,
+        password: data.password,
+        passwordConfirmation: data.passwordConfirmation,
+      });
       console.log('회원가입 성공:', responseData);
 
       // alert('가입이 완료되었습니다.');
