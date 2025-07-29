@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
         port: '', // 포트가 없다면 빈 문자열
         pathname: '/Wikied/user/**', // 또는 /Wikied/**, /Wikied/user/1429/** 등 더 구체적으로 지정 가능
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '', // 포트가 없다면 빈 문자열
+        pathname: '/dxho7f5dm/image/upload/**', // 또는 /Wikied/**, /Wikied/user/1429/** 등 더 구체적으로 지정 가능
+      },
       // },
     ],
   },
