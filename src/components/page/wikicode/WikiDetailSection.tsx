@@ -17,6 +17,7 @@ import { getHtmlHeadings } from '@/components/common/TextEditor/utils/handlers/g
 import WikiInfo from './WikiInfo/WikiInfo';
 import { ToastRender } from 'cy-toast';
 import { useRouter } from 'next/navigation';
+import { useUnloadAlert } from '@/hooks/useUnloadAlert';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -31,6 +32,8 @@ const WikiDetailSection = ({ wikiData }: Props) => {
   });
 
   const [isExpiredModalOpen, setIsExpiredtModalOpen] = useState(false);
+
+  useUnloadAlert({ activeBy: isEditing });
 
   const router = useRouter();
 
