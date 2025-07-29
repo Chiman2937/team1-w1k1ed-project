@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 import { GetProfileItemResponse } from '@/api/profile/getProfileAPI';
 import { useWikiContext } from '@/context/WikiContext';
-import Image from 'next/image';
 import ProfileItemListViewer from './components/ProfileItemListViewer';
 import ProfileItemListEditor from './components/ProfileItemListEditor';
 import { useAuthContext } from '@/context/AuthContext';
+import ProfileImageViewer from './components/ProfileImageViewer';
+import ProfileImageEditor from './components/ProfileImageEditor';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -37,7 +38,7 @@ const ProfileCard = ({ wikiData }: Props) => {
         className={clsx(
           // 'lg:bg-white lg:border-1 lg:border-gray-300',
           'relative flex flex-col gap-[5px]',
-          'pt-[20px] px-[20px]',
+          'pt-[40px] px-[40px]',
           'w-full',
           'xs:w-[150px]',
           'sm:w-[150px]',
@@ -45,9 +46,8 @@ const ProfileCard = ({ wikiData }: Props) => {
           'lg:w-full',
         )}
       >
-        <div className={clsx('rounded-full', 'relative aspect-square overflow-hidden', 'w-full')}>
-          <Image className='object-cover' src={wikiData.image} alt='프로필 이미지' layout='fill' />
-        </div>
+        {isEditing && <ProfileImageEditor imageUrl={wikiData.image} />}
+        {!isEditing && <ProfileImageViewer imageUrl={wikiData.image} />}
         <div className='text-center w-full'>
           <p className='text-xl-semibold text-grayscale-500'>
             {wikiData.name}
