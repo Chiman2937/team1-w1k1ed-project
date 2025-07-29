@@ -23,32 +23,53 @@ const BoardsSearchBar = ({
   const searchAPI = useCallback(
     async (keyword: string, sortBy: OrderByType = 'recent') => {
       try {
-        // 받은 검색어의공백 제거함
         const trimmedKeyword = keyword.trim();
-        // 입력한 검색어를 부모에게 일단 전달 (검색 시작할 때)
         onSearchTerm?.(trimmedKeyword || '');
 
-        // 이전의 요청이 존재하고 있다면 취소
         if (abortControllerRef.current) {
           abortControllerRef.current.abort();
         }
 
-        // 새로운 AbortController 생성
         abortControllerRef.current = new AbortController();
 
-        const articles = await getArticlesAPI(
-          trimmedKeyword,
+        // 항상 전체 데이터 가져오기
+        const allArticles = await getArticlesAPI(
+          '', // 빈 검색어로 전체 데이터 요청
           sortBy,
           abortControllerRef.current.signal,
         );
 
+        let articles: ArticleResponse[] = [];
+
+        if (trimmedKeyword) {
+          // 검색어가 있으면 프론트엔드에서 필터링
+          console.log(`검색어 "${trimmedKeyword}"로 필터링 시작`);
+
+          articles = allArticles.filter((article) => {
+            const title = article.title.toLowerCase();
+            const search = trimmedKeyword.toLowerCase();
+
+            // 제목에 검색어가 포함되어 있는지 확인 (영문/한글 구분 없이)
+            return title.includes(search);
+          });
+
+          console.log(`필터링 결과: 전체 ${allArticles.length}개 중 ${articles.length}개 매칭`);
+
+          // 검색 타입 로깅 (디버깅용)
+          const isEnglishOnly = /^[a-zA-Z\s]+$/.test(trimmedKeyword);
+          const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(trimmedKeyword);
+          console.log('검색 타입:', isEnglishOnly ? '영문' : hasKorean ? '한글' : '혼합/특수문자');
+        } else {
+          // 검색어가 없으면 전체 목록
+          console.log('전체 목록 표시');
+          articles = allArticles;
+        }
+
         onSearchResults?.(articles);
-        console.log('검색 결과:', articles);
-        console.log('정렬 기준:', sortBy);
+        console.log('최종 검색 결과:', articles);
         console.log('검색어:', trimmedKeyword);
       } catch (error) {
         if (axios.isCancel(error)) {
-          // TODO:개발끝나면 지우기
           console.log('이전 요청이 취소되었습니다.');
           return;
         }
