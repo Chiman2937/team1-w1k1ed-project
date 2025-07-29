@@ -49,14 +49,6 @@ const ProfileCard = ({ wikiData }: Props) => {
         {isEditing && <ProfileImageEditor imageUrl={wikiData.image} />}
         {!isEditing && <ProfileImageViewer imageUrl={wikiData.image} />}
       </div>
-      {!isEditing && (
-        <div className='text-center w-full'>
-          <p className='text-xl-semibold text-grayscale-500'>
-            {wikiData.name}
-            <span className='text-lg-semibold text-grayscale-400'>{` (${wikiData.nickname})`}</span>
-          </p>
-        </div>
-      )}
       <div
         className={clsx(
           // 'lg:bg-white lg:border-1 lg:border-gray-300',
