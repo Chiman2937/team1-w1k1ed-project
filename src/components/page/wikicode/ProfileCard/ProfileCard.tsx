@@ -61,7 +61,7 @@ const ProfileCard = ({ wikiData }: Props) => {
 
           'lg:w-full py-[20px] grow',
           'px-[20px]',
-          'xs:px-0',
+          'xs:pl-0',
           'lg:px-[20px]',
           'min-w-[200px]',
           'md:min-w-[250px]',
