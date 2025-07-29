@@ -10,6 +10,8 @@ interface WikiProfileContextType {
   setEditingInfo: React.Dispatch<React.SetStateAction<GetProfilePingResponse | null>>;
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  tempProfileImageFile: File | null;
+  setTempProfileImageFile: React.Dispatch<React.SetStateAction<File | null>>;
 }
 
 const wikiContext = createContext<WikiProfileContextType | null>(null);
@@ -26,6 +28,8 @@ export const WikiProvider = ({ children }: ProviderProps) => {
   // 내가 퀴즈를 맞추면 수정모드로 진입
   const [isEditing, setIsEditing] = useState(false);
 
+  const [tempProfileImageFile, setTempProfileImageFile] = useState<File | null>(null);
+
   return (
     <wikiContext.Provider
       value={{
@@ -35,6 +39,8 @@ export const WikiProvider = ({ children }: ProviderProps) => {
         setEditingInfo,
         isEditing,
         setIsEditing,
+        tempProfileImageFile,
+        setTempProfileImageFile,
       }}
     >
       {children}
