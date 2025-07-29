@@ -27,11 +27,6 @@ export default function BoardsHeader() {
         setIsClosing(true);
       }, 1000);
 
-      setTimeout(() => {
-        setShowToast(false);
-        setIsClosing(false);
-      }, 1000);
-
       // 로그인 화면 전환을 약간 늦춤
       setTimeout(() => {
         router.push('/login');
@@ -48,7 +43,7 @@ export default function BoardsHeader() {
 
       {showToast && (
         <SnackBar variant='info' isOpening={isOpening} isClosing={isClosing} index={0}>
-          로그인이 필요합니다.
+          로그인이 필요한 서비스입니다.
         </SnackBar>
       )}
     </section>
