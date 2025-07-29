@@ -1,4 +1,5 @@
-import { Node, mergeAttributes } from '@tiptap/core';
+import { CommandProps, mergeAttributes, Node } from '@tiptap/core';
+import { NodeSelection } from '@tiptap/pm/state';
 
 export interface LocalImageOptions {
   HTMLAttributes: Record<string, HTMLImageElement>;
@@ -7,7 +8,13 @@ export interface LocalImageOptions {
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     localImage: {
-      insertLocalImage: (attrs: { src: string; alt?: string }) => ReturnType;
+      insertLocalImage: (attrs: {
+        src: string;
+        alt?: string;
+        width: number;
+        height: number;
+      }) => ReturnType;
+      setImageAlign: (align: 'left' | 'center' | 'right') => ReturnType;
     };
   }
 }
@@ -23,6 +30,15 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
     return {
       src: { default: null },
       alt: { default: null },
+      width: { default: null },
+      height: { default: null },
+      align: {
+        default: 'center',
+        parseHTML: (element) => element.getAttribute('data-align') || 'center',
+        renderHTML: (attributes) => ({
+          'data-align': attributes.align,
+        }),
+      },
     };
   },
 
@@ -31,10 +47,14 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
       {
         tag: 'div[data-image-outer]',
         getAttrs: (node) => {
-          const img = (node as HTMLElement).querySelector('img');
+          const el = node as HTMLElement;
+          const img = el.querySelector('img');
           return {
             src: img?.getAttribute('src'),
             alt: img?.getAttribute('alt') ?? '',
+            width: img?.getAttribute('width') ? parseInt(img.getAttribute('width')!) : null,
+            height: img?.getAttribute('height') ? parseInt(img.getAttribute('height')!) : null,
+            align: el.getAttribute('data-align') ?? 'center',
           };
         },
       },
@@ -42,42 +62,137 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
+    const { align } = HTMLAttributes;
+
     return [
       'div',
       {
         'data-image-outer': '',
+        'data-align': align,
         class: 'image-outer-wrapper',
+        style: `display: flex; justify-content: ${align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center'};`,
       },
       [
         'div',
-        {
-          'data-image-inner': '',
-          class: 'image-inner-wrapper',
-        },
-        ['img', mergeAttributes(HTMLAttributes)],
+        { 'data-image-inner': '', class: 'image-inner-wrapper', style: 'position: relative;' },
+        [
+          'img',
+          mergeAttributes({
+            src: HTMLAttributes.src,
+            alt: HTMLAttributes.alt,
+            width: String(HTMLAttributes.width),
+            height: String(HTMLAttributes.height),
+          }),
+        ],
       ],
     ];
   },
 
   addNodeView() {
-    return ({ node }) => {
+    return ({ node, getPos, editor }) => {
       const outer = document.createElement('div');
       outer.className = 'image-outer-wrapper';
       outer.setAttribute('data-image-outer', '');
+      outer.setAttribute('data-align', node.attrs.align || 'center');
+
+      outer.style.display = 'flex';
+      outer.style.justifyContent =
+        node.attrs.align === 'left'
+          ? 'flex-start'
+          : node.attrs.align === 'right'
+            ? 'flex-end'
+            : 'center';
+      outer.contentEditable = 'false';
 
       const inner = document.createElement('div');
       inner.className = 'image-inner-wrapper';
       inner.setAttribute('data-image-inner', '');
+      inner.style.position = 'relative';
 
       const img = document.createElement('img');
       img.setAttribute('src', node.attrs.src);
       if (node.attrs.alt) img.setAttribute('alt', node.attrs.alt);
+      if (node.attrs.width) {
+        img.style.width = `${node.attrs.width}px`;
+        img.setAttribute('width', String(node.attrs.width));
+      }
+      if (node.attrs.height) {
+        img.style.height = `${node.attrs.height}px`;
+        img.setAttribute('height', String(node.attrs.height));
+      }
+      const resizeHandle = document.createElement('div');
+      resizeHandle.className = 'resize-handle';
+      resizeHandle.style.position = 'absolute';
+      resizeHandle.style.right = '0';
+      resizeHandle.style.bottom = '0';
+      resizeHandle.style.width = '12px';
+      resizeHandle.style.height = '12px';
+      resizeHandle.style.background = 'rgba(0, 0, 0, 0.4)';
+      resizeHandle.style.cursor = 'nwse-resize';
 
+      inner.style.position = 'relative';
       inner.appendChild(img);
+      inner.appendChild(resizeHandle);
       outer.appendChild(inner);
+
+      // Resize 이벤트 로직
+      let startX = 0;
+      let startWidth = 0;
+      let startHeight = 0;
+
+      const maxWidth = editor.view.dom.clientWidth;
+
+      const handleMouseDown = (event: MouseEvent) => {
+        event.preventDefault();
+        startX = event.clientX;
+        startWidth = img.offsetWidth;
+        startHeight = img.offsetHeight;
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+      };
+
+      const handleMouseMove = (event: MouseEvent) => {
+        const dx = event.clientX - startX;
+        const newWidth = Math.min(Math.max(50, startWidth + dx), maxWidth);
+
+        const aspectRatio =
+          node.attrs.width && node.attrs.height
+            ? node.attrs.width / node.attrs.height
+            : startWidth / startHeight;
+
+        const newHeight = newWidth / aspectRatio;
+
+        img.style.width = `${newWidth}px`;
+        img.style.height = `${newHeight}px`;
+      };
+
+      const handleMouseUp = () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+
+        const newWidth = img.offsetWidth;
+        const newHeight = img.offsetHeight;
+
+        const pos = getPos?.();
+        if (typeof pos === 'number') {
+          editor.commands.command(({ tr }) => {
+            tr.setNodeMarkup(pos, undefined, {
+              ...node.attrs,
+              width: newWidth,
+              height: newHeight,
+              // ❌ aspectRatio 저장 불필요
+            });
+            return true;
+          });
+        }
+      };
+
+      resizeHandle.addEventListener('mousedown', handleMouseDown);
 
       return {
         dom: outer,
+        contentDOM: null,
       };
     };
   },
@@ -91,6 +206,27 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
             type: this.name,
             attrs,
           });
+        },
+      setImageAlign:
+        (align: 'left' | 'center' | 'right') =>
+        ({ tr, state, dispatch }: CommandProps) => {
+          const { selection } = state;
+          const node = selection instanceof NodeSelection ? selection.node : null;
+          console.log(node?.type.name);
+          if (node?.type.name !== 'localImage') return false;
+
+          const pos = selection.from;
+          if (typeof pos === 'number') {
+            const newAttrs = {
+              ...node.attrs,
+              align,
+            };
+            tr.setNodeMarkup(pos, undefined, newAttrs);
+            dispatch?.(tr);
+            return true;
+          }
+
+          return false;
         },
     };
   },

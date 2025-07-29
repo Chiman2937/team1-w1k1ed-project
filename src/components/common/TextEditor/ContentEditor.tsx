@@ -1,4 +1,5 @@
 import { EditorContent, type Editor } from '@tiptap/react';
+import ImageAlignToolBar from './textarea/ImageAlignToolBar';
 
 interface Props {
   editor: Editor;
@@ -7,6 +8,7 @@ interface Props {
 const ContentEditor = ({ editor }: Props) => {
   return (
     <div>
+      <ImageAlignToolBar editor={editor} />
       <EditorContent editor={editor} />
     </div>
   );
