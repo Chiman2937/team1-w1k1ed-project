@@ -1,4 +1,5 @@
-import { mergeAttributes, Node } from '@tiptap/core';
+import { CommandProps, mergeAttributes, Node } from '@tiptap/core';
+import { NodeSelection } from '@tiptap/pm/state';
 
 export interface LocalImageOptions {
   HTMLAttributes: Record<string, HTMLImageElement>;
@@ -13,6 +14,7 @@ declare module '@tiptap/core' {
         width: number;
         height: number;
       }) => ReturnType;
+      setImageAlign: (align: 'left' | 'center' | 'right') => ReturnType;
     };
   }
 }
@@ -30,6 +32,13 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
       alt: { default: null },
       width: { default: null },
       height: { default: null },
+      align: {
+        default: 'center',
+        parseHTML: (element) => element.getAttribute('data-align') || 'center',
+        renderHTML: (attributes) => ({
+          'data-align': attributes.align,
+        }),
+      },
     };
   },
 
@@ -38,12 +47,14 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
       {
         tag: 'div[data-image-outer]',
         getAttrs: (node) => {
-          const img = (node as HTMLElement).querySelector('img');
+          const el = node as HTMLElement;
+          const img = el.querySelector('img');
           return {
             src: img?.getAttribute('src'),
             alt: img?.getAttribute('alt') ?? '',
             width: img?.getAttribute('width') ? parseInt(img.getAttribute('width')!) : null,
             height: img?.getAttribute('height') ? parseInt(img.getAttribute('height')!) : null,
+            align: el.getAttribute('data-align') ?? 'center',
           };
         },
       },
@@ -51,12 +62,19 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
+    const { align } = HTMLAttributes;
+
     return [
       'div',
-      { 'data-image-outer': '', class: 'image-outer-wrapper' },
+      {
+        'data-image-outer': '',
+        'data-align': align,
+        class: 'image-outer-wrapper',
+        style: `display: flex; justify-content: ${align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center'};`,
+      },
       [
         'div',
-        { 'data-image-inner': '', class: 'image-inner-wrapper' },
+        { 'data-image-inner': '', class: 'image-inner-wrapper', style: 'position: relative;' },
         [
           'img',
           mergeAttributes({
@@ -75,11 +93,21 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
       const outer = document.createElement('div');
       outer.className = 'image-outer-wrapper';
       outer.setAttribute('data-image-outer', '');
+      outer.setAttribute('data-align', node.attrs.align || 'center');
+
+      outer.style.display = 'flex';
+      outer.style.justifyContent =
+        node.attrs.align === 'left'
+          ? 'flex-start'
+          : node.attrs.align === 'right'
+            ? 'flex-end'
+            : 'center';
       outer.contentEditable = 'false';
 
       const inner = document.createElement('div');
       inner.className = 'image-inner-wrapper';
       inner.setAttribute('data-image-inner', '');
+      inner.style.position = 'relative';
 
       const img = document.createElement('img');
       img.setAttribute('src', node.attrs.src);
@@ -178,6 +206,27 @@ export const LocalImageExtension = Node.create<LocalImageOptions>({
             type: this.name,
             attrs,
           });
+        },
+      setImageAlign:
+        (align: 'left' | 'center' | 'right') =>
+        ({ tr, state, dispatch }: CommandProps) => {
+          const { selection } = state;
+          const node = selection instanceof NodeSelection ? selection.node : null;
+          console.log(node?.type.name);
+          if (node?.type.name !== 'localImage') return false;
+
+          const pos = selection.from;
+          if (typeof pos === 'number') {
+            const newAttrs = {
+              ...node.attrs,
+              align,
+            };
+            tr.setNodeMarkup(pos, undefined, newAttrs);
+            dispatch?.(tr);
+            return true;
+          }
+
+          return false;
         },
     };
   },
