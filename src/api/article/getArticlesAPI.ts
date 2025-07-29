@@ -31,19 +31,18 @@ export interface GetArticlesResponse {
 export const getArticlesAPI = async (
   keyword: string,
   orderBy: OrderByType = 'recent',
-  signal?: AbortSignal,
+  signal?: AbortSignal, // signal을 pageSize 앞으로 이동
+  pageSize: number = 500, // pageSize를 마지막으로
 ): Promise<ArticleResponse[]> => {
   const params = {
     page: 1,
-    pageSize: 500,
+    pageSize,
     orderBy,
     ...(keyword.trim() && { keyword: keyword.trim() }),
   };
-
   const response: AxiosResponse<GetArticlesResponse> = await instance.get('/articles', {
     params,
     signal,
   });
-
   return response.data.list || [];
 };

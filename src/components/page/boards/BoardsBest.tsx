@@ -1,69 +1,69 @@
+'use client';
+import { useEffect, useState } from 'react';
 import BoardsBestCard from './BoardsBestCard';
+import { getArticlesAPI, ArticleResponse } from '@/api/article/getArticlesAPI';
 
-const BASE_URL = 'https://wikied-api.vercel.app';
+function BoardsBest() {
+  const [articles, setArticles] = useState<ArticleResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export interface Writer {
-  name: string;
-  id: number;
-}
+  useEffect(() => {
+    const fetchBestArticles = async () => {
+      try {
+        setLoading(true);
+        const bestArticles = await getArticlesAPI('', 'like', undefined, 4);
+        setArticles(bestArticles);
+      } catch (error) {
+        console.error('Failed to fetch best articles:', error);
+        setError('베스트 게시글을 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-export interface Article {
-  updatedAt: string;
-  createdAt: string;
-  likeCount: number;
-  writer: Writer;
-  image: string | null;
-  title: string;
-  id: number;
-}
+    fetchBestArticles();
+  }, []);
 
-export interface ArticlesResponse {
-  totalCount: number;
-  list: Article[];
-}
-
-// 서버에서 실행되는 함수
-async function getAllArticles(
-  id: string,
-  page: number,
-  pageSize: number,
-  orderBy: string,
-  keyword?: string,
-): Promise<ArticlesResponse> {
-  const keywordParam = keyword ? `&keyword=${keyword}` : '';
-
-  const res = await fetch(
-    `${BASE_URL}/${id}/articles?page=${page}&pageSize=${pageSize}&orderBy=${orderBy}${keywordParam}`,
-  );
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch articles');
+  if (loading) {
+    return (
+      <div className='w-full h-48 flex items-center justify-center'>
+        <div className='animate-pulse text-gray-500'>로딩 중...</div>
+      </div>
+    );
   }
 
-  return res.json();
-}
+  if (error) {
+    return (
+      <div className='w-full h-48 flex items-center justify-center'>
+        <div className='text-red-500'>{error}</div>
+      </div>
+    );
+  }
 
-// 서버 컴포넌트 (async 가능)
-async function BoardsBest() {
-  // 서버에서 미리 데이터 가져오기
-  const articles = await getAllArticles('6-16', 1, 4, 'like');
+  if (articles.length === 0) {
+    return (
+      <div className='w-full h-48 flex items-center justify-center'>
+        <div className='text-gray-500'>베스트 게시글이 없습니다.</div>
+      </div>
+    );
+  }
 
   return (
     <div className='w-full'>
       {/* 모바일: 수평 스크롤 */}
       <div className='block md:hidden'>
         <div className='flex gap-4 overflow-x-auto px-5 pb-4 scrollbar-hide snap-x snap-mandatory'>
-          {articles.list.map((article) => (
+          {articles.map((article) => (
             <div key={article.id} className='flex-shrink-0 snap-start'>
               <BoardsBestCard article={article} />
             </div>
           ))}
         </div>
       </div>
-
       {/* md 이상: 그리드 */}
       <div className='hidden md:grid md:grid-cols-2 md:gap-4 lg:flex lg:justify-between lg:gap-4'>
-        {articles.list.map((article) => (
+        {articles.map((article) => (
           <BoardsBestCard key={article.id} article={article} />
         ))}
       </div>
