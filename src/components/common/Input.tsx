@@ -2,7 +2,6 @@ import React, { InputHTMLAttributes } from 'react';
 import clsx from 'clsx'; // clsx 임포트
 import { twMerge } from 'tailwind-merge';
 import { FieldErrors, FieldValues, UseFormRegisterReturn } from 'react-hook-form';
-// Font Awesome 아이콘을 사용합니다.
 import { LuEye as IconEyeOpen, LuEyeClosed as IconEyeClosed } from 'react-icons/lu';
 
 type TouchedFieldsType<TFieldValues extends FieldValues> = {

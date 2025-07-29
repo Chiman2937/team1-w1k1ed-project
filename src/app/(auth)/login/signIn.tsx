@@ -29,7 +29,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginSection() {
-  const router = useRouter(); //useRouter 훅 초기화
+  const router = useRouter();
   const { login, isAuthenticated } = useAuthContext();
 
   const {
@@ -48,18 +48,16 @@ export default function LoginSection() {
     mode: 'onChange',
   });
 
-  // 컴포넌트가 마운트될 때 (한 번만) 실행
-  // ✨ 저장된 이메일 주소가 있다면 불러와서 폼 필드에 채우기
   useEffect(() => {
     const rememberedEmail = CookiesJs.get(REMEMBER_EMAIL_KEY);
     if (rememberedEmail) {
       // 'email' 필드에 저장된 이메일 값 설정
-      // shouldValidate: true 로 설정하여 값을 설정한 후 즉시 유효성 검사를 수행하도록 합니다.
+      // shouldValidate: true 로 설정하여 값을 설정한 후 즉시 유효성 검사를 수행
       setValue('email', rememberedEmail, { shouldValidate: true });
       // 'rememberEmail' 체크박스도 자동으로 체크
       setValue('rememberEmail', true);
     }
-  }, [setValue]); // setValue는 useForm에서 제공하며 안정적인 함수이므로 의존성 배열에 포함
+  }, [setValue]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -77,7 +75,7 @@ export default function LoginSection() {
 
       login(responseData.accessToken, responseData.refreshToken, responseData.user as UserData);
 
-      // ✨ '이메일 기억하기' 로직 처리
+      // '이메일 기억하기' 로직
       if (data.rememberEmail) {
         // 체크박스가 체크되어 있다면 이메일을 쿠키에 1년(365일) 동안 저장
         CookiesJs.set(REMEMBER_EMAIL_KEY, data.email, { expires: 365 });
@@ -85,22 +83,16 @@ export default function LoginSection() {
         // 체크박스가 해제되어 있다면 저장된 이메일 쿠키 삭제
         CookiesJs.remove(REMEMBER_EMAIL_KEY);
       }
-
-      // alert('로그인 되었습니다.');
     } catch (error) {
-      // ⭐️ error를 AxiosError로 타입 단언
       const axiosError = error as AxiosError;
-      // error.response가 없는 경우를 대비하여 || axiosError.message도 포함
       const errorMessage =
         (axiosError.response?.data as { message?: string })?.message ||
         axiosError.message ||
         '알 수 없는 오류가 발생했습니다.';
       console.error('로그인 실패:', errorMessage);
-      // alert(`로그인 실패: ${errorMessage}`);
+
       toast.run(
-        (
-          { isClosing, isOpening, index }, // close 함수도 받아서 닫기 버튼에 활용 가능
-        ) => (
+        ({ isClosing, isOpening, index }) => (
           <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
             로그인 실패: {errorMessage}
           </SnackBar>

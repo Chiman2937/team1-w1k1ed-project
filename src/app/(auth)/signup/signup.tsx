@@ -12,7 +12,6 @@ import { authAPI } from '@/api/authAPI';
 import { toast } from 'cy-toast';
 import SnackBar from '@/components/common/Snackbar';
 
-// 폼 데이터의 유효성 검사를 위한 Zod 스키마 정의
 const signUpSchema = z
   .object({
     name: z.string().trim().max(10, '8자 이하로 작성해주세요.'), //뒤의 랜덤 숫자 2자리를 위해 8자로 수정
@@ -26,42 +25,32 @@ const signUpSchema = z
     path: ['passwordConfirmation'], // 에러 메시지가 표시될 필드
   });
 
-// Zod 스키마로부터 폼 데이터의 TypeScript 타입 추론
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
-// 이름 + 랜덤2자리 숫자의 이름 생성 함수
+// 이름 + 랜덤 2자리 숫자의 이름 생성 함수
 const generateName = (baseName: string): string => {
   const randomNumber = Math.floor(10 + Math.random() * 90); //10부터 99까지의 랜덤 숫자 생성
-  return `${baseName}${randomNumber}`; // baseName 뒤에 랜덤 숫자를
+  return `${baseName}${randomNumber}`; // baseName + 랜덤 숫자 반환
 };
-
-// Display에선 숫자를 제외한 이름만 표시하는 함수
-// const DisplayName = (storedName: string): string => {
-//   const match = storedName.match(/(\D+)(\d{2})/);
-//   if (match && match[1]) {
-//     return match[1];
-//   }
-//   return storedName;
-// };
 
 export default function SignupSection() {
   const router = useRouter();
 
   const {
-    register, // 입력 필드를 React Hook Form에 등록하는 함수
-    handleSubmit, // 폼 제출을 처리하는 함수
-    formState: { errors, touchedFields }, // 폼의 에러 상태 객체
-    watch, // 필드 값을 감시하기 위함
-    trigger, // 유효성 검사를 수동으로 하기 위함
+    register,
+    handleSubmit,
+    formState: { errors, touchedFields },
+    watch,
+    trigger,
   } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema), // Zod 스키마를 유효성 검사기로 사용
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: '',
       email: '',
       password: '',
       passwordConfirmation: '',
     },
-    mode: 'onChange', // 유효성 검사 트리거 모드 설정 (아래에서 자세히 설명)
+    mode: 'onChange',
   });
 
   const password = watch('password');
@@ -78,18 +67,15 @@ export default function SignupSection() {
 
     try {
       const responseData = await authAPI.signUp({
-        name: nameForAPI, //변환된
+        name: nameForAPI, //변경된 이름 전달
         email: data.email,
         password: data.password,
         passwordConfirmation: data.passwordConfirmation,
       });
       console.log('회원가입 성공:', responseData);
 
-      // alert('가입이 완료되었습니다.');
       toast.run(
-        (
-          { isClosing, isOpening, index }, // close 함수도 받아서 닫기 버튼에 활용 가능
-        ) => (
+        ({ isClosing, isOpening, index }) => (
           <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
             가입이 완료되었습니다!
           </SnackBar>
@@ -101,19 +87,15 @@ export default function SignupSection() {
         router.push('/login');
       }, 2000);
     } catch (error) {
-      // ⭐️ error를 AxiosError로 타입 단언
       const axiosError = error as AxiosError;
-      // error.response가 없는 경우를 대비하여 || axiosError.message도 포함
       const errorMessage =
         (axiosError.response?.data as { message?: string })?.message ||
         axiosError.message ||
         '알 수 없는 오류가 발생했습니다.';
       console.error('회원가입 실패:', errorMessage);
-      // alert(`회원가입 실패: ${errorMessage}`);
+
       toast.run(
-        (
-          { isClosing, isOpening, index }, // close 함수도 받아서 닫기 버튼에 활용 가능
-        ) => (
+        ({ isClosing, isOpening, index }) => (
           <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
             회원가입 실패: {errorMessage}
           </SnackBar>
@@ -124,7 +106,7 @@ export default function SignupSection() {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center gap-[32px] mt-[100px]'>
+    <div className='flex flex-col justify-center items-center gap-[32px] mt-[70px]'>
       <h1 className='text-2xl-semibold text-grayscale-500'>회원가입</h1>
       <div className='flex flex-col gap-[40px] items-center'>
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-[32px] items-center'>
