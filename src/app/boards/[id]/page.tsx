@@ -6,6 +6,7 @@ import BoardDetail from '@/components/page/boardDetail/BoardDetail';
 import { useAuthContext } from '@/context/AuthContext';
 import { useParams } from 'next/navigation';
 import Animation from '@/components/common/Animation';
+import { ToastRender } from 'cy-toast';
 
 const Board = () => {
   const param = useParams();
@@ -17,6 +18,7 @@ const Board = () => {
   return (
     <>
       <Animation>
+        <ToastRender />
         <BoardDetail id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardDetail>
         <BoardComments id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardComments>
       </Animation>

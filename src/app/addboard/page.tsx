@@ -15,13 +15,16 @@ import ContentEditor from '@/components/common/TextEditor/ContentEditor';
 import ToolBar from '@/components/common/TextEditor/ToolBar';
 import { useAuthContext } from '@/context/AuthContext';
 import { dateFormater } from '@/utils/date';
+import { toast, ToastRender } from 'cy-toast';
+import SnackBar from '@/components/common/Snackbar';
 
 const AddBoard = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { user } = useAuthContext();
+  const { user, isAuthenticated } = useAuthContext();
   const { editor, tempFiles, setTempFiles, lengthWithSpaces, lengthWithoutSpaces } =
     useTextEditor();
 
@@ -45,27 +48,44 @@ const AddBoard = () => {
       title,
       content,
     };
+
     try {
+      if (!isAuthenticated) {
+        toast.run(({ isClosing, isOpening, index }) => (
+          <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+            로그인 후 이용해 주시길 바랍니다.
+          </SnackBar>
+        ));
+        router.push('/login');
+      }
+      setIsSubmitting(true);
       const response = await postArticle(formData);
-      // 성공 모달
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
+          게시물 작성에 성공했습니다.
+        </SnackBar>
+      ));
       console.log(response);
-      router.push(`/boards/${response.id}`);
-    } catch {
-      // 실패 토스트
-      router.push('/boards');
+      router.push(`/boards/${response?.id}`);
+    } catch (error) {
+      console.log(error);
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          게시물 작성에 실패했습니다.
+        </SnackBar>
+      ));
+      setTimeout(() => {
+        router.push('/error');
+      }, 2000);
     } finally {
+      setIsSubmitting(false);
       setIsModalOpen(false);
     }
   };
 
-  // useEffect(() => {
-  //   if (!isAuthenticated && !user) {
-  //     router.push('/');
-  //   }
-  // }, [isAuthenticated, user, router]);
-
   return (
     <Animation>
+      <ToastRender />
       <div className='flex justify-center w-full'>
         <BoardContent>
           <div className='p-5 w-full m-auto'>
@@ -75,13 +95,13 @@ const AddBoard = () => {
                   게시물 등록하기
                 </h2>
                 <Button
-                  disabled={!lengthWithoutSpaces}
+                  disabled={!lengthWithoutSpaces || isSubmitting}
                   variant='primary'
                   type='submit'
                   className={'hidden md:inline w-[120px]'}
                   onClick={handleRender}
                 >
-                  등록하기
+                  {isSubmitting ? '등록중..' : '등록하기'}
                 </Button>
                 <button onClick={handleRender} className='inline md:hidden'>
                   <SubmitButton className='text-grayscale-400' />
