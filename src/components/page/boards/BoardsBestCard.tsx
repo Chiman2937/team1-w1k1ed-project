@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { Article } from './BoardsBest';
 import { CiHeart } from 'react-icons/ci';
 import { dateFormater } from '@/utils/date';
+import { ArticleResponse } from '@/api/article/getArticlesAPI';
 interface BoardsBestCardProps {
-  article: Article;
+  article: ArticleResponse;
 }
 const BoardsBestCard = ({ article }: BoardsBestCardProps) => {
   return (

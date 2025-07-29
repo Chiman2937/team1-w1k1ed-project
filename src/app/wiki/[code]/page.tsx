@@ -16,7 +16,9 @@ const WikiDetail = async ({ params }: PageProps) => {
   return (
     <WikiProvider>
       <section
-        className={clsx('relative', 'mx-auto', 'px-[20px] py-[40px]', 'md:px-[60px] md:py-[60px]')}
+        className={clsx(
+          'lg:px-[20px] lg:py-[20px] lg:w-full lg:pr-[280px] xl:pl-[230px] lg:mx-auto',
+        )}
       >
         <WikiDetailSection wikiData={wikiData} />
       </section>

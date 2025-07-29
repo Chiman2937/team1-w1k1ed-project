@@ -1,4 +1,6 @@
 import { EditorContent, type Editor } from '@tiptap/react';
+import ImageAlignToolBar from './textarea/ImageAlignToolBar';
+import EditorClickCatcher from './textarea/EditorClickCatcher';
 
 interface Props {
   editor: Editor;
@@ -6,8 +8,10 @@ interface Props {
 
 const ContentEditor = ({ editor }: Props) => {
   return (
-    <div>
+    <div className='flex flex-col h-full'>
+      <ImageAlignToolBar editor={editor} />
       <EditorContent editor={editor} />
+      <EditorClickCatcher editor={editor} />
     </div>
   );
 };
