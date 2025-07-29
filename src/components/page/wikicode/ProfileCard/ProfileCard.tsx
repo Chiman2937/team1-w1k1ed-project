@@ -40,21 +40,23 @@ const ProfileCard = ({ wikiData }: Props) => {
           'relative flex flex-col gap-[5px]',
           'pt-[40px] px-[40px]',
           'w-full',
-          'xs:w-[150px]',
-          'sm:w-[150px]',
-          'md:w-[200px]',
+          'xs:w-[200px]',
+          'sm:w-[250px]',
+          'md:w-[250px]',
           'lg:w-full',
         )}
       >
         {isEditing && <ProfileImageEditor imageUrl={wikiData.image} />}
         {!isEditing && <ProfileImageViewer imageUrl={wikiData.image} />}
+      </div>
+      {!isEditing && (
         <div className='text-center w-full'>
           <p className='text-xl-semibold text-grayscale-500'>
             {wikiData.name}
             <span className='text-lg-semibold text-grayscale-400'>{` (${wikiData.nickname})`}</span>
           </p>
         </div>
-      </div>
+      )}
       <div
         className={clsx(
           // 'lg:bg-white lg:border-1 lg:border-gray-300',
