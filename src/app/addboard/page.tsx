@@ -77,7 +77,7 @@ const AddBoard = () => {
       ));
       setTimeout(() => {
         router.push('/error');
-      }, 2000);
+      }, 1500);
     } finally {
       setIsSubmitting(false);
       setIsModalOpen(false);

@@ -103,7 +103,7 @@ const BoardDetail = ({
       ));
       setTimeout(() => {
         router.push('/boards');
-      }, 1000);
+      }, 1500);
     } catch (error) {
       console.log(error);
       toast.run(({ isClosing, isOpening, index }) => (
