@@ -60,6 +60,7 @@ const AddBoard = () => {
       }
       setIsSubmitting(true);
       const response = await postArticle(formData);
+      if (response.id === undefined) throw new Error();
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
           게시물 작성에 성공했습니다.
