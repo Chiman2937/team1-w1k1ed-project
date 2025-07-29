@@ -18,6 +18,7 @@ import WikiInfo from './WikiInfo/WikiInfo';
 import { ToastRender } from 'cy-toast';
 import { useRouter } from 'next/navigation';
 import { useUnloadAlert } from '@/hooks/useUnloadAlert';
+import ProfileQnAEditor from './ProfileQnAEditor/ProfileQnAEditor';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -112,6 +113,7 @@ const WikiDetailSection = ({ wikiData }: Props) => {
         wikiData={wikiData}
       />
       <WikiInfo onTimerFinish={onTimerFinish} />
+      <ProfileQnAEditor wikiData={wikiData} />
       <div
         className={clsx(
           'border-y-1 border-gray-200',
@@ -119,6 +121,7 @@ const WikiDetailSection = ({ wikiData }: Props) => {
           'w-full py-[20px]',
           'sm:flex-row',
           'xl:py-0 xl:border-0',
+          'lg:py-0 lg:border-b-0',
         )}
       >
         <ProfileIndex indexList={getHtmlHeadings(wikiData.content)} />
