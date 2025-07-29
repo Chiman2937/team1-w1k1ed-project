@@ -17,6 +17,8 @@ import Button from '@/components/common/Button';
 import { Modal } from 'react-simplified-package';
 import BoardSkeleton from './BoardSkeleton';
 import ContentViewer from '@/components/common/TextEditor/ContentViewer';
+import { toast } from 'cy-toast';
+import SnackBar from '@/components/common/Snackbar';
 
 const BoardDetail = ({
   id,
@@ -57,7 +59,11 @@ const BoardDetail = ({
   const handleLike = async () => {
     try {
       if (!isAuthenticated) {
-        //Toast 사용하기
+        toast.run(({ isClosing, isOpening, index }) => (
+          <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+            로그인 후 이용해 주시길 바랍니다.
+          </SnackBar>
+        ));
         router.push('/login');
       }
       if (isLiked) {
@@ -75,19 +81,51 @@ const BoardDetail = ({
     }
   };
 
+  const handleDeleteModal = async () => {
+    if (!isAuthenticated) {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          로그인 후 이용해 주시길 바랍니다.
+        </SnackBar>
+      ));
+      router.push('/login');
+    }
+    setIsModalOpen(true);
+  };
+
   const handleDelete = async () => {
     try {
       await deleteArticle(id);
-      // toast 삭제되었습니다
-      router.push('/boards');
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
+          게시물이 삭제되었습니다.
+        </SnackBar>
+      ));
+      setTimeout(() => {
+        router.push('/boards');
+      }, 1000);
     } catch (error) {
       console.log(error);
-      //toast 삭제 실패
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          게시물 삭제에 실패했습니다.
+        </SnackBar>
+      ));
       router.push('/error');
+    } finally {
+      setIsModalOpen(false);
     }
   };
 
   const handleEdit = () => {
+    if (!isAuthenticated) {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          로그인 후 이용해 주시길 바랍니다.
+        </SnackBar>
+      ));
+      router.push('/login');
+    }
     setIsEditing(true);
   };
 
@@ -113,6 +151,7 @@ const BoardDetail = ({
       <Animation>
         <BoardContent>
           <BoardEdit
+            isEditing={isEditing}
             setIsEditing={setIsEditing}
             userName={name}
             id={id}
@@ -136,7 +175,7 @@ const BoardDetail = ({
                 {userId === writerId && (
                   <>
                     <BoardEditButton onEdit={handleEdit} />
-                    <BoardDeleteButton onDelete={() => setIsModalOpen(true)} />
+                    <BoardDeleteButton onDelete={handleDeleteModal} isEditing={isEditing} />
                   </>
                 )}
               </div>
@@ -147,6 +186,7 @@ const BoardDetail = ({
                 <p>{updatedDate}</p>
               </div>
               <BoardLikeButton
+                isAuthenticated={isAuthenticated}
                 initialLikeCount={likeCount}
                 onClick={handleLike}
                 isLiked={isLiked}
