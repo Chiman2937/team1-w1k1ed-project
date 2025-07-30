@@ -2,6 +2,8 @@ import Button from './Button';
 import { motion, useAnimation, easeOut } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthContext } from '@/context/AuthContext';
 
 // 컨테이너와 아이템 variants 분리
 const containerVariants = {
@@ -23,6 +25,9 @@ const itemVariants = {
 };
 
 const CTASection = () => {
+  const router = useRouter();
+  const { isAuthenticated } = useAuthContext();
+
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.5 });
 
@@ -31,6 +36,14 @@ const CTASection = () => {
       controls.start('visible');
     }
   }, [controls, inView]);
+
+  const handleCreateWikiClick = () => {
+    if (isAuthenticated) {
+      router.push('/mypage');
+    } else {
+      router.push('/login');
+    }
+  };
 
   return (
     <motion.div
@@ -66,7 +79,7 @@ const CTASection = () => {
           {/* Button에 itemVariants 적용 */}
           <motion.div variants={itemVariants}>
             <Button
-              href={'/mypage'}
+              onClick={handleCreateWikiClick}
               variant='landingWhite'
               className='mx-[40px] my-[40px] px-[30px] py-[15px] rounded-[15px]
                 transition cursor-pointer
