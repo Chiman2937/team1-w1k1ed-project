@@ -2,8 +2,8 @@
 
 import { Switch } from '@headlessui/react';
 import { useNotificationStore } from '@/store/useNotificationStore';
-import { toast } from 'cy-toast'; // cy-toast 임포트
-import SnackBar from '../../components/common/Snackbar'; // SnackBar 컴포넌트 임포트
+import { toast } from 'cy-toast';
+import SnackBar from '../../components/common/Snackbar';
 
 const NotificationSwitch = () => {
   // Zustand 스토어에서 상태와 상태를 업데이트하는 함수를 임포트

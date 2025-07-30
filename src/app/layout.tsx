@@ -7,6 +7,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import AuthHeaderRenderer from '@/components/layout/AuthHeaderRenderer';
 import { Suspense } from 'react';
 import Animation from '@/components/common/Animation';
+import { ToastRender } from 'cy-toast';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -29,6 +30,7 @@ export default function RootLayout({
         ${nexonGothicRegular.variable}
         antialiased`}
       >
+        <ToastRender />
         <Suspense fallback={<div>앱 로딩증</div>}>
           <AuthProvider>
             <Animation>
