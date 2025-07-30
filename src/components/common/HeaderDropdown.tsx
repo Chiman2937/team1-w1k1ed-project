@@ -37,7 +37,10 @@ const HeaderDropdown = ({
 
   return (
     <Menu as='div' className='relative font-pretendard text-[14px] font-normal'>
-      <MenuButton className='focus:outline-none relative'>
+      <MenuButton
+        className='flex items-center justify-center
+        focus:outline-none relative'
+      >
         <Icon className='text-grayscale-300 cursor-pointer w-[24px] h-[24px] md:w-[32px] md:h-[32px]' />
         {/* 아이콘 옆에 빨간 점 표시 (hasNewNotifications prop 사용) */}
         {hasNewNotifications && iconName === 'hamburger' && (

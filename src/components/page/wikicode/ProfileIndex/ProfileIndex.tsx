@@ -12,7 +12,9 @@ interface Props {
 
 const ProfileIndex = ({ indexList }: Props) => {
   const { isEditing } = useWikiContext();
-  if (!isEditing) return null;
+
+  if (isEditing) return null;
+
   return (
     <div
       className={clsx(

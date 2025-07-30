@@ -4,7 +4,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NotificationItem from '@/components/common/NotificationItem';
 import { FaTimes as IconClose } from 'react-icons/fa';
-import { useNotificationStore } from '@/store/notificationStore'; // Zustand 스토어 임포트
+import { useNotificationStore } from '@/store/useNotificationStore'; // Zustand 스토어 임포트
 
 type Item = {
   id: number;

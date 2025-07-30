@@ -14,6 +14,8 @@ import { FiEdit2 as Edit } from 'react-icons/fi';
 import { FaRegTrashAlt as Delete } from 'react-icons/fa';
 import CommentEdit from './CommentEdit';
 import Button from '@/components/common/Button';
+import { toast } from 'cy-toast';
+import SnackBar from '@/components/common/Snackbar';
 
 interface CommentItemProps {
   id: number | undefined;
@@ -32,10 +34,19 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
     try {
       await deleteComment(comment.id);
       onDelete(comment.id);
-      // 댓글이 삭제되었습니다 토스트
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
+          댓글이 삭제되었습니다.
+        </SnackBar>
+      ));
     } catch (error) {
       console.log(error);
-      router.push('/500');
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          댓글 삭제에 실패했습니다.
+        </SnackBar>
+      ));
+      router.push('/error');
     }
   };
 
