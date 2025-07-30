@@ -11,7 +11,12 @@ const BoardContent = ({ children }: { children: React.ReactNode }) => {
         {children}
       </div>
       <div className='flex items-center justify-center'>
-        <Button variant={'secondary'} className={'w-[140px] h-[45px] justify-center'}>
+        <Button
+          variant={'secondary'}
+          className={
+            'w-[140px] h-[45px] justify-center hover:bg-primary-green-200 hover:text-grayscale-50'
+          }
+        >
           <Link href={'/boards'}>목록으로</Link>
         </Button>
       </div>

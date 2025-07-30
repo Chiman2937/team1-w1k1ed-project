@@ -11,6 +11,9 @@ import { useTextEditor } from '@/components/common/TextEditor/utils/hooks/useTex
 import { handlehtmlParse } from '@/components/common/TextEditor/utils/handlers/handleHtmlParse';
 import ContentEditor from '@/components/common/TextEditor/ContentEditor';
 import ToolBar from '@/components/common/TextEditor/ToolBar';
+import { toast } from 'cy-toast';
+import SnackBar from '@/components/common/Snackbar';
+import { useRouter } from 'next/navigation';
 
 const BoardEdit = ({
   userName,
@@ -19,6 +22,7 @@ const BoardEdit = ({
   date,
   initalTitle,
   initalContent,
+  isEditing,
   setIsEditing,
 }: {
   userName: string;
@@ -27,6 +31,7 @@ const BoardEdit = ({
   date: string;
   initalTitle: string;
   initalContent: string;
+  isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [title, setTitle] = useState(initalTitle);
@@ -37,6 +42,8 @@ const BoardEdit = ({
     initialContent: initalContent,
   });
 
+  const router = useRouter();
+
   const handleRender = async () => {
     if (!editor) return;
     const nextContent = await handlehtmlParse({ editor, files: tempFiles });
@@ -45,7 +52,14 @@ const BoardEdit = ({
   };
 
   const handlePatch = async () => {
-    if (!userId) return;
+    if (!userId) {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          로그인 후 이용해 주시길 바랍니다.
+        </SnackBar>
+      ));
+      router.push('/login');
+    }
 
     const formData = {
       title,
@@ -53,9 +67,21 @@ const BoardEdit = ({
     };
     try {
       await patchArticle(id, formData);
-      window.location.reload();
+      router.refresh();
     } catch (error) {
       console.log(error);
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          게시물 수정에 실패했습니다.
+        </SnackBar>
+      ));
+    } finally {
+      setIsEditing(false);
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
+          게시물 수정이 완료되었습니다.
+        </SnackBar>
+      ));
     }
   };
 
@@ -79,13 +105,13 @@ const BoardEdit = ({
                 <CancelButton className='text-grayscale-400' />
               </button>
               <Button
-                disabled={!content}
+                disabled={!content || !isEditing}
                 variant='primary'
                 type='submit'
                 className={'hidden md:inline w-[120px]'}
                 onClick={handleRender}
               >
-                등록하기
+                {!isEditing ? '수정중..' : '수정하기'}
               </Button>
               <button onClick={handleRender} className='inline md:hidden'>
                 <SubmitButton className='text-grayscale-400' />

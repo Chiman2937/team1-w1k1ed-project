@@ -7,6 +7,8 @@ import { getComment, postComment } from '@/api/articleApi';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import LoadingSpinner from '@/components/common/LoadingSpinner/LoadingSpinner';
 import { FaCommentDots as CommentImg } from 'react-icons/fa';
+import { toast } from 'cy-toast';
+import SnackBar from '@/components/common/Snackbar';
 
 export interface CommentWriterResponse {
   image: string;
@@ -73,7 +75,7 @@ const BoardComments = ({
       setIsCommentLoading(true);
       const response = await getComment(id, LIMIT, cursor);
       setComments((prev) => {
-        if (prev === response.list) return prev;
+        if (prev == response.list) return [...prev];
         return [...prev, ...response.list];
       });
       setCursor(response.nextCursor);
@@ -105,12 +107,21 @@ const BoardComments = ({
         });
         getAllComment();
       } else {
-        // 토스트 추가
+        toast.run(({ isClosing, isOpening, index }) => (
+          <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+            로그인 후 이용해 주시길 바랍니다.
+          </SnackBar>
+        ));
         router.push('/login');
       }
     } catch (e) {
-      // 댓글 작성 오류 토스트
       console.log(e);
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          댓글 작성에 실패했습니다.
+        </SnackBar>
+      ));
+      router.push('/error');
     }
   };
 
@@ -124,6 +135,11 @@ const BoardComments = ({
   };
 
   const handleCommentUpdated = (updatedComment: CommentResponse) => {
+    toast.run(({ isClosing, isOpening, index }) => (
+      <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
+        댓글 수정이 완료되었습니다.
+      </SnackBar>
+    ));
     setComments((prevData) => {
       return prevData.map((comment) => {
         return comment.id === updatedComment.id ? updatedComment : comment;
@@ -151,11 +167,11 @@ const BoardComments = ({
     >
       <BoardTextArea
         count={commentCount}
-        isLogin={isAuthenticated}
+        isAuthenticated={isAuthenticated}
         onSubmit={handleCommentSubmit}
       />
       {commentCount === 0 ? (
-        <div className='flex flex-col justify-center items-center my-10'>
+        <div className='flex flex-col justify-center items-center mt-20'>
           <CommentImg size={170} className='text-primary-green-200 animation-bounce-comment' />
           <span className='my-5 text-grayscale-400'>댓글이 없습니다</span>
         </div>
