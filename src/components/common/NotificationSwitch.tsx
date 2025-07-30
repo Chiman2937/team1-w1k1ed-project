@@ -36,8 +36,10 @@ const NotificationSwitch = () => {
 
   return (
     <div
-      className='flex justify-between items-center text-grayscale-500 text-md-regular
-      w-[335px] md:w-[400px] transition-all duration-700'
+      className='flex justify-between items-center px-1 py-1 my-4 w-auto 
+      text-lg font-semibold text-grayscale-500
+      transition-all duration-700
+      bg-white rounded-[10px]'
     >
       <div>서비스 알림</div>
       <Switch
