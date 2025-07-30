@@ -46,8 +46,8 @@ const ProfileCard = ({ wikiData }: Props) => {
           'lg:w-full',
         )}
       >
-        {isEditing && <ProfileImageEditor imageUrl={wikiData.image} />}
-        {!isEditing && <ProfileImageViewer imageUrl={wikiData.image} />}
+        {editCondition && <ProfileImageEditor imageUrl={wikiData.image} />}
+        {!editCondition && <ProfileImageViewer imageUrl={wikiData.image} />}
       </div>
       <div
         className={clsx(
