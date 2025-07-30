@@ -44,5 +44,14 @@ export const getArticlesAPI = async (
     params,
     signal,
   });
-  return response.data.list || [];
+  // 작성자 이름 뒤의 숫자 2자리 제거
+  const articles = (response.data.list || []).map((article) => ({
+    ...article,
+    writer: {
+      ...article.writer,
+      name: article.writer.name.replace(/\d{2}$/, ''),
+    },
+  }));
+
+  return articles;
 };
