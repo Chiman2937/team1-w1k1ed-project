@@ -19,13 +19,21 @@ import { ToastRender } from 'cy-toast';
 import { useRouter } from 'next/navigation';
 import { useUnloadAlert } from '@/hooks/useUnloadAlert';
 import ProfileQnAEditor from './ProfileQnAEditor/ProfileQnAEditor';
+import { uploadFileAPI } from '@/api/uploadFileAPI';
 
 interface Props {
   wikiData: GetProfileItemResponse;
 }
 
 const WikiDetailSection = ({ wikiData }: Props) => {
-  const { wikiProfile, setWikiProfile, setIsEditing, isEditing, setEditingInfo } = useWikiContext();
+  const {
+    wikiProfile,
+    setWikiProfile,
+    setIsEditing,
+    isEditing,
+    setEditingInfo,
+    tempProfileImageFile,
+  } = useWikiContext();
 
   //textEditor 인스턴스 객체 호출
   const { editor, tempFiles, setTempFiles } = useTextEditor({
@@ -55,10 +63,15 @@ const WikiDetailSection = ({ wikiData }: Props) => {
   const handleUpdateProfileSubmit = async () => {
     if (!editor) return;
     if (!wikiProfile) return;
+    let nextProfileImage = wikiProfile.image;
+    if (!!tempProfileImageFile) {
+      nextProfileImage = await uploadFileAPI({ fileObject: tempProfileImageFile, type: 'image' });
+    }
     const nextContent = await handlehtmlParse({ editor, files: tempFiles });
     const nextWikiProfile = {
       ...wikiProfile,
       content: nextContent,
+      image: nextProfileImage,
     };
     await patchProfileItemAPI({ code: wikiData.code, params: nextWikiProfile });
     setIsEditing(false);
@@ -121,7 +134,7 @@ const WikiDetailSection = ({ wikiData }: Props) => {
           'w-full py-[20px]',
           'sm:flex-row',
           'xl:py-0 xl:border-0',
-          'lg:py-0 lg:border-b-0',
+          'lg:border-b-0',
         )}
       >
         <ProfileIndex indexList={getHtmlHeadings(wikiData.content)} />
