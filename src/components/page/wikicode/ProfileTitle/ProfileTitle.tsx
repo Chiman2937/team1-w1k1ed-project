@@ -65,7 +65,7 @@ const ProfileTitle = ({ wikiData, handleCancelClick, handleUpdateProfileSubmit }
           {wikiData.name}
         </h1>
         {isEditing && (
-          <div className='flex flex-row gap-[10px]'>
+          <div className={clsx('flex flex-row gap-[10px]', 'sticky top-[120px]')}>
             <Button variant='secondary' className='py-[8px] px-[20px]' onClick={handleCancelClick}>
               취소
             </Button>

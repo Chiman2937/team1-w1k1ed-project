@@ -65,7 +65,7 @@ const WikiInfo = ({ onTimerFinish }: Props) => {
         'bg-white',
         'flex flex-row gap-[15px] items-center',
         'py-[15px]',
-        isEditing && 'sticky top-[80px] z-1',
+        isEditing && 'sticky top-[60px] md:top-[80px] z-1',
       )}
     >
       <IconInfo className='shrink-0' />
