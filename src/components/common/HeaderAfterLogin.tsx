@@ -58,7 +58,7 @@ const HeaderAfterLogin = () => {
     };
 
     fetchProfileImage();
-  }, [user?.profile.code]); // 💡 user.code가 생길 때만 실행
+  }, [user]);
 
   // 새 알림 추가 함수 (NotificationPanel로 전달)
   const handleAddNotification = () => {
