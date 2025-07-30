@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Logo from './Logo';
 import Nav from './Nav';
 import NotificationPanel from './NotificationPanel';
-import Button from './Button';
 import { useNotificationStore } from '@/store/useNotificationStore';
 import NotificationBell from './NotificationBell';
 import UserDropdown from './UserDropdown';
@@ -12,32 +11,18 @@ import MobileMenu from './MobileMenu';
 import { profilesAPI } from '@/api/profile/postProfilesAPI';
 import { useAuthContext } from '@/context/AuthContext';
 
-// NotificationItem에서 사용하는 Item 타입 정의
-type Item = {
-  id: number;
-  content: string;
-  createdAt: string;
-};
-
 const HeaderAfterLogin = () => {
   // Zustand 상태와 함수 가져오기
-  const { notificationsEnabled, hasNewNotifications, setHasNewNotifications } =
-    useNotificationStore();
+  const {
+    notificationsEnabled,
+    hasNewNotifications,
+    setHasNewNotifications,
+    list: notifications, // Zustand 스토어의 list를 notifications로 사용
+    fetchNotifications, // 알림 불러오기 함수
+    deleteNotification, // 알림 삭제 함수
+  } = useNotificationStore();
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Item[]>([
-    // 알림 목록 상태를 HeaderAfterLogin으로 옮김
-    {
-      id: 1,
-      content: '첫 번째 알림입니다.',
-      createdAt: '2025-07-19T12:39:23.618Z',
-    },
-    {
-      id: 2,
-      content: '두 번째 알림이 도착했어요!',
-      createdAt: '2025-07-19T12:45:00.000Z',
-    },
-  ]);
 
   const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
   const { user } = useAuthContext();
@@ -60,26 +45,14 @@ const HeaderAfterLogin = () => {
     fetchProfileImage();
   }, [user]);
 
-  // 새 알림 추가 함수 (NotificationPanel로 전달)
-  const handleAddNotification = () => {
-    const newItem: Item = {
-      id: notifications.length > 0 ? Math.max(...notifications.map((item) => item.id)) + 1 : 1,
-      content: `새 알림 ${new Date().toLocaleTimeString()}`,
-      createdAt: new Date().toISOString(),
-    };
+  // 컴포넌트 마운트 시 알림 목록 불러오기 (초기 데이터 로드)
+  useEffect(() => {
+    fetchNotifications({ reset: true }); // 컴포넌트 마운트 시 알림 목록 초기화 및 불러오기
+  }, [fetchNotifications]); // fetchNotifications 함수가 변경될 때 (실제로는 변경되지 않음)
 
-    setNotifications([newItem, ...notifications]);
-    if (notificationsEnabled) {
-      setHasNewNotifications(true);
-    }
-  };
-
-  // 알림 삭제 함수 (NotificationPanel로 전달)
+  // 알림 삭제 함수를 Zustand 스토어의 deleteNotification으로 대체
   const handleDeleteNotification = (id: number) => {
-    setNotifications((prevList) => prevList.filter((item) => item.id !== id));
-    if (notifications.length === 1 && notifications[0].id === id) {
-      setHasNewNotifications(false);
-    }
+    deleteNotification(id);
   };
 
   // 알림 패널이 열리면 새 알림 표시를 해제
@@ -111,10 +84,6 @@ const HeaderAfterLogin = () => {
               <div className='hidden md:block'>
                 <Nav />
               </div>
-            </div>
-
-            <div className='mb-4'>
-              <Button onClick={handleAddNotification}>새 알림 추가</Button>
             </div>
 
             <div className='flex items-center gap-4'>

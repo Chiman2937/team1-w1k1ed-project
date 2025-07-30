@@ -50,23 +50,25 @@ export const useNotificationStore = create<NotificationStore>()(
 
       // 알림 목록 불러오기
       fetchNotifications: async ({ reset = false } = {}) => {
-        const { page, pageSize, list } = get();
+        const { page, pageSize, list, totalCount: prevTotalCount } = get();
         const nextPage = reset ? 1 : page;
 
         set({ loading: true, error: null });
 
         try {
           const res = await notificationsAPI.getList(nextPage, pageSize);
-          const newList = reset ? res.list : [...list, ...res.list];
+          const newList = reset ? res.list : [...res.list, ...list];
 
           set({
             list: newList,
             totalCount: res.totalCount,
             page: nextPage + 1,
             hasNextPage: newList.length < res.totalCount,
+            // 새로 불러온 totalCount가 이전 totalCount보다 크면 새 알림이 있다고 표시
+            hasNewNotifications: res.totalCount > prevTotalCount,
           });
         } catch (err) {
-          console.error('알림 불러오기 실패:', err); // 토스트?
+          console.error('알림 불러오기 실패:', err);
           set({ error: '알림을 불러오는 데 실패했어요.' });
         } finally {
           set({ loading: false });
@@ -84,7 +86,7 @@ export const useNotificationStore = create<NotificationStore>()(
             hasNextPage: updatedList.length < get().totalCount,
           });
         } catch (err) {
-          console.error('알림 불러오기 실패:', err); // 토스트?
+          console.error('알림 불러오기 실패:', err);
           set({ error: '알림 삭제 실패' });
         }
       },
@@ -102,11 +104,11 @@ export const useNotificationStore = create<NotificationStore>()(
     }),
     {
       // 로컬 스토리지에 두고 활용할 데이터만 저장
-      // 이후에 totalCount도 저장해서 새로 불러온 totalCount와 다르면 빨간 점을 띄울 수 있겠다.
       name: 'notification-storage',
       partialize: (state) => ({
         notificationsEnabled: state.notificationsEnabled,
         hasNewNotifications: state.hasNewNotifications,
+        totalCount: state.totalCount, // totalCount를 로컬 스토리지에 저장
       }),
     },
   ),

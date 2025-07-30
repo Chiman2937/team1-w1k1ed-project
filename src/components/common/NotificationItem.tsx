@@ -20,6 +20,7 @@ const NotificationItem = ({ id, content, createdAt, onDelete }: NotificationItem
     if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)}시간 전`;
     return `${Math.floor(diffSeconds / 86400)}일 전`;
   };
+
   return (
     <>
       <div className='w-[330px] px-[12px] py-[16px] rounded-[5px] bg-white text-grayscale-500'>
@@ -28,8 +29,7 @@ const NotificationItem = ({ id, content, createdAt, onDelete }: NotificationItem
         </header>
         <div className='flex gap-2'>
           <FaBell size={50} className='m-2 p-2 rounded-2xl bg-grayscale-200' />
-          <div>
-            <p>내 위키가 수정되었습니다.</p>
+          <div className='flex flex-col justify-between m-2'>
             <p>{content}</p>
             <p>{formatTimeAgo(createdAt)}</p>
           </div>
