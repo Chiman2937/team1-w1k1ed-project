@@ -127,19 +127,21 @@
 
   .animate-scroll-left {
     animation: scroll-left 5s linear infinite; /* 기본 속도: 5초 */
+    display: flex;
+    width: max-content;
   }
 
   /* 미디어 쿼리를 사용하여 반응형 속도 조절 */
   @media (min-width: 768px) {
     /* md */
-    .md\:animate-scroll-left {
+    .animate-scroll-left {
       animation-duration: 10s; /* md 사이즈 이상에서는 10초 */
     }
   }
 
   @media (min-width: 1024px) {
     /* lg */
-    .lg\:animate-scroll-left {
+    .animate-scroll-left {
       animation-duration: 15s; /* lg 사이즈 이상에서는 15초 */
     }
 
