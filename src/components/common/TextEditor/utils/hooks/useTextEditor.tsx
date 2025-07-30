@@ -9,6 +9,7 @@ import { OGLinkExtension } from '../extensions/OGLinkExtension';
 import { LocalImageExtension } from '../extensions/LocalImageExtension';
 import { useState } from 'react';
 import { getHtmlLength } from '../handlers/getHtmlLength';
+import { removeHeadingIds } from '../handlers/removeHeadingIds';
 
 interface Props {
   initialContent?: string;
@@ -104,7 +105,7 @@ export const useTextEditor = ({ initialContent = '' }: Props = {}) => {
       setLengthWithoutSpaces(getHtmlLength.withoutSpaces(editor));
       console.log('[DEBUG] editor updated');
     },
-    content: initialContent,
+    content: removeHeadingIds(initialContent),
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
   });

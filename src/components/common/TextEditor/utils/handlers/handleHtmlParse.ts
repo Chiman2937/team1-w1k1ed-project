@@ -15,9 +15,10 @@ const getParsedHtml = async ({ editor, files }: Props) => {
   const contentJson = await getSanitizedJson({ editor, files });
   const html = generateHTML(contentJson, editor.extensionManager.extensions);
 
-  const convertedHtml = replaceAspectRatioToHeight(html);
+  const aspectRatioconvertedHtml = replaceAspectRatioToHeight(html);
+  const headingIdSetHtml = addSequentialHeadingIds(aspectRatioconvertedHtml);
 
-  return convertedHtml;
+  return headingIdSetHtml;
 };
 const getSanitizedJson = async ({ editor, files }: Props) => {
   const contentJson = editor.getJSON();
@@ -77,6 +78,25 @@ const replaceAspectRatioToHeight = (html: string): string => {
         img.removeAttribute('style');
       }
     }
+  });
+
+  return doc.body.innerHTML;
+};
+
+const addSequentialHeadingIds = (html: string): string => {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+
+  // 각 heading 태그별로 카운트 (h1, h2, ..., h6)
+  const countMap: Record<string, number> = {};
+
+  const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+
+  headings.forEach((el) => {
+    const tag = el.tagName.toLowerCase(); // 'h1', 'h2', ...
+    countMap[tag] = (countMap[tag] || 0) + 1;
+
+    const id = `${tag}-${countMap[tag]}`;
+    el.id = id;
   });
 
   return doc.body.innerHTML;
