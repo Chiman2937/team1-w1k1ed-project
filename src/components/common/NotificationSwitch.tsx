@@ -1,7 +1,7 @@
 'use client';
 
 import { Switch } from '@headlessui/react';
-import { useNotificationStore } from '@/store/notificationStore';
+import { useNotificationStore } from '@/store/useNotificationStore';
 import { toast } from 'cy-toast'; // cy-toast 임포트
 import SnackBar from '../../components/common/Snackbar'; // SnackBar 컴포넌트 임포트
 
