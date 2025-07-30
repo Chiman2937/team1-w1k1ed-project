@@ -19,6 +19,8 @@ const HeaderAfterLogin = () => {
     setHasNewNotifications,
     list: notifications, // Zustand 스토어의 list를 notifications로 사용
     fetchNotifications, // 알림 불러오기 함수
+    startPollingNotifications,
+    stopPollingNotifications,
   } = useNotificationStore();
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -28,7 +30,10 @@ const HeaderAfterLogin = () => {
 
   // 프로필 이미지 가져오기
   useEffect(() => {
-    if (!user || !user.profile.code) return;
+    if (!user || !user.profile?.code) {
+      setUserProfileImage(null); // 사용자 정보 없으면 이미지도 null
+      return;
+    }
 
     const fetchProfileImage = async () => {
       try {
@@ -44,10 +49,27 @@ const HeaderAfterLogin = () => {
     fetchProfileImage();
   }, [user]);
 
-  // 컴포넌트 마운트 시 알림 목록 불러오기 (초기 데이터 로드)
+  // 컴포넌트 마운트 시 초기 알림 목록 불러오기 및 폴링 시작/중지
   useEffect(() => {
-    fetchNotifications({ reset: true }); // 컴포넌트 마운트 시 알림 목록 초기화 및 불러오기
-  }, [fetchNotifications]); // fetchNotifications 함수가 변경될 때 (실제로는 변경되지 않음)
+    // 사용자가 로그인되어 있고, 알림 기능이 활성화되어 있을 때만 폴링 시작
+    if (user && notificationsEnabled) {
+      fetchNotifications({ reset: true }); // 초기 로드
+      startPollingNotifications(5000); // 5초마다 폴링 시작
+    } else {
+      stopPollingNotifications(); // 로그인 상태가 아니거나 알림 비활성화 시 폴링 중지
+    }
+
+    // 컴포넌트 언마운트 시 폴링 중지
+    return () => {
+      stopPollingNotifications();
+    };
+  }, [
+    user,
+    notificationsEnabled,
+    fetchNotifications,
+    startPollingNotifications,
+    stopPollingNotifications,
+  ]);
 
   // 알림 패널이 열리면 새 알림 표시를 해제
   useEffect(() => {
@@ -60,8 +82,18 @@ const HeaderAfterLogin = () => {
   useEffect(() => {
     if (!notificationsEnabled) {
       setHasNewNotifications(false);
+      stopPollingNotifications(); // 알림 비활성화 시 폴링 중지
+    } else if (user) {
+      // 알림 활성화되고 사용자 로그인 상태면 다시 폴링 시작
+      startPollingNotifications(5000);
     }
-  }, [notificationsEnabled, setHasNewNotifications]);
+  }, [
+    notificationsEnabled,
+    setHasNewNotifications,
+    user,
+    startPollingNotifications,
+    stopPollingNotifications,
+  ]);
 
   return (
     <>

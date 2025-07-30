@@ -14,9 +14,10 @@ const UserDropdown = ({ userImage }: Props) => {
   // 드롭다운 메뉴 아이템 정의
   const menuItems = [
     {
-      label: '내 위키 보기',
+      label: '나의 위키',
       href: user?.profile?.code ? `/wiki/${user.profile.code}` : '/create-wiki',
     },
+    { label: '위키 생성하기', href: '/mypage' },
     { label: '설정', href: '/settings' },
     { label: '로그아웃', onClick: logout },
   ];

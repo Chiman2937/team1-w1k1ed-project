@@ -7,7 +7,7 @@ type MobileMenuProps = {
 };
 
 const MobileMenu = ({ hasNewNotifications, onNotificationClick }: MobileMenuProps) => {
-  const { logout } = useAuthContext();
+  const { user, logout } = useAuthContext();
 
   const menuItems = [
     { label: '위키목록', href: '/wikilist' },
@@ -16,6 +16,10 @@ const MobileMenu = ({ hasNewNotifications, onNotificationClick }: MobileMenuProp
       label: '알림',
       hasNewNotifications: hasNewNotifications,
       onClick: onNotificationClick,
+    },
+    {
+      label: '나의 위키',
+      href: user?.profile?.code ? `/wiki/${user.profile.code}` : '/create-wiki',
     },
     { label: '위키 생성하기', href: '/mypage' },
     { label: '설정', href: '/settings' },

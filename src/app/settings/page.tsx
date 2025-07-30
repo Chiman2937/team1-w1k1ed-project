@@ -1,11 +1,14 @@
 'use client';
 
 import NotificationSwitch from '@/components/common/NotificationSwitch';
+import { useAuthContext } from '@/context/AuthContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GoChevronRight as IconArrowRight } from 'react-icons/go';
 
 const SettingPage = () => {
+  const { logout } = useAuthContext();
+
   return (
     <div className='flex flex-col items-center my-[100px]'>
       <Link href='/'>
@@ -36,8 +39,9 @@ const SettingPage = () => {
             <IconArrowRight className='size-5 fill-grayscale-400' />
           </a>
           <a
+            onClick={logout}
             className='text-lg font-semibold text-grayscale-500
-            flex items-center justify-between'
+            flex items-center justify-between cursor-pointer'
           >
             로그아웃
             <IconArrowRight className='size-5 fill-grayscale-400' />
