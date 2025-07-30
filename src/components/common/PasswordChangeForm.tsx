@@ -10,6 +10,7 @@ import { authAPI } from '@/api/authAPI';
 import { toast } from 'cy-toast';
 import SnackBar from '../../components/common/Snackbar';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react'; // useEffect 임포트 추가
 
 // ----------------------------------------------
 // 비밀번호 변경용 zod 스키마 정의
@@ -22,7 +23,7 @@ const resetPasswordSchema = z
     confirmNewPassword: z.string().min(8, '비밀번호는 8자 이상이어야 합니다.'),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: '새 비밀번호가 일치하지 않음',
+    message: '비밀번호가 일치하지 않습니다.',
     path: ['confirmNewPassword'],
   });
 
@@ -40,10 +41,20 @@ const PasswordChangeForm = () => {
     handleSubmit, // form submit handler
     formState: { errors, touchedFields }, // 폼 에러 상태
     reset, // 폼 필드 초기화 함수 추가
+    watch, // 필드 값 감시용
+    trigger, // 유효성 검사 수동 트리거용
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     mode: 'onBlur', // blur 시점에 유효성 검사
   });
+
+  // newPassword 필드의 값을 감시합니다.
+  const newPassword = watch('newPassword');
+
+  // newPassword 값이 변경될 때마다 confirmNewPassword 필드의 유효성 검사를 트리거합니다.
+  useEffect(() => {
+    trigger('confirmNewPassword');
+  }, [newPassword, trigger]); // newPassword 또는 trigger 함수가 변경될 때마다 실행
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     try {
@@ -64,7 +75,7 @@ const PasswordChangeForm = () => {
         </SnackBar>
       ));
 
-      // 폼 필드 초기화: 안보이지만 일단 넣어두겠습니다.
+      // 폼 필드 초기화
       reset();
 
       // 비밀번호 변경 성공 후 랜딩 페이지로 이동
