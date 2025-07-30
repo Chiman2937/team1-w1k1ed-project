@@ -16,7 +16,6 @@ import ProfileIndex from './ProfileIndex/ProfileIndex';
 import { getHtmlHeadings } from '@/components/common/TextEditor/utils/handlers/getHtmlHeadings';
 import WikiInfo from './WikiInfo/WikiInfo';
 import { ToastRender } from 'cy-toast';
-import { useRouter } from 'next/navigation';
 import { useUnloadAlert } from '@/hooks/useUnloadAlert';
 import ProfileQnAEditor from './ProfileQnAEditor/ProfileQnAEditor';
 import { uploadFileAPI } from '@/api/uploadFileAPI';
@@ -42,9 +41,7 @@ const WikiDetailSection = ({ wikiData }: Props) => {
 
   const [isExpiredModalOpen, setIsExpiredtModalOpen] = useState(false);
 
-  useUnloadAlert({ activeBy: isEditing });
-
-  const router = useRouter();
+  const { disable } = useUnloadAlert({ activeBy: isEditing });
 
   const onTimerFinish = useCallback(() => {
     setEditingInfo(null);
@@ -74,9 +71,8 @@ const WikiDetailSection = ({ wikiData }: Props) => {
       image: nextProfileImage,
     };
     await patchProfileItemAPI({ code: wikiData.code, params: nextWikiProfile });
-    setIsEditing(false);
-    setWikiProfile(null);
-    router.refresh();
+    disable();
+    window.location.reload();
   };
 
   // 수정 중 현황 정보 전역 state에 등록
@@ -92,21 +88,6 @@ const WikiDetailSection = ({ wikiData }: Props) => {
     };
     getProfilePing();
   }, [setEditingInfo, wikiData]);
-
-  // 새로고침/닫기 시 브라우저 확인창 띄우기
-  useEffect(() => {
-    if (!isEditing) return;
-
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = ''; // 브라우저 기본 메시지 표시
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [isEditing]);
 
   if (!editor) return;
 
