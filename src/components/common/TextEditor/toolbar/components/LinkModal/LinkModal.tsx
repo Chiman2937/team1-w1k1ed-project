@@ -69,7 +69,13 @@ const LinkModal = ({ onModalClose, ogData, setOgData }: Props) => {
               value={inputValue}
               onChange={handleInputChange}
             />
-            {isLoading && <LoadingSpinner.lineCircle lineWeight={2} distanceFromCenter={6} />}
+            {isLoading && (
+              <LoadingSpinner.lineCircle
+                themeColor='var(--color-primary-green-300)'
+                lineWeight={2}
+                distanceFromCenter={6}
+              />
+            )}
           </div>
         </form>
 
