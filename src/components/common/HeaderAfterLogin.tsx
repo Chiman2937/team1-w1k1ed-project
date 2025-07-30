@@ -19,7 +19,6 @@ const HeaderAfterLogin = () => {
     setHasNewNotifications,
     list: notifications, // Zustand 스토어의 list를 notifications로 사용
     fetchNotifications, // 알림 불러오기 함수
-    deleteNotification, // 알림 삭제 함수
   } = useNotificationStore();
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -49,11 +48,6 @@ const HeaderAfterLogin = () => {
   useEffect(() => {
     fetchNotifications({ reset: true }); // 컴포넌트 마운트 시 알림 목록 초기화 및 불러오기
   }, [fetchNotifications]); // fetchNotifications 함수가 변경될 때 (실제로는 변경되지 않음)
-
-  // 알림 삭제 함수를 Zustand 스토어의 deleteNotification으로 대체
-  const handleDeleteNotification = (id: number) => {
-    deleteNotification(id);
-  };
 
   // 알림 패널이 열리면 새 알림 표시를 해제
   useEffect(() => {
@@ -106,7 +100,6 @@ const HeaderAfterLogin = () => {
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
         list={notifications}
-        onDeleteItem={handleDeleteNotification}
       />
     </>
   );

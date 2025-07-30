@@ -6,9 +6,10 @@ type NotificationItemProps = {
   content: string;
   createdAt: string;
   onDelete: (id: number) => void; // 삭제 핸들러 추가
+  onClick?: (id: number) => void; // 클릭 핸들러 추가
 };
 
-const NotificationItem = ({ id, content, createdAt, onDelete }: NotificationItemProps) => {
+const NotificationItem = ({ id, content, createdAt, onDelete, onClick }: NotificationItemProps) => {
   // 시간 표시를 위한 함수 (예시)
   const formatTimeAgo = (isoString: string) => {
     const date = new Date(isoString);
@@ -22,20 +23,27 @@ const NotificationItem = ({ id, content, createdAt, onDelete }: NotificationItem
   };
 
   return (
-    <>
-      <div className='w-[330px] px-[12px] py-[16px] rounded-[5px] bg-white text-grayscale-500'>
-        <header className='flex justify-end'>
-          <IconClose className='cursor-pointer ' onClick={() => onDelete(id)} />
-        </header>
-        <div className='flex gap-2'>
-          <FaBell size={50} className='m-2 p-2 rounded-2xl bg-grayscale-200' />
-          <div className='flex flex-col justify-between m-2'>
-            <p>{content}</p>
-            <p>{formatTimeAgo(createdAt)}</p>
-          </div>
+    <div
+      className='w-[330px] px-[12px] py-[16px] rounded-[5px] bg-white text-grayscale-500 cursor-pointer'
+      onClick={() => onClick?.(id)}
+    >
+      <header className='flex justify-end'>
+        <IconClose
+          className='cursor-pointer '
+          onClick={(e) => {
+            e.stopPropagation(); // <--- 이벤트 전파를 막는 코드를 추가했습니다
+            onDelete(id);
+          }}
+        />
+      </header>
+      <div className='flex gap-2'>
+        <FaBell size={50} className='m-2 p-2 rounded-2xl bg-grayscale-200' />
+        <div className='flex flex-col justify-between m-2'>
+          <p>{content}</p>
+          <p>{formatTimeAgo(createdAt)}</p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
