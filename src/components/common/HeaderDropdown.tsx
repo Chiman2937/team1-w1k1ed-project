@@ -41,7 +41,11 @@ const HeaderDropdown = ({
         className='flex items-center justify-center
         focus:outline-none relative'
       >
-        <Icon className='text-grayscale-300 cursor-pointer w-[24px] h-[24px] md:w-[32px] md:h-[32px]' />
+        <Icon
+          className='text-grayscale-300 cursor-pointer 
+          w-6 h-6
+          md:w-7 md:h-7'
+        />
         {/* 아이콘 옆에 빨간 점 표시 (hasNewNotifications prop 사용) */}
         {hasNewNotifications && iconName === 'hamburger' && (
           <span
