@@ -14,7 +14,11 @@ import SnackBar from '@/components/common/Snackbar';
 
 const signUpSchema = z
   .object({
-    name: z.string().trim().max(10, '8자 이하로 작성해주세요.'), //뒤의 랜덤 숫자 2자리를 위해 8자로 수정
+    name: z
+      .string()
+      .trim()
+      .min(1, '최소 1글자 이상 입력해주세요.')
+      .max(10, '8자 이하로 작성해주세요.'), //뒤의 랜덤 숫자 2자리를 위해 8자로 수정
     email: z.email('이메일 형식으로 작성해 주세요.'),
     password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 8자 이상
     passwordConfirmation: z.string(), // 비밀번호 확인은 최소 1자 이상
@@ -39,9 +43,10 @@ export default function SignupSection() {
   const {
     register,
     handleSubmit,
-    formState: { errors, touchedFields },
+    formState: { errors, touchedFields, isValid },
     watch,
     trigger,
+    setError, //이메일 중복 시 에러필드 처리 위함
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -94,6 +99,13 @@ export default function SignupSection() {
         '알 수 없는 오류가 발생했습니다.';
       console.error('회원가입 실패:', errorMessage);
 
+      if (axiosError.response) {
+        setError('email', {
+          type: 'manual',
+          message: '중복된 이메일입니다. 다시 입력해주세요',
+        });
+      }
+
       toast.run(
         ({ isClosing, isOpening, index }) => (
           <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
@@ -130,6 +142,7 @@ export default function SignupSection() {
               register={register('email')}
               errors={errors}
               touchedFields={touchedFields}
+              forceShowError={!!errors.email}
             />
             <Input
               className='w-[335px] md:w-[400px]'
@@ -152,7 +165,11 @@ export default function SignupSection() {
               touchedFields={touchedFields}
             />
           </div>
-          <Button type='submit' className='flex items-center justify-center w-[335px] md:w-[400px]'>
+          <Button
+            type='submit'
+            className='flex items-center justify-center w-[335px] md:w-[400px]'
+            disabled={!isValid}
+          >
             회원가입
           </Button>
         </form>
