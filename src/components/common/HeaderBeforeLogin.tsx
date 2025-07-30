@@ -6,11 +6,13 @@ import Logo from './Logo';
 const HeaderBeforeLogin = () => {
   return (
     <div
-      className='bg-grayscale-50 shadow-md
-        sticky top-0 left-0 w-full z-50'
+      className='bg-grayscale-50 shadow-md flex items-center justify-between
+        sticky top-0 left-0 w-full z-50
+        h-[60px]
+        md:h-[80px]'
     >
       <div className='w-full px-[20px] md:px-[40px] lg:px-[80px]'>
-        <div className=' mx-auto py-[25px] flex items-center justify-between'>
+        <div className=' mx-auto flex items-center justify-between'>
           <div className='flex items-center gap-[40px]'>
             <Logo />
 
