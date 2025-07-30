@@ -1,3 +1,4 @@
+'use client';
 import { uploadFileAPI, UploadType } from '@/api/uploadFileAPI';
 import { Editor, generateHTML, JSONContent } from '@tiptap/react';
 

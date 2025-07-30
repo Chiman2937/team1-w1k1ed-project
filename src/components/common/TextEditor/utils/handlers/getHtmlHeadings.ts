@@ -1,3 +1,4 @@
+'use client';
 export interface HtmlHeadingItems {
   level: number;
   text: string;
