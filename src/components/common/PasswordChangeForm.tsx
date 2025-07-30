@@ -8,7 +8,8 @@ import Button from '@/components/common/Button';
 import { AxiosError } from 'axios';
 import { authAPI } from '@/api/authAPI';
 import { toast } from 'cy-toast';
-import SnackBar from '../../components/common/Snackbar'; // SnackBar 컴포넌트 임포트
+import SnackBar from '../../components/common/Snackbar';
+import { useRouter } from 'next/navigation';
 
 // ----------------------------------------------
 // 비밀번호 변경용 zod 스키마 정의
@@ -32,10 +33,13 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 // 비밀번호 변경 폼 컴포넌트
 // ----------------------------------------------
 const PasswordChangeForm = () => {
+  const router = useRouter(); // useRouter 훅 사용
+
   const {
     register, // input 연결용
     handleSubmit, // form submit handler
     formState: { errors, touchedFields }, // 폼 에러 상태
+    reset, // 폼 필드 초기화 함수 추가
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     mode: 'onBlur', // blur 시점에 유효성 검사
@@ -59,6 +63,12 @@ const PasswordChangeForm = () => {
           비밀번호가 성공적으로 변경되었습니다.
         </SnackBar>
       ));
+
+      // 폼 필드 초기화: 안보이지만 일단 넣어두겠습니다.
+      reset();
+
+      // 비밀번호 변경 성공 후 랜딩 페이지로 이동
+      router.push('/');
     } catch (error) {
       const axiosError = error as AxiosError;
 
