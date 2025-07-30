@@ -18,6 +18,10 @@ const SettingPage = () => {
     }
   }, [user, router]);
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className='flex flex-col items-center my-[100px]'>
       <Link href='/'>
