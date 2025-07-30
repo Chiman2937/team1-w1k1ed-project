@@ -4,10 +4,19 @@ import NotificationSwitch from '@/components/common/NotificationSwitch';
 import { useAuthContext } from '@/context/AuthContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { GoChevronRight as IconArrowRight } from 'react-icons/go';
 
 const SettingPage = () => {
-  const { logout } = useAuthContext();
+  const { user, logout } = useAuthContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.replace('/login'); // 로그인 페이지 경로로 리다이렉션
+    }
+  }, [user, router]);
 
   return (
     <div className='flex flex-col items-center my-[100px]'>
