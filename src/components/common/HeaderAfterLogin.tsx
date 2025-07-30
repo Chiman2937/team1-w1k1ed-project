@@ -9,6 +9,8 @@ import { useNotificationStore } from '@/store/useNotificationStore';
 import NotificationBell from './NotificationBell';
 import UserDropdown from './UserDropdown';
 import MobileMenu from './MobileMenu';
+import { profilesAPI } from '@/api/profile/postProfilesAPI';
+import { useAuthContext } from '@/context/AuthContext';
 
 // NotificationItem에서 사용하는 Item 타입 정의
 type Item = {
@@ -37,28 +39,45 @@ const HeaderAfterLogin = () => {
     },
   ]);
 
+  const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
+  const { user } = useAuthContext();
+
+  // 프로필 이미지 가져오기
+  useEffect(() => {
+    if (!user || !user.profile.code) return;
+
+    const fetchProfileImage = async () => {
+      try {
+        const imageUrl = await profilesAPI.getProfileImage(user.profile.code);
+        console.log('가져온 프로필 이미지 URL:', imageUrl);
+        setUserProfileImage(imageUrl);
+      } catch (error) {
+        console.error('프로필 이미지 가져오기 실패:', error);
+        setUserProfileImage(null);
+      }
+    };
+
+    fetchProfileImage();
+  }, [user?.profile.code]); // 💡 user.code가 생길 때만 실행
+
   // 새 알림 추가 함수 (NotificationPanel로 전달)
   const handleAddNotification = () => {
-    // 알림이 비활성화 상태일 때는 함수 실행 중단
-    if (!notificationsEnabled) {
-      return;
-    }
-
     const newItem: Item = {
       id: notifications.length > 0 ? Math.max(...notifications.map((item) => item.id)) + 1 : 1,
       content: `새 알림 ${new Date().toLocaleTimeString()}`,
       createdAt: new Date().toISOString(),
     };
+
     setNotifications([newItem, ...notifications]);
-    setHasNewNotifications(true); // 새 알림이 추가되었음을 표시
+    if (notificationsEnabled) {
+      setHasNewNotifications(true);
+    }
   };
 
   // 알림 삭제 함수 (NotificationPanel로 전달)
   const handleDeleteNotification = (id: number) => {
     setNotifications((prevList) => prevList.filter((item) => item.id !== id));
-    // 모든 알림을 삭제했을 때 빨간 점 없애기
     if (notifications.length === 1 && notifications[0].id === id) {
-      // 마지막 알림이 삭제될 때
       setHasNewNotifications(false);
     }
   };
@@ -99,17 +118,12 @@ const HeaderAfterLogin = () => {
             </div>
 
             <div className='flex items-center gap-4'>
-              {/* 분리된 컴포넌트 사용 */}
               <NotificationBell
                 notificationsEnabled={notificationsEnabled}
                 hasNewNotifications={hasNewNotifications}
                 onClick={() => setIsPanelOpen(true)}
               />
-
-              {/* 분리된 컴포넌트 사용 */}
-              <UserDropdown />
-
-              {/* 분리된 컴포넌트 사용 */}
+              <UserDropdown userImage={userProfileImage} />
               <MobileMenu
                 hasNewNotifications={hasNewNotifications}
                 onNotificationClick={() => setIsPanelOpen(true)}
