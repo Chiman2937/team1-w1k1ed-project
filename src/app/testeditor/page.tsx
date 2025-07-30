@@ -6,6 +6,7 @@ import { handlehtmlParse } from '@/components/common/TextEditor/utils/handlers/h
 import { useState } from 'react';
 import ContentViewer from '@/components/common/TextEditor/ContentViewer';
 import ContentEditor from '@/components/common/TextEditor/ContentEditor';
+import { getHtmlFirstImageSrc } from '@/components/common/TextEditor/utils/handlers/getHtmlFirstImageSrc';
 
 const TestEditor = () => {
   const { editor, tempFiles, setTempFiles, lengthWithSpaces, lengthWithoutSpaces } =
@@ -16,6 +17,15 @@ const TestEditor = () => {
     if (!editor) return;
     const nextContent = await handlehtmlParse({ editor, files: tempFiles });
     setContent(nextContent);
+  };
+
+  const handleGetImageSrcClick = () => {
+    if (!editor) return;
+    if (!content) {
+      alert('HTML파싱을 먼저 진행해주세요.');
+    }
+    const nextImageSrc = getHtmlFirstImageSrc(content);
+    console.log(nextImageSrc);
   };
 
   if (!editor) return;
@@ -36,6 +46,7 @@ const TestEditor = () => {
       <ToolBar editor={editor} setTempFiles={setTempFiles} />
       <ContentEditor editor={editor} />
       <button onClick={handleRenderClick}>파싱 시작</button>
+      <button onClick={handleGetImageSrcClick}>첫번째 이미지 경로 추출</button>
       <ContentViewer content={content} />
     </div>
   );
