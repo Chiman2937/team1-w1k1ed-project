@@ -1,15 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { FaBell } from 'react-icons/fa';
 import Logo from './Logo';
 import Nav from './Nav';
-import HeaderDropdown from './HeaderDropdown';
 import NotificationPanel from './NotificationPanel';
-import { useAuthContext } from '@/context/AuthContext';
 import Button from './Button';
 import { useNotificationStore } from '@/store/useNotificationStore';
+import NotificationBell from './NotificationBell';
+import UserDropdown from './UserDropdown';
+import MobileMenu from './MobileMenu';
 
 // NotificationItem에서 사용하는 Item 타입 정의
 type Item = {
@@ -37,8 +36,6 @@ const HeaderAfterLogin = () => {
       createdAt: '2025-07-19T12:45:00.000Z',
     },
   ]);
-
-  const { logout } = useAuthContext();
 
   // 새 알림 추가 함수 (NotificationPanel로 전달)
   const handleAddNotification = () => {
@@ -73,6 +70,13 @@ const HeaderAfterLogin = () => {
     }
   }, [isPanelOpen, setHasNewNotifications]);
 
+  // notificationsEnabled 상태가 false로 변경되면 hasNewNotifications도 false로 설정
+  useEffect(() => {
+    if (!notificationsEnabled) {
+      setHasNewNotifications(false);
+    }
+  }, [notificationsEnabled, setHasNewNotifications]);
+
   return (
     <>
       <div className='bg-grayscale-50 shadow-md sticky top-0 left-0 w-full z-50'>
@@ -84,60 +88,27 @@ const HeaderAfterLogin = () => {
                 <Nav />
               </div>
             </div>
-            {/* 알림 추가 버튼 */}
+
             <div className='mb-4'>
               <Button onClick={handleAddNotification}>새 알림 추가</Button>
             </div>
+
             <div className='flex items-center gap-4'>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
+              {/* 분리된 컴포넌트 사용 */}
+              <NotificationBell
+                notificationsEnabled={notificationsEnabled}
+                hasNewNotifications={hasNewNotifications}
                 onClick={() => setIsPanelOpen(true)}
-                className='hidden md:inline relative'
-              >
-                <FaBell
-                  className='text-gray-300 cursor-pointer
-                    w-[24px] h-[24px]
-                    md:w-[32px] md:h-[32px]'
-                />
-                {hasNewNotifications && ( // 조건부로 빨간 점 렌더링
-                  <span
-                    className='absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-secondary-red-200'
-                    aria-hidden='true'
-                  ></span>
-                )}
-              </motion.button>
+              />
 
-              <div className='hidden md:flex items-center gap-2 cursor-pointer'>
-                <HeaderDropdown
-                  iconName='account'
-                  menuItems={[
-                    { label: '위키 생성하기', href: '/mypage' },
-                    { label: '설정', href: '/settings' },
-                    { label: '로그아웃', onClick: logout },
-                  ]}
-                />
-              </div>
+              {/* 분리된 컴포넌트 사용 */}
+              <UserDropdown />
 
-              {/* 모바일 메뉴 */}
-              <div className='inline md:hidden'>
-                <HeaderDropdown
-                  hasNewNotifications={hasNewNotifications}
-                  menuItems={[
-                    { label: '위키목록', href: '/wikilist' },
-                    { label: '자유게시판', href: '/boards' },
-                    { label: '알림', hasNewNotifications: hasNewNotifications },
-                    { label: '위키 생성하기', href: '/mypage' },
-                    { label: '설정', href: '/settings' },
-                    { label: '로그아웃', onClick: logout },
-                  ]}
-                  onItemClick={(label) => {
-                    if (label === '알림') {
-                      setIsPanelOpen(true); // 알림 클릭 시 패널 열기
-                    }
-                  }}
-                />
-              </div>
+              {/* 분리된 컴포넌트 사용 */}
+              <MobileMenu
+                hasNewNotifications={hasNewNotifications}
+                onNotificationClick={() => setIsPanelOpen(true)}
+              />
             </div>
           </div>
         </div>
@@ -146,8 +117,8 @@ const HeaderAfterLogin = () => {
       <NotificationPanel
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
-        list={notifications} // 알림 목록 전달
-        onDeleteItem={handleDeleteNotification} // 알림 삭제 함수 전달
+        list={notifications}
+        onDeleteItem={handleDeleteNotification}
       />
     </>
   );
