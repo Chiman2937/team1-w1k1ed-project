@@ -1,10 +1,9 @@
 'use client';
 
 import CopyToClipboard from '@/components/common/CopyToClipboard';
-import { IoPersonCircle } from 'react-icons/io5';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Profile } from '@/api/profile/getProfilesAPI';
+import WikiListProfile from './WikiListProfile';
 
 // nationality와 city를 조건에 따라 표시
 const getLocationText = (nationality: string, city: string) => {
@@ -39,22 +38,7 @@ const WikiListCard = ({ code, image, name, nationality, city, job }: Profile) =>
         px-6 py-5 gap-5 rounded-md items-center text-grayscale-400
         md:gap-8 md:px-9 md:py-6'
     >
-      {/* 기존 내용들 동일 */}
-      {image ? (
-        <div className='relative size-[60px] shrink-0 rounded-full overflow-hidden md:size-[80px]'>
-          <Image
-            src={image}
-            alt='프로필 이미지'
-            fill
-            sizes='(max-width: 768px)60,80px'
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
-      ) : (
-        <div className='size-[60px] shrink-0 md:size-[80px]'>
-          <IoPersonCircle className='w-full h-full' color='#C6CADA' />
-        </div>
-      )}
+      <WikiListProfile image={image} />
 
       <div className='flex-1'>
         <div className='flex flex-col gap-3.5'>
