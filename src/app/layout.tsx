@@ -64,7 +64,7 @@ export default function RootLayout({
         antialiased`}
       >
         <ToastRender />
-        <Suspense fallback={<div>앱 로딩증</div>}>
+        <Suspense>
           <AuthProvider>
             <Animation>
               <AuthHeaderRenderer />
