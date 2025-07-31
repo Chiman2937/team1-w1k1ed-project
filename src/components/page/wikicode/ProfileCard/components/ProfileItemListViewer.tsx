@@ -1,6 +1,6 @@
 import { GetProfileItemResponse } from '@/api/profile/getProfileAPI';
 import ProfileField from './ProfileField';
-
+import clsx from 'clsx';
 interface Props {
   wikiData: GetProfileItemResponse;
 }
@@ -17,14 +17,42 @@ const ProfileItemListViewer = ({ wikiData }: Props) => {
     ['국적', wikiData.nationality],
   ];
 
+  const filledMap = fieldMap.filter(([_, value]) => value !== '');
+  const emptyMap = fieldMap.filter(([_, value]) => value === '');
+
   return (
     <div className='flex flex-col gap-[10px]'>
-      {fieldMap.map(([label, value]) => (
-        <ProfileField key={label}>
-          <ProfileField.label>{label}</ProfileField.label>
-          <ProfileField.value>{value}</ProfileField.value>
-        </ProfileField>
-      ))}
+      {filledMap.length > 0 &&
+        filledMap.map(([label, value]) => (
+          <ProfileField key={label}>
+            <ProfileField.label>{label}</ProfileField.label>
+            <ProfileField.value>{value}</ProfileField.value>
+          </ProfileField>
+        ))}
+      {emptyMap.length > 0 && (
+        <>
+          <div className='border-b-1 border-gray-200' />
+          <div className='flex flex-row gap-[10px]'>
+            <div className='flex flex-col justify-center gap-[10px] shrink-0'>
+              {emptyMap.map(([label, _]) => (
+                <ProfileField.label key={label}>{label}</ProfileField.label>
+              ))}
+            </div>
+            <div
+              className={clsx(
+                'grow',
+                'bg-gray-100 rounded-[10px] text-center py-[10px]',
+                'text-grayscale-400',
+                'flex flex-col items-center justify-center',
+                'max-w-[200px]',
+              )}
+            >
+              <span className='whitespace-nowrap'>작성된 내용이</span>
+              <span className='whitespace-nowrap'>없어요.</span>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
