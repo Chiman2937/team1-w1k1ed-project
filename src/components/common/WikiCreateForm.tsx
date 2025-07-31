@@ -12,6 +12,8 @@ import { toast } from 'cy-toast';
 import SnackBar from '../../components/common/Snackbar';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/context/AuthContext';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const WikiCreateForm = () => {
   const router = useRouter();
@@ -200,7 +202,7 @@ const WikiCreateForm = () => {
   // 초기 로딩 중일 때 로딩 스피너 표시
   if (isInitialLoading) {
     return (
-      <div className='flex justify-center items-center h-screen'>
+      <div className='flex justify-center items-center h-screen font-pretendard'>
         <LoadingSpinner.lineCircle lineWeight={3} distanceFromCenter={6} />
       </div>
     );
@@ -209,20 +211,31 @@ const WikiCreateForm = () => {
   return (
     <div className='font-pretendard'>
       <div
-        className='flex flex-col gap-[40px] my-[141px] mx-auto
-        w-[335px] md:w-[400px]'
+        className='flex flex-col mx-auto gap-5 my-[120px] transition-all duration-700
+        w-[335px] md:w-[500px]'
       >
-        <h1 className='font-semibold text-center text-[24px]'>위키생성하기</h1>
+        <Link href='/'>
+          <Image src='/images/logo.svg' alt='로고' width={400} height={80} className='mx-auto' />
+        </Link>
+
         {/* 안내 메시지 섹션 */}
         <div
-          className='border-none rounded-[10px] px-[5px] py-[15px]
-          bg-primary-green-100 w-auto
-          text-center text-[14px]
-          md:px-[30px]'
+          className='border-none rounded-[10px] px-[5px] py-[15px] 
+        bg-primary-green-100 w-auto text-primary-green-300
+          text-center text-[10px]
+          md:px-[30px] md:text-[14px]'
         >
-          위키는 계정당 1회만 생성할 수 있습니다.
+          <span
+            className='font-bold text-[16px] text-center 
+          block mb-2
+          md:text-[20px]'
+          >
+            나를 소개하는 작은 우주, 위키를 만들어보세요!
+          </span>
+          프로필보다 더 깊고, 게시글보다 더 정돈된 <strong>나만의 공간</strong>
+          이에요.
           <br />
-          이미 생성된 위키가 있다면, 해당 위키를 이용해주세요.
+          친구들과 함께 채워갈 <strong>위키</strong>를 만들어 시작해보세요!!
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -246,7 +259,10 @@ const WikiCreateForm = () => {
               isLoading={isLoading}
             />
 
-            <Button className='col-span-2 flex items-center justify-center' type='submit'>
+            <Button
+              className='col-span-2 flex items-center justify-center h-[45px] transition-all duration-700'
+              type='submit'
+            >
               {isLoading ? (
                 <LoadingSpinner.lineCircle lineWeight={3} distanceFromCenter={6} />
               ) : (
@@ -255,6 +271,11 @@ const WikiCreateForm = () => {
             </Button>
           </div>
         </form>
+        <p className='text-[14px] text-center text-secondary-red-200'>
+          위키는 계정당 1회만 생성할 수 있습니다.
+          <br />
+          이미 생성된 위키가 있다면, 해당 위키를 이용해주세요.
+        </p>
       </div>
     </div>
   );
