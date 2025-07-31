@@ -130,7 +130,7 @@ const WikiDetailSection = ({ wikiData }: Props) => {
           <ProfileCard className='lg:hidden' wikiData={wikiData} />
         </div>
         <ProfileContent editor={editor} setTempFiles={setTempFiles} wikiData={wikiData} />
-        <ProfileNoContent content={wikiData.content} />
+        <ProfileNoContent wikiData={wikiData} content={wikiData.content} />
         <Modal isOpen={isExpiredModalOpen} onClose={() => setIsExpiredtModalOpen(false)}>
           <ExpiredModal onClose={() => setIsExpiredtModalOpen(false)} />
         </Modal>

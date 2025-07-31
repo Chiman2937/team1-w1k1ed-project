@@ -3,12 +3,18 @@ import { getHtmlStringIsEmpty } from '@/components/common/TextEditor/utils/handl
 import { useAuthContext } from '@/context/AuthContext';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
+import { Modal } from 'react-simplified-package';
+import QuestionModal from '../ProfileTitle/components/QuestionModal';
+import { useState } from 'react';
+import { GetProfileItemResponse } from '@/api/profile/getProfileAPI';
 
 interface Props {
+  wikiData: GetProfileItemResponse;
   content: string;
 }
 
-const ProfileNoContent = ({ content }: Props) => {
+const ProfileNoContent = ({ wikiData, content }: Props) => {
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const { user } = useAuthContext();
   const router = useRouter();
 
@@ -30,9 +36,14 @@ const ProfileNoContent = ({ content }: Props) => {
             <br />
             위키에 참여해 친구의 정보를 작성해보세요!
           </p>
-          <Button variant='primary'>위키 참여하기</Button>
+          <Button variant='primary' onClick={() => setIsQuizModalOpen(true)}>
+            위키 참여하기
+          </Button>
         </div>
       )}
+      <Modal isOpen={isQuizModalOpen} onClose={() => setIsQuizModalOpen(false)}>
+        <QuestionModal wikiData={wikiData} onClose={() => setIsQuizModalOpen(false)} />
+      </Modal>
       {!isLogin && (
         <div className='flex flex-col items-center gap-[10px]'>
           <p className='text-center text-grayscale-400 text-lg-regular'>
