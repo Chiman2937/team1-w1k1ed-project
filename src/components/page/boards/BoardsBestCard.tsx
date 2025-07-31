@@ -6,14 +6,32 @@ import { CiHeart } from 'react-icons/ci';
 import { dateFormater } from '@/utils/date';
 import { ArticleResponse } from '@/api/article/getArticlesAPI';
 import BoardsNoImg from '@/assets/images/boards-best-noImg.png';
-import { useState } from 'react';
+// import { useState } from 'react';
 
 interface BoardsBestCardProps {
   article: ArticleResponse;
 }
 
 const BoardsBestCard = ({ article }: BoardsBestCardProps) => {
-  const [imgSrc, setImgSrc] = useState(article.image || BoardsNoImg);
+  // const [imgSrc, setImgSrc] = useState(BoardsNoImg);
+
+  // useEffect(() => {
+  //   const img = new Image();
+  //   img.onload = () => {
+  //     console.log('이미지 로드 성공');
+  //   };
+
+  //   img.onerror = () => {
+  //     console.log('이미지 로드 실패');
+  //   };
+
+  //   img.src = article.image;
+  // }, []);
+
+  const image =
+    article.image === 'https://example.com/...' || article.image === '' || !article.image
+      ? BoardsNoImg
+      : article.image;
 
   return (
     <Link
@@ -23,13 +41,13 @@ const BoardsBestCard = ({ article }: BoardsBestCardProps) => {
       {/* 이미지 영역 */}
       <div className='w-full h-[130px] relative'>
         <Image
-          src={imgSrc}
+          src={image}
           alt={article.title}
           className='object-cover'
           fill
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           priority
-          onError={() => setImgSrc(BoardsNoImg)}
+          // onError={() => setImgSrc(BoardsNoImg)}
         />
       </div>
 
