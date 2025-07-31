@@ -1,22 +1,24 @@
 'use client';
 
-import Animation from '@/components/common/Animation';
-import BoardContent from '@/components/page/boardDetail/BoardContent';
 import { MdAutoFixNormal as SubmitButton } from 'react-icons/md';
-import { postArticle } from '@/api/articleApi';
-import Button from '@/components/common/Button';
-import BoardInfoForm from '@/components/page/boardDetail/BoardInfo';
-import { Modal } from 'react-simplified-package';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useTextEditor } from '@/components/common/TextEditor/utils/hooks/useTextEditor';
-import { handlehtmlParse } from '@/components/common/TextEditor/utils/handlers/handleHtmlParse';
-import ContentEditor from '@/components/common/TextEditor/ContentEditor';
-import ToolBar from '@/components/common/TextEditor/ToolBar';
+import { Modal } from 'react-simplified-package';
+import { toast } from 'cy-toast';
 import { useAuthContext } from '@/context/AuthContext';
 import { dateFormater } from '@/utils/date';
-import { toast, ToastRender } from 'cy-toast';
+import { getDisplayName } from '@/utils/displayName';
+import { postArticle } from '@/api/articleApi';
+import { useTextEditor } from '@/components/common/TextEditor/utils/hooks/useTextEditor';
+import { handlehtmlParse } from '@/components/common/TextEditor/utils/handlers/handleHtmlParse';
+import { getHtmlFirstImageSrc } from '@/components/common/TextEditor/utils/handlers/getHtmlFirstImageSrc';
+import Button from '@/components/common/Button';
+import ToolBar from '@/components/common/TextEditor/ToolBar';
 import SnackBar from '@/components/common/Snackbar';
+import Animation from '@/components/common/Animation';
+import BoardContent from '@/components/page/boardDetail/BoardContent';
+import BoardInfoForm from '@/components/page/boardDetail/BoardInfo';
+import ContentEditor from '@/components/common/TextEditor/ContentEditor';
 
 const AddBoard = () => {
   const [title, setTitle] = useState('');
@@ -29,65 +31,75 @@ const AddBoard = () => {
     useTextEditor();
 
   const router = useRouter();
-
   const userName = user?.name;
   const newDate = new Date().toLocaleDateString();
   const date = dateFormater(newDate);
 
   const handleRender = async () => {
     if (!editor) return;
+
     const nextContent = await handlehtmlParse({ editor, files: tempFiles });
     setContent(nextContent);
     setIsModalOpen(true);
   };
 
   const handlePost = async () => {
-    if (!content) return; //토스트?
+    if (!content) {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          내용을 입력해주세요.
+        </SnackBar>
+      ));
+      return;
+    }
+
+    const image = getHtmlFirstImageSrc(content);
 
     const formData = {
+      image,
       title,
       content,
     };
 
     try {
-      if (!isAuthenticated) {
-        toast.run(({ isClosing, isOpening, index }) => (
-          <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
-            로그인 후 이용해 주시길 바랍니다.
-          </SnackBar>
-        ));
-        router.push('/login');
-      }
-      setIsSubmitting(true);
       const response = await postArticle(formData);
+      setIsSubmitting(true);
+
       if (response.id === undefined) throw new Error();
+
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
           게시물 작성에 성공했습니다.
         </SnackBar>
       ));
-      console.log(response);
       router.push(`/boards/${response?.id}`);
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
           게시물 작성에 실패했습니다.
         </SnackBar>
       ));
-      setTimeout(() => {
-        router.push('/error');
-      }, 1500);
+      router.push('/error');
     } finally {
       setIsSubmitting(false);
       setIsModalOpen(false);
     }
   };
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          로그인 후 이용해 주시길 바랍니다.
+        </SnackBar>
+      ));
+      router.push('/login');
+    }
+  }, [isAuthenticated, router]);
+
   return (
     <Animation>
-      <ToastRender />
-      <div className='flex justify-center w-full'>
+      <div className='flex justify-center items-center'>
         <BoardContent>
           <div className='p-5 w-full m-auto'>
             <main className='flex flex-col gap-[30px]'>
@@ -108,9 +120,8 @@ const AddBoard = () => {
                   <SubmitButton className='text-grayscale-400' />
                 </button>
               </div>
-
               <span className='flex items-center gap-[10px] text-md-regular text-gray-400'>
-                <p>{userName}</p>
+                <p>{getDisplayName(userName!)}</p>
                 <p>{date}</p>
               </span>
               <BoardInfoForm title={title} setTitle={setTitle} />
@@ -118,7 +129,11 @@ const AddBoard = () => {
           </div>
           {!editor ? null : (
             <div className='px-5 pb-5 flex flex-col gap-[20px]'>
-              <div className='flex items-center gap-2 text-md-regular text-grayscale-400'>
+              <ToolBar editor={editor} setTempFiles={setTempFiles} />
+              <div className='h-64 overflow-auto'>
+                <ContentEditor editor={editor} />
+              </div>
+              <div className='flex items-center gap-2 justify-end text-md-regular text-grayscale-400'>
                 <span>
                   <span>공백 포함: </span>
                   <span className='text-primary-green-200'>{lengthWithSpaces}</span> |
@@ -128,10 +143,6 @@ const AddBoard = () => {
                   <span className='text-primary-green-200'>{lengthWithoutSpaces}</span>
                 </span>
               </div>
-              <div className='h-48 overflow-auto'>
-                <ContentEditor editor={editor} />
-              </div>
-              <ToolBar editor={editor} setTempFiles={setTempFiles} />
             </div>
           )}
           {isModalOpen && (
