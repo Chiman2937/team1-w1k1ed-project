@@ -1,13 +1,14 @@
 'use client';
 
+import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useAuthContext } from '@/context/AuthContext';
+import Animation from '@/components/common/Animation';
+import BoardDetail from '@/components/page/boardDetail/BoardDetail';
 import BoardComments from '@/components/page/boardDetail/BoardComments';
 
-import BoardDetail from '@/components/page/boardDetail/BoardDetail';
-import { useAuthContext } from '@/context/AuthContext';
-import { useParams } from 'next/navigation';
-import Animation from '@/components/common/Animation';
-
 const Board = () => {
+  const [iscomment, setIsComment] = useState(true);
   const param = useParams();
   const id = param.id as string;
 
@@ -17,8 +18,15 @@ const Board = () => {
   return (
     <>
       <Animation>
-        <BoardDetail id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardDetail>
-        <BoardComments id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardComments>
+        <BoardDetail
+          id={id}
+          userId={userId}
+          isAuthenticated={isAuthenticated}
+          setIsComment={setIsComment}
+        ></BoardDetail>
+        {iscomment && (
+          <BoardComments id={id} userId={userId} isAuthenticated={isAuthenticated}></BoardComments>
+        )}
       </Animation>
     </>
   );

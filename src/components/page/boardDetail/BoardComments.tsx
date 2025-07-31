@@ -183,7 +183,7 @@ const BoardComments = ({
         onSubmit={handleCommentSubmit}
       />
       {commentCount === 0 ? (
-        <div className='flex flex-col justify-center items-center mt-20'>
+        <div className='flex flex-col justify-center items-center mt-24'>
           <CommentImg size={170} className='text-primary-green-200 animation-bounce-comment' />
           <span className='my-5 text-grayscale-400'>댓글이 없습니다</span>
         </div>
@@ -202,7 +202,7 @@ const BoardComments = ({
       )}
       {isCommentLoading && (
         <div className='flex items-center justify-center h-40'>
-          <LoadingSpinner.lineCircle lineWeight={8} distanceFromCenter={30} />
+          <LoadingSpinner.lineCircle lineWeight={8} distanceFromCenter={30} themeColor='#32a68a' />
         </div>
       )}
       <div ref={targetRef} className='p-24' />

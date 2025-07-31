@@ -5,7 +5,7 @@ const BoardContent = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className='w-full m-auto'>
       <div
-        className='m-auto my-10 shadow-[0_4px_20px_#00000014] min-w-[335px] max-w-[1060px] w-full rounded-lg
+        className='m-auto my-10 shadow-[0_4px_20px_#00000014] min-w-[335px] md:w-[624px] xl:w-[1060px] w-full rounded-lg
       '
       >
         {children}
