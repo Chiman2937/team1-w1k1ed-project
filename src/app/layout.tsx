@@ -15,6 +15,9 @@ const nextOrigin = `https://${vercelUrl}`;
 export const metadata: Metadata = {
   title: 'wikied',
   description: '위키를 직접 작성하고 공유해보세요',
+  icons: {
+    icon: '/images/favicon.svg',
+  },
   metadataBase: new URL(nextOrigin),
   openGraph: {
     title: 'wikied',
