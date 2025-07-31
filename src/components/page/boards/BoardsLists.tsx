@@ -19,8 +19,8 @@ const BoardsLists = () => {
     <>
       {/* 검색바와 정렬 드롭다운 */}
       <div
-        className='flex gap-4 pt-10 mb-5
-      md:pt-12'
+        className='flex flex-col  gap-4 pt-10 mb-5
+      md:pt-12 md:flex-row'
       >
         {/* 검색바 */}
         <BoardsSearchBar
@@ -33,7 +33,9 @@ const BoardsLists = () => {
       </div>
 
       {/* 테이블 헤더 추가 */}
-      <BoardsListsHeader />
+      <div className='hidden md:block'>
+        <BoardsListsHeader />
+      </div>
       {/* Pagination 컴포넌트 사용 */}
       <Pagination
         data={searchResults}
