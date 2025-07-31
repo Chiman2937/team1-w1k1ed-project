@@ -17,7 +17,7 @@ export interface PatchProfilePayload {
   job: string;
   mbti: string;
   city: string;
-  image: string;
+  image: string | null;
   content: string;
 }
 
