@@ -53,7 +53,11 @@ const AddBoard = () => {
       return;
     }
 
-    const image = getHtmlFirstImageSrc(content);
+    let image = getHtmlFirstImageSrc(content);
+
+    if (!image) {
+      image = 'https://example.com/...';
+    }
 
     const formData = {
       image,
@@ -130,7 +134,7 @@ const AddBoard = () => {
           {!editor ? null : (
             <div className='px-5 pb-5 flex flex-col gap-[20px]'>
               <ToolBar editor={editor} setTempFiles={setTempFiles} />
-              <div className='h-64 overflow-auto'>
+              <div className='min-h-64 h-auto overflow-auto'>
                 <ContentEditor editor={editor} />
               </div>
               <div className='flex items-center gap-2 justify-end text-md-regular text-grayscale-400'>
