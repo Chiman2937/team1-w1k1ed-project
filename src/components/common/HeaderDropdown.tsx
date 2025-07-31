@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { GiHamburgerMenu as IconHamburger } from 'react-icons/gi';
 import { VscAccount as IconAccount } from 'react-icons/vsc';
 import clsx from 'clsx';
+import Image from 'next/image';
 
 const ICONS = {
   hamburger: IconHamburger,
@@ -21,27 +22,50 @@ type DropdownMenuItem = {
 
 type Props = {
   iconName?: 'hamburger' | 'account';
+  imageSrc?: string;
   menuItems: DropdownMenuItem[];
   onItemClick?: (label: string) => void;
   hasNewNotifications?: boolean;
 };
 
 const HeaderDropdown = ({
-  iconName = 'hamburger',
+  iconName,
+  imageSrc,
   menuItems,
   onItemClick,
   hasNewNotifications,
 }: Props) => {
-  const Icon = ICONS[iconName];
+  const Icon = iconName ? ICONS[iconName] : null; // iconName이 있을 때만 Icon 컴포넌트 할당
   const pathname = usePathname();
 
   return (
     <Menu as='div' className='relative font-pretendard text-[14px] font-normal'>
       <MenuButton
         className='flex items-center justify-center
-        focus:outline-none relative'
+        focus:outline-none relative rounded-full'
       >
-        <Icon className='text-grayscale-300 cursor-pointer w-[24px] h-[24px] md:w-[32px] md:h-[32px]' />
+        {imageSrc ? ( // imageSrc가 있으면 Image 컴포넌트 렌더링
+          <Image
+            src={imageSrc}
+            alt='프로필 이미지'
+            width={36}
+            height={36}
+            className='rounded-full object-cover w-9 h-9'
+          />
+        ) : Icon ? ( // iconSrc가 없고 iconName이 있으면 아이콘 렌더링
+          <Icon
+            className='text-grayscale-300 cursor-pointer
+            w-6 h-6
+            md:w-7 md:h-7'
+          />
+        ) : (
+          // 둘 다 없으면 햄버거
+          <IconHamburger
+            className='text-grayscale-300 cursor-pointer
+            w-6 h-6
+            md:w-7 md:h-7'
+          />
+        )}
         {/* 아이콘 옆에 빨간 점 표시 (hasNewNotifications prop 사용) */}
         {hasNewNotifications && iconName === 'hamburger' && (
           <span

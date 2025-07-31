@@ -19,6 +19,7 @@ import { ToastRender } from 'cy-toast';
 import { useUnloadAlert } from '@/hooks/useUnloadAlert';
 import ProfileQnAEditor from './ProfileQnAEditor/ProfileQnAEditor';
 import { uploadFileAPI } from '@/api/uploadFileAPI';
+import ProfileNoContent from './ProfileNoContent/ProfileNoContent';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -92,39 +93,49 @@ const WikiDetailSection = ({ wikiData }: Props) => {
   if (!editor) return;
 
   return (
-    <section
-      className={clsx(
-        'bg-white',
-        'rounded-[10px]  shadow-card', //
-        'p-[20px] mx-auto',
-        // 'lg:border-1 lg:border-gray-300',
-      )}
-    >
-      <ToastRender />
-      <ProfileTitle
-        handleCancelClick={handleCancelClick}
-        handleUpdateProfileSubmit={handleUpdateProfileSubmit}
-        wikiData={wikiData}
+    <section className='flex flex-row justify-center items-start gap-[20px] mx-auto'>
+      <ProfileIndex
+        className='hidden xl:block sticky top-[100px]'
+        indexList={getHtmlHeadings(wikiData.content)}
       />
-      <WikiInfo onTimerFinish={onTimerFinish} />
-      <ProfileQnAEditor wikiData={wikiData} />
       <div
         className={clsx(
-          'border-y-1 border-gray-200',
-          'flex flex-col-reverse items-start gap-[30px]',
-          'w-full py-[20px]',
-          'sm:flex-row',
-          'xl:py-0 xl:border-0',
-          'lg:border-b-0',
+          'bg-white',
+          'lg:rounded-[10px] lg:shadow-card',
+          'p-[20px]',
+          'w-full',
+          'lg:max-w-[800px]',
         )}
       >
-        <ProfileIndex indexList={getHtmlHeadings(wikiData.content)} />
-        <ProfileCard wikiData={wikiData} />
+        <ToastRender />
+        <ProfileTitle
+          handleCancelClick={handleCancelClick}
+          handleUpdateProfileSubmit={handleUpdateProfileSubmit}
+          wikiData={wikiData}
+        />
+        <WikiInfo onTimerFinish={onTimerFinish} />
+        <ProfileQnAEditor wikiData={wikiData} />
+        <div
+          className={clsx(
+            'border-y-1 border-gray-200',
+            'flex flex-col-reverse items-start gap-[30px]',
+            'w-full py-[20px]',
+            'md:flex-row',
+            'lg:border-b-0',
+            isEditing && 'lg:border-t-0 lg:py-0',
+            'xl:py-0 xl:border-0',
+          )}
+        >
+          <ProfileIndex className='xl:hidden' indexList={getHtmlHeadings(wikiData.content)} />
+          <ProfileCard className='lg:hidden' wikiData={wikiData} />
+        </div>
+        <ProfileContent editor={editor} setTempFiles={setTempFiles} wikiData={wikiData} />
+        <ProfileNoContent wikiData={wikiData} content={wikiData.content} />
+        <Modal isOpen={isExpiredModalOpen} onClose={() => setIsExpiredtModalOpen(false)}>
+          <ExpiredModal onClose={() => setIsExpiredtModalOpen(false)} />
+        </Modal>
       </div>
-      <ProfileContent editor={editor} setTempFiles={setTempFiles} wikiData={wikiData} />
-      <Modal isOpen={isExpiredModalOpen} onClose={() => setIsExpiredtModalOpen(false)}>
-        <ExpiredModal onClose={() => setIsExpiredtModalOpen(false)} />
-      </Modal>
+      <ProfileCard className='hidden lg:block sticky top-[100px]' wikiData={wikiData} />
     </section>
   );
 };

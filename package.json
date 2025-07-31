@@ -23,6 +23,7 @@
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.10.0",
+    "cheerio": "^1.1.2",
     "clsx": "^2.1.1",
     "cy-combobox": "^1.0.4",
     "cy-toast": "^1.0.11",

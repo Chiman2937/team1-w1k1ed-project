@@ -1,9 +1,9 @@
 'use client';
 
 import { IoHeartOutline as EmptyHeart } from 'react-icons/io5';
+import { FaRegTrashAlt as Delete } from 'react-icons/fa';
 import { IoHeart as FullHeart } from 'react-icons/io5';
 import { FiEdit2 as Edit } from 'react-icons/fi';
-import { FaRegTrashAlt as Delete } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 import Button from '@/components/common/Button';
@@ -21,7 +21,7 @@ interface LikeButtonProps {
   isLiked: boolean;
 }
 
-// edit, delete button
+// edit button
 export const BoardEditButton = ({ onEdit }: ButtonsProps) => {
   return (
     <>
@@ -37,6 +37,7 @@ export const BoardEditButton = ({ onEdit }: ButtonsProps) => {
   );
 };
 
+// delete button
 export const BoardDeleteButton = ({ onDelete, isEditing }: ButtonsProps) => {
   return (
     <div>
@@ -50,18 +51,33 @@ export const BoardDeleteButton = ({ onDelete, isEditing }: ButtonsProps) => {
   );
 };
 
+// like button
 export const BoardLikeButton = ({
   isAuthenticated,
   initialLikeCount,
   onClick,
   isLiked,
 }: LikeButtonProps) => {
+  if (!isAuthenticated)
+    return (
+      <button
+        className={`flex justify-center items-center gap-[2px] ${isLiked && 'text-primary-green-200'}`}
+        onClick={() => onClick()}
+      >
+        {isLiked ? (
+          <FullHeart size={18} className=' text-primary-green-300' />
+        ) : (
+          <EmptyHeart size={18} className=' text-grayscale-400' />
+        )}
+        <span className='w-[15px] text-center'>{initialLikeCount}</span>
+      </button>
+    );
+
   return (
     <motion.div whileTap={{ scale: 1.5 }}>
       <button
         className={`flex justify-center items-center gap-[2px] ${isLiked && 'text-primary-green-200'}`}
         onClick={() => onClick()}
-        disabled={!isAuthenticated}
       >
         {isLiked ? (
           <FullHeart size={18} className=' text-primary-green-300' />

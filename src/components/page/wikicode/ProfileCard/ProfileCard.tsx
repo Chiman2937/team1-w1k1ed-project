@@ -9,9 +9,10 @@ import ProfileImageEditor from './components/ProfileImageEditor';
 
 interface Props {
   wikiData: GetProfileItemResponse;
+  className?: string;
 }
 
-const ProfileCard = ({ wikiData }: Props) => {
+const ProfileCard = ({ wikiData, className }: Props) => {
   const { isEditing, editingInfo } = useWikiContext();
   const { user } = useAuthContext();
 
@@ -30,24 +31,26 @@ const ProfileCard = ({ wikiData }: Props) => {
         'w-full',
         'xs:flex-row xs:items-start',
         'lg:border-none',
-        'lg:fixed lg:right-[20px] lg:top-[108px] lg:w-[250px]',
+        'lg:w-[250px]',
         'lg:flex-col lg:items-center',
+        className,
       )}
     >
       <div
         className={clsx(
           // 'lg:bg-white lg:border-1 lg:border-gray-300',
           'relative flex flex-col gap-[5px]',
-          'pt-[40px] px-[40px]',
+          'pt-[30px] px-[30px]',
+          'lg:pt-[40px] lg:px-[40px]',
           'w-full',
-          'xs:w-[200px]',
-          'sm:w-[250px]',
-          'md:w-[250px]',
-          'lg:w-full',
+          'xs:max-w-[220px]',
+          // 'sm:w-[250px]',
+          'md:max-w-[230px]',
+          'lg:max-w-none lg:w-full',
         )}
       >
-        {isEditing && <ProfileImageEditor imageUrl={wikiData.image} />}
-        {!isEditing && <ProfileImageViewer imageUrl={wikiData.image} />}
+        {editCondition && <ProfileImageEditor imageUrl={wikiData.image} />}
+        {!editCondition && <ProfileImageViewer imageUrl={wikiData.image} />}
       </div>
       <div
         className={clsx(

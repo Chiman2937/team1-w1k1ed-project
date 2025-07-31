@@ -19,6 +19,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   register?: UseFormRegisterReturn;
   errors?: FieldErrors;
   touchedFields?: TouchedFieldsType<FieldValues>;
+  forceShowError?: boolean;
 }
 
 export default function Input({
@@ -31,10 +32,11 @@ export default function Input({
   register,
   errors,
   touchedFields,
+  forceShowError = false,
   ...rest
 }: InputProps) {
   const errorMessage = errors?.[name]?.message as string | undefined;
-  const hasError = !!errorMessage && touchedFields?.[name];
+  const hasError = !!errorMessage && (forceShowError || touchedFields?.[name]);
 
   const [showPassword, setShowPassword] = React.useState(false);
   const isPasswordType = type === 'password';
@@ -52,17 +54,34 @@ export default function Input({
 
   const baseStyle = clsx(
     'w-full h-[45px] rounded-[10px] px-[20px] py-[14px]',
-    'bg-grayscale-100',
     'text-grayscale-500',
     'text-md-regular',
     'placeholder:text-grayscale-400',
-    'border border-transparent',
     'focus:outline-none',
-    'focus:border-primary-green-200',
     { 'pr-12': isPasswordType },
   );
 
-  const errorClasses = clsx('bg-secondary-red-100', 'focus:border-secondary-red-200');
+  const dynamicBgAndBorderStyles = clsx(
+    // 기본 (에러 아닐 때) 스타일
+    {
+      'bg-grayscale-100': !hasError,
+      'bg-secondary-red-100': hasError, // ✨ 에러일 때 빨간색 배경
+    },
+    'border', // 기본 보더 (border-transparent vs border-red-200)
+    {
+      'border-transparent': !hasError, // 에러가 아닐 때 투명 보더
+      'border-secondary-red-200': hasError, // 에러일 때 빨간색 보더
+    },
+    // Focus 스타일: 에러 여부에 따라 명확하게 분리
+    {
+      // 에러가 아닐 때의 포커스 스타일
+      'focus:border-primary-green-200': !hasError,
+    },
+    {
+      // 에러일 때의 포커스 스타일 (이게 우선순위를 가져가야 함)
+      'focus:border-secondary-red-200': hasError,
+    },
+  );
 
   return (
     <div className={twMerge('flex flex-col gap-[10px] transition-all duration-700', className)}>
@@ -76,7 +95,7 @@ export default function Input({
           id={id || name}
           type={isPasswordType && showPassword ? 'text' : type}
           placeholder={placeholder}
-          className={twMerge(baseStyle, hasError && errorClasses)}
+          className={twMerge(baseStyle, dynamicBgAndBorderStyles)}
           {...register}
           {...rest}
         />
