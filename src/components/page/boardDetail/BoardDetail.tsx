@@ -1,24 +1,26 @@
 'use client';
 
-import { dateFormater } from '@/utils/date';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Modal } from 'react-simplified-package';
+import { toast } from 'cy-toast';
+import { useUnloadAlert } from '@/hooks/useUnloadAlert';
+import { getDisplayName } from '@/utils/displayName';
+import { dateFormater } from '@/utils/date';
 import {
   getDetailArticle,
   postArticleLike,
   deleteArticleLike,
   deleteArticle,
 } from '@/api/articleApi';
-import BoardEdit from './BoardEdit';
 import { BoardDeleteButton, BoardEditButton, BoardLikeButton } from './BoardDetailButton';
-import { useState, useEffect } from 'react';
+import Button from '@/components/common/Button';
+import SnackBar from '@/components/common/Snackbar';
+import BoardEdit from './BoardEdit';
 import Animation from '@/components/common/Animation';
 import BoardContent from './BoardContent';
-import Button from '@/components/common/Button';
-import { Modal } from 'react-simplified-package';
 import BoardSkeleton from './BoardSkeleton';
 import ContentViewer from '@/components/common/TextEditor/ContentViewer';
-import { toast } from 'cy-toast';
-import SnackBar from '@/components/common/Snackbar';
 
 const BoardDetail = ({
   id,
@@ -31,6 +33,7 @@ const BoardDetail = ({
 }) => {
   const [article, setArticle] = useState(null);
   const [likeCount, setLikeCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [writerId, setWriterId] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -42,19 +45,30 @@ const BoardDetail = ({
     const fetchArticle = async () => {
       try {
         const article = await getDetailArticle(id);
+
+        setIsLoading(true);
         setArticle(article);
         setLikeCount(article.likeCount);
         setIsLiked(article.isLiked);
         setWriterId(article.writer.id);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        toast.run(({ isClosing, isOpening, index }) => (
+          <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+            게시물을 불러오는데 실패했습니다.
+          </SnackBar>
+        ));
         router.push('/error');
+      } finally {
+        setIsLoading(false);
       }
     };
+
     if (id) {
       fetchArticle();
     }
-  }, [id, router]);
+  }, [id, router, isEditing]);
+
+  useUnloadAlert({ activeBy: isEditing });
 
   const handleLike = async () => {
     try {
@@ -101,11 +115,8 @@ const BoardDetail = ({
           게시물이 삭제되었습니다.
         </SnackBar>
       ));
-      setTimeout(() => {
-        router.push('/boards');
-      }, 1500);
-    } catch (error) {
-      console.log(error);
+      router.push('/boards');
+    } catch {
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
           게시물 삭제에 실패했습니다.
@@ -129,7 +140,7 @@ const BoardDetail = ({
     setIsEditing(true);
   };
 
-  if (!article)
+  if (!article || isLoading)
     return (
       <Animation>
         <BoardSkeleton />
@@ -143,6 +154,7 @@ const BoardDetail = ({
     updatedAt,
     writer: { name },
   } = article;
+  const newName = getDisplayName(name);
   const date = dateFormater(createdAt);
   const updatedDate = dateFormater(updatedAt);
 
@@ -153,7 +165,7 @@ const BoardDetail = ({
           <BoardEdit
             isEditing={isEditing}
             setIsEditing={setIsEditing}
-            userName={name}
+            userName={newName}
             id={id}
             userId={userId}
             date={date}
@@ -182,7 +194,7 @@ const BoardDetail = ({
             </section>
             <section className='flex justify-between items-center  text-grayscale-400 text-md-regular pb-5 border-b border-grayscale-200'>
               <div className='flex gap-[10px] '>
-                <p>{name}</p>
+                <p>{newName}</p>
                 <p>{updatedDate}</p>
               </div>
               <BoardLikeButton
@@ -192,7 +204,7 @@ const BoardDetail = ({
                 isLiked={isLiked}
               />
             </section>
-            <main className='flex flex-col gap-[20px] min-h-52 overflow-auto md:min-h-72 xl:min-h-100 text-ellipsis'>
+            <main className='flex flex-col gap-[20px] min-h-64 h-auto overflow-y-auto'>
               <ContentViewer content={content} />
             </main>
           </header>

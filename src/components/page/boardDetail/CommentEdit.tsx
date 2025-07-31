@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CommentResponse } from '@/components/page/boardDetail/BoardComments';
+import { useRouter } from 'next/navigation';
+import { toast } from 'cy-toast';
 import { patchComment } from '@/api/articleApi';
+import { CommentResponse } from '@/components/page/boardDetail/BoardComments';
 import Button from '@/components/common/Button';
+import SnackBar from '@/components/common/Snackbar';
 
 interface CommentEditProps {
   comment: CommentResponse;
@@ -15,6 +18,8 @@ const CommentEdit = ({ comment, isEdit, onUpdate }: CommentEditProps) => {
   const [characterCount, setCharacterCount] = useState(0);
   const [editedContent, setEditedContent] = useState(comment.content);
   const MAX_CHARACTERS = 500;
+
+  const router = useRouter();
 
   useEffect(() => {
     setCharacterCount(comment.content.length);
@@ -30,9 +35,13 @@ const CommentEdit = ({ comment, isEdit, onUpdate }: CommentEditProps) => {
       const updatedComment = await patchComment(String(comment.id), { content: editedContent });
       onUpdate(updatedComment);
       isEdit(false);
-    } catch (error) {
-      console.log(error);
-      // ({ type: 'error', message: '댓글을 작성해주세요.' });
+    } catch {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          로그인 후 이용해 주시길 바랍니다.
+        </SnackBar>
+      ));
+      router.push('/error');
     }
   };
 
