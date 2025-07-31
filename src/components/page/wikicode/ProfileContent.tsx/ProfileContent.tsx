@@ -25,7 +25,7 @@ const ProfileContent = ({ editor, setTempFiles, wikiData }: Props) => {
     <div className='pt-[10px] relative'>
       {editCondition && (
         <div>
-          <div className='sticky top-[150px] xs:top-[130px] z-1'>
+          <div className='sticky top-[110px] md:top-[130px]  z-1'>
             <ToolBar editor={editor} setTempFiles={setTempFiles} />
           </div>
           <ContentEditor editor={editor} />
