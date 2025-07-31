@@ -12,6 +12,7 @@ interface NotificationStore {
   // 알림 설정 관련
   notificationsEnabled: boolean;
   hasNewNotifications: boolean;
+  markNotificationsAsRead: () => void;
   setNotificationsEnabled: (enabled: boolean) => void;
   setHasNewNotifications: (has: boolean) => void;
 
@@ -71,8 +72,12 @@ export const useNotificationStore = create<NotificationStore>()(
             totalCount: res.totalCount,
             page: nextPage + 1,
             hasNextPage: newList.length < res.totalCount,
-            // 새로 불러온 totalCount가 이전 totalCount보다 크고, 알림이 활성화 상태일 때만 새 알림이 있다고 표시
-            hasNewNotifications: get().notificationsEnabled && res.totalCount > prevTotalCount,
+            // 이 부분에서 hasNewNotifications를 직접적으로 false로 만들지 않음
+            // 새로운 알림이 있다면 true로 설정하되, 기존에 true였으면 유지
+            hasNewNotifications:
+              get().notificationsEnabled && res.totalCount > prevTotalCount
+                ? true
+                : get().hasNewNotifications,
           });
         } catch (err) {
           console.error('알림 불러오기 실패:', err);
@@ -111,6 +116,11 @@ export const useNotificationStore = create<NotificationStore>()(
           error: null,
           hasNewNotifications: false, // 모두 삭제니 새 알림도 없음
         });
+      },
+
+      // 새 알림을 읽음으로 표시하는 함수 추가
+      markNotificationsAsRead: () => {
+        set({ hasNewNotifications: false });
       },
 
       // 새로운 폴링 관련 함수
