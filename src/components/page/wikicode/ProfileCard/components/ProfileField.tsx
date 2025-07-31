@@ -68,6 +68,8 @@ const ProfileInput = ({ id, className, value, onChange }: InputProps) => {
       className={clsx(
         'bg-grayscale-100 rounded-[10px] text-xs-regular px-[16px] py-[10px] w-full',
         'grow',
+        'outline-none border-1 border-transparent',
+        'focus:border-primary-green-200',
         className,
       )}
       value={value}
