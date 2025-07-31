@@ -14,7 +14,7 @@ import SnackBar from '@/components/common/Snackbar';
 
 const signUpSchema = z
   .object({
-    name: z.string().trim().min(1).max(10, '8자 이하로 작성해주세요.'), //뒤의 랜덤 숫자 2자리를 위해 8자로 수정
+    name: z.string().trim().min(1, '1자 이상 작성해주세요.').max(10, '8자 이하로 작성해주세요.'), //뒤의 랜덤 숫자 2자리를 위해 8자로 수정
     email: z.email('이메일 형식으로 작성해 주세요.'),
     password: z.string().min(8, '8자 이상 입력해주세요.'), // 비밀번호는 최소 8자 이상
     passwordConfirmation: z.string(), // 비밀번호 확인은 최소 1자 이상
