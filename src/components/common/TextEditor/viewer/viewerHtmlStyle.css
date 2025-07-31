@@ -51,3 +51,12 @@
   content: counter(heading-counter) '. ';
   color: var(--color-grayscale-500);
 }
+
+.text-viewer h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  scroll-margin-top: 100px; /* 고정 헤더 높이 + 여유값 */
+}
