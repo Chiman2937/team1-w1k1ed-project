@@ -8,6 +8,7 @@ import AuthHeaderRenderer from '@/components/layout/AuthHeaderRenderer';
 import { Suspense } from 'react';
 import Animation from '@/components/common/Animation';
 import { ToastRender } from 'cy-toast';
+import LoadingOverlay from '@/components/common/LoadingOverlay';
 
 const vercelUrl = process.env.VERCEL_URL;
 const nextOrigin = `https://${vercelUrl}`;
@@ -64,7 +65,7 @@ export default function RootLayout({
         antialiased`}
       >
         <ToastRender />
-        <Suspense>
+        <Suspense fallback={<LoadingOverlay>페이지를 불러오고 있어요</LoadingOverlay>}>
           <AuthProvider>
             <Animation>
               <AuthHeaderRenderer />
