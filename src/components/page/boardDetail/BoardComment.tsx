@@ -1,21 +1,22 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { dateFormater } from '@/utils/date';
-import { CommentResponse } from '@/components/page/boardDetail/BoardComments';
-import { useState } from 'react';
-
-import Image from 'next/image';
-import BasicProfileImage from '@/assets/images/default_profile.svg';
-import { Modal } from 'react-simplified-package';
-import { useRouter } from 'next/navigation';
-import { deleteComment } from '@/api/articleApi';
 import { FiEdit2 as Edit } from 'react-icons/fi';
 import { FaRegTrashAlt as Delete } from 'react-icons/fa';
-import CommentEdit from './CommentEdit';
-import Button from '@/components/common/Button';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Modal } from 'react-simplified-package';
 import { toast } from 'cy-toast';
+import { motion } from 'framer-motion';
+import { deleteComment } from '@/api/articleApi';
+import { dateFormater } from '@/utils/date';
+import { getDisplayName } from '@/utils/displayName';
+import { CommentResponse } from '@/components/page/boardDetail/BoardComments';
+import { useUnloadAlert } from '@/hooks/useUnloadAlert';
+import Image from 'next/image';
+import Button from '@/components/common/Button';
 import SnackBar from '@/components/common/Snackbar';
+import CommentEdit from './CommentEdit';
+import BasicProfileImage from '@/assets/images/default_profile.svg';
 
 interface CommentItemProps {
   id: number | undefined;
@@ -30,6 +31,8 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
 
   const router = useRouter();
 
+  useUnloadAlert({ activeBy: isEditing });
+
   const handleDeleteComment = async () => {
     try {
       await deleteComment(comment.id);
@@ -39,8 +42,7 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
           댓글이 삭제되었습니다.
         </SnackBar>
       ));
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
           댓글 삭제에 실패했습니다.
@@ -55,6 +57,8 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
     createdAt,
     writer: { image, name },
   } = comment;
+
+  const newName = getDisplayName(name);
   return (
     <>
       <div className={`mt-7 ${isEditing ? 'hidden' : ''}`}>
@@ -68,7 +72,7 @@ const BoardComment = ({ id, comment, onDelete, onUpdate }: CommentItemProps) => 
               )}
             </div>
             <div className='  ml-[15px] flex-col break-words text-grayscale-500 lg:max-w-none'>
-              <div className='text-lg-semibold lg:text-2lg-semibold '>{name}</div>
+              <div className='text-lg-semibold lg:text-2lg-semibold '>{newName}</div>
               <div className='flex-wrap break-words text-md-regular lg:text-lg-regular'>
                 {content}
               </div>
