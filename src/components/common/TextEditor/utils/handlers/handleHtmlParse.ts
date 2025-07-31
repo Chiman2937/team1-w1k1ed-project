@@ -1,6 +1,8 @@
 'use client';
 import { uploadFileAPI, UploadType } from '@/api/uploadFileAPI';
 import { Editor, generateHTML, JSONContent } from '@tiptap/react';
+import { replaceAspectRatioToHeight } from './replaceAspectRatioToHeight';
+import { addIdToHeadings } from './addIdToHeadings';
 
 interface Props {
   editor: Editor;
@@ -15,9 +17,8 @@ export const handlehtmlParse = async ({ editor, files }: Props) => {
 const getParsedHtml = async ({ editor, files }: Props) => {
   const contentJson = await getSanitizedJson({ editor, files });
   const html = generateHTML(contentJson, editor.extensionManager.extensions);
-
   const aspectRatioconvertedHtml = replaceAspectRatioToHeight(html);
-  const headingIdSetHtml = addSequentialHeadingIds(aspectRatioconvertedHtml);
+  const headingIdSetHtml = addIdToHeadings(aspectRatioconvertedHtml);
 
   return headingIdSetHtml;
 };
@@ -50,55 +51,4 @@ const getSanitizedJson = async ({ editor, files }: Props) => {
   };
   await replaceBlobs(contentJson);
   return contentJson;
-};
-
-const replaceAspectRatioToHeight = (html: string): string => {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const imgs = doc.querySelectorAll('img');
-
-  imgs.forEach((img) => {
-    const style = img.getAttribute('style') ?? '';
-    const widthStr = img.getAttribute('width');
-    const width = widthStr ? parseInt(widthStr) : null;
-
-    // aspect-ratio 파싱
-    const match = style.match(/aspect-ratio:\s*(\d+)\s*\/\s*(\d+)/);
-    if (match && width) {
-      const [, w, h] = match;
-      const aspectRatio = parseFloat(w) / parseFloat(h);
-      const height = Math.round(width / aspectRatio);
-
-      // height 속성 삽입
-      img.setAttribute('height', String(height));
-
-      // style에서 aspect-ratio 제거
-      const cleanedStyle = style.replace(/aspect-ratio:\s*\d+\s*\/\s*\d+;?/g, '').trim();
-      if (cleanedStyle) {
-        img.setAttribute('style', cleanedStyle);
-      } else {
-        img.removeAttribute('style');
-      }
-    }
-  });
-
-  return doc.body.innerHTML;
-};
-
-const addSequentialHeadingIds = (html: string): string => {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-
-  // 각 heading 태그별로 카운트 (h1, h2, ..., h6)
-  const countMap: Record<string, number> = {};
-
-  const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
-
-  headings.forEach((el) => {
-    const tag = el.tagName.toLowerCase(); // 'h1', 'h2', ...
-    countMap[tag] = (countMap[tag] || 0) + 1;
-
-    const id = `${tag}-${countMap[tag]}`;
-    el.id = id;
-  });
-
-  return doc.body.innerHTML;
 };
