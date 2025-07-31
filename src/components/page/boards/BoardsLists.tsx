@@ -44,7 +44,7 @@ const BoardsLists = () => {
         emptyMessage='검색 결과가 없습니다.'
         itemSpacing={false} // 게시판은 간격 없음
         listHeight={{
-          mobile: 'h-[500px]',
+          mobile: 'h-[570px]',
           desktop: 'md:h-[500px]',
         }}
       />

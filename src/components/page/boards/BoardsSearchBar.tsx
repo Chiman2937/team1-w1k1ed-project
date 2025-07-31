@@ -3,6 +3,7 @@ import { ArticleResponse, getArticlesAPI, OrderByType } from '@/api/article/getA
 import axios from 'axios';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 const BoardsSearchBar = ({
   placeholder,
@@ -18,6 +19,7 @@ const BoardsSearchBar = ({
   // 검색어 상태 관리
   const [searchTerm, setSearchTerm] = useState<string>('');
   const abortControllerRef = useRef<AbortController | undefined>(undefined);
+  const router = useRouter();
 
   // API 호출 함수
   const searchAPI = useCallback(
@@ -74,7 +76,9 @@ const BoardsSearchBar = ({
           return;
         }
         console.error('API 호출 오류:', error);
-        onSearchResults?.([]);
+
+        router.push('/error');
+        // onSearchResults?.([]);
       }
     },
     [onSearchResults, onSearchTerm],
