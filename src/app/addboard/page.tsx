@@ -31,7 +31,7 @@ const AddBoard = () => {
     useTextEditor();
 
   const router = useRouter();
-  const userName = user?.name;
+  const userName = user === null ? '' : getDisplayName(user?.name);
   const newDate = new Date().toLocaleDateString();
   const date = dateFormater(newDate);
 
@@ -121,7 +121,7 @@ const AddBoard = () => {
                 </button>
               </div>
               <span className='flex items-center gap-[10px] text-md-regular text-gray-400'>
-                <p>{getDisplayName(userName!)}</p>
+                <p>{userName}</p>
                 <p>{date}</p>
               </span>
               <BoardInfoForm title={title} setTitle={setTitle} />
