@@ -5,6 +5,7 @@ import './viewer/viewerYoutubeStyle.css';
 import './viewer/viewerImageStyle.css';
 
 import DOMPurify from 'dompurify';
+import { getHtmlStringIsEmpty } from './utils/handlers/getHtmlStringIsEmpty';
 
 interface Props {
   content: string;
@@ -13,6 +14,10 @@ interface Props {
 const ContentViewer = ({ content }: Props) => {
   const htmlString = content;
   const sanitized = DOMPurify.sanitize(htmlString);
+
+  const isEmpty = getHtmlStringIsEmpty(content);
+
+  if (isEmpty) return null;
 
   return (
     <div>
