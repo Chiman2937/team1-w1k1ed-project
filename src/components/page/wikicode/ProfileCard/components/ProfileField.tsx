@@ -20,9 +20,9 @@ const ProfileLabel = ({ children, className }: LabelProps) => {
     <label
       className={clsx(
         'text-grayscale-400',
-        'text-xs-regular w-[55px]',
-        'md:text-md-regular md:w-[55px]',
-        'xl:text-md-regular xl:w-[60px]',
+        'text-xs-regular w-[60px]',
+        'md:text-md-regular md:w-[65px]',
+        'xl:text-md-regular xl:w-[70px]',
         'shrink-0',
         className,
       )}
