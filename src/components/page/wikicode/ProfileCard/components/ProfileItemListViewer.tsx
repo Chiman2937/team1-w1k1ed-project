@@ -31,7 +31,7 @@ const ProfileItemListViewer = ({ wikiData }: Props) => {
         ))}
       {emptyMap.length > 0 && (
         <>
-          <div className='border-b-1 border-gray-200' />
+          {filledMap.length > 0 && <div className='border-b-1 border-gray-200' />}
           <div className='flex flex-row gap-[10px]'>
             <div className='flex flex-col justify-center gap-[10px] shrink-0'>
               {emptyMap.map(([label, _]) => (
