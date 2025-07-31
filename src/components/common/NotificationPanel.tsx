@@ -71,7 +71,7 @@ const NotificationPanel = ({ isOpen, onClose, list }: Props) => {
             className='fixed top-0 right-0 w-[380px] h-full bg-gray-100 shadow-xl'
           >
             <DialogPanel className='h-full flex flex-col p-4'>
-              <div className='flex justify-between items-center px-1'>
+              <div className='flex justify-between items-center'>
                 <DialogTitle className='text-lg font-semibold text-grayscale-500'>
                   알림 {list.length}개
                 </DialogTitle>
@@ -96,7 +96,11 @@ const NotificationPanel = ({ isOpen, onClose, list }: Props) => {
                     />
                   ))
                 ) : (
-                  <div className='flex flex-col items-center justify-center py-[16px] text-gray-500 bg-gray-50 rounded-[5px]'>
+                  <div
+                    className='flex flex-col items-center justify-center 
+                    py-[16px] text-gray-500 bg-gray-50 rounded-[5px] 
+                    w-full h-full'
+                  >
                     <Image
                       src='/images/type=image8.png'
                       alt='알림 없음'

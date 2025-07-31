@@ -77,6 +77,7 @@ const PasswordChangeForm = () => {
       router.push('/');
     } catch (error) {
       const axiosError = error as AxiosError;
+      const statusCode = axiosError.response?.status;
 
       const errorMessage =
         (axiosError.response?.data as { message?: string })?.message ||
@@ -89,6 +90,11 @@ const PasswordChangeForm = () => {
           비밀번호 변경 실패: {errorMessage}
         </SnackBar>
       ));
+
+      // 500번대 에러(서버 오류)일 경우에만 에러 페이지로 이동
+      if (statusCode && statusCode >= 500) {
+        router.push('/error');
+      }
     }
   };
 

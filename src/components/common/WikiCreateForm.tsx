@@ -17,42 +17,41 @@ import Image from 'next/image';
 
 const WikiCreateForm = () => {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuthContext(); // 로그인된 사용자 정보와 인증 상태 가져오기
+  const { user, isAuthenticated } = useAuthContext(); // 사용자 인증 정보
 
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [customInput, setCustomInput] = useState('');
   const [answerInput, setAnswerInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isInitialLoading, setIsInitialLoading] = useState(true); // 초기 로딩 상태 추가
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   const quizButtonsContainerRef = useRef<HTMLDivElement>(null);
 
   const primaryGreen300 = '#32a68a';
   const primaryGreen100 = '#eefff6';
 
-  // 컴포넌트 마운트 시 기존 위키 존재 여부 확인
+  // 페이지 진입 시 기존 위키 존재 여부 확인
   useEffect(() => {
     const checkExistingWiki = async () => {
-      // 사용자가 로그인되어 있지 않으면 로그인 페이지로 이동
+      // 로그인되지 않은 경우 로그인 페이지로 이동
       if (!isAuthenticated) {
-        router.replace('/login'); // 로그인 페이지로 리다이렉트
+        router.replace('/login');
         return;
       }
 
-      // 사용자가 로그인되어 있지만, 프로필 코드가 없는 경우 (위키 생성 전)
+      // 프로필 코드가 없는 경우: 위키를 아직 생성하지 않음
       if (!user?.profile?.code) {
         setIsInitialLoading(false); // 로딩 상태 해제 후 위키 생성 폼 렌더링
         return;
       }
 
-      // user.profile.code가 있는 경우, 실제 API를 호출하여 위키 존재 여부 확인
+      // 프로필 코드가 있는 경우: 위키 존재 여부 확인 API 호출
       try {
         const profile = await getProfileItemAPI({ code: user.profile.code });
 
-        // 프로필이 성공적으로 조회되면 (즉, 위키가 존재하면) 해당 위키 페이지로 리다이렉트
+        // 기존 위키가 존재할 경우 → 리다이렉트
         if (profile && profile.code) {
           console.log(`기존 위키 발견: ${profile.code}, 리다이렉트합니다.`);
-          // 위키가 존재하여 리다이렉트되기 직전에 토스트 메시지 표시
           toast.run(({ isClosing, isOpening, index }) => (
             <SnackBar variant='info' isOpening={isOpening} isClosing={isClosing} index={index}>
               이미 위키가 생성되어있습니다. 위키페이지로 이동합니다.
@@ -60,30 +59,24 @@ const WikiCreateForm = () => {
           ));
           router.replace(`/wiki/${profile.code}`);
         } else {
-          // 프로필은 존재하지만 code가 없는 경우 (예상치 못한 경우)
+          // 예외 상황: 프로필에는 code가 없는데 조회는 됨
           router.replace('/error');
           setIsInitialLoading(false);
         }
       } catch (error) {
-        // Axios 에러이고 404 Not Found (위키 없음) 에러인 경우, 위키 생성 폼을 보여줍니다.
+        // 404: 위키가 없는 정상 케이스 → 폼 표시
         if (axios.isAxiosError(error) && error.response?.status === 404) {
           console.log('기존 위키를 찾을 수 없습니다. 위키 생성 폼을 표시합니다.');
-          // toast.run(({ isClosing, isOpening, index }) => (
-          //   <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
-          //     위키 정보를 불러오는 중 오류가 발생했습니다.
-          //   </SnackBar>
-          // ));
-          router.replace('/error');
+          router.replace('/mypage');
           setIsInitialLoading(false);
         } else {
-          // 그 외의 다른 에러 발생 시 (네트워크 오류, 서버 오류 등)
+          // 기타 에러: 서버 오류, 네트워크 오류 등
           console.error('기존 위키 확인 중 오류 발생:', error);
           toast.run(({ isClosing, isOpening, index }) => (
             <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
-              위키 정보를 불러오는 중 오류가 발생했습니다.
+              서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
             </SnackBar>
           ));
-          router.replace('/error');
           setIsInitialLoading(false);
         }
       }
@@ -92,7 +85,7 @@ const WikiCreateForm = () => {
     checkExistingWiki();
   }, [isAuthenticated, user, router]);
 
-  // 외부 클릭 감지 로직
+  // 외부 클릭 시 질문/답변 입력 초기화
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -142,6 +135,7 @@ const WikiCreateForm = () => {
     setIsLoading(true);
 
     try {
+      // 보안 질문 등록 API 호출
       const response = await profilesAPI.createSecurityQuestion({
         securityQuestion: finalQuestion,
         securityAnswer: finalAnswer,
@@ -153,24 +147,22 @@ const WikiCreateForm = () => {
           위키가 성공적으로 생성되었습니다!
         </SnackBar>
       ));
+
+      // 입력값 초기화
       setSelectedQuestion(null);
       setCustomInput('');
       setAnswerInput('');
 
-      // 위키 생성 성공 후 응답에서 받은 code를 사용하여 해당 위키 페이지로 이동
+      // 성공 시 위키 페이지로 이동
       if (response.code) {
         router.replace(`/wiki/${response.code}`);
       } else {
-        // 방어코드
+        // code 없을 경우 → 홈으로 이동
         console.warn('위키 생성 응답에 code가 없습니다. 랜딩 페이지로 이동합니다.');
-        //  toast.run(({ isClosing, isOpening, index }) => (
-        //     <SnackBar variant='info' isOpening={isOpening} isClosing={isClosing} index={index}>
-        //       위키 생성 응답에 code가 없습니다. 랜딩 페이지로 이동합니다.
-        //     </SnackBar>
-        //   ));
         router.replace('/');
       }
     } catch (error) {
+      // 에러 핸들링: Axios 에러
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.message || error.message;
         console.error('위키 생성 실패 (AxiosError):', errorMessage);
@@ -180,6 +172,7 @@ const WikiCreateForm = () => {
           </SnackBar>
         ));
       } else if (error instanceof Error) {
+        // 일반 자바스크립트 에러
         console.error('위키 생성 실패 (일반 Error):', error.message);
         toast.run(({ isClosing, isOpening, index }) => (
           <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
@@ -187,12 +180,14 @@ const WikiCreateForm = () => {
           </SnackBar>
         ));
       } else {
+        // 알 수 없는 에러
         console.error('위키 생성 실패 (알 수 없는 에러):', error);
         toast.run(({ isClosing, isOpening, index }) => (
           <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
             위키 생성 실패: 알 수 없는 오류가 발생했습니다.
           </SnackBar>
         ));
+        router.replace('/error');
       }
     } finally {
       setIsLoading(false);
@@ -239,7 +234,7 @@ const WikiCreateForm = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* 폼 필드들을 감싸는 그리드 컨테이너. 외부 클릭 감지를 위한 ref 연결 */}
+          {/* 질문/답변 입력 필드 */}
           <div className='grid grid-cols-2 gap-4' ref={quizButtonsContainerRef}>
             <QuestionSelection
               selectedQuestion={selectedQuestion}
@@ -271,6 +266,7 @@ const WikiCreateForm = () => {
             </Button>
           </div>
         </form>
+        {/* 안내 메시지 섹션 */}
         <p className='text-[14px] text-center text-secondary-red-200'>
           위키는 계정당 1회만 생성할 수 있습니다.
           <br />
