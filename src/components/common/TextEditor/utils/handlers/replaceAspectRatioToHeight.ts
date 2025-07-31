@@ -1,32 +1,34 @@
-'use client';
+import * as cheerio from 'cheerio';
+
 export const replaceAspectRatioToHeight = (html: string): string => {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const imgs = doc.querySelectorAll('img');
+  const $ = cheerio.load(html);
 
-  imgs.forEach((img) => {
-    const style = img.getAttribute('style') ?? '';
-    const widthStr = img.getAttribute('width');
-    const width = widthStr ? parseInt(widthStr) : null;
+  $('img').each((_, img) => {
+    const $img = $(img);
 
-    // aspect-ratio 파싱
+    const style = $img.attr('style') ?? '';
+    const widthStr = $img.attr('width');
+    const width = widthStr ? parseInt(widthStr, 10) : null;
+
+    // aspect-ratio: w / h 추출
     const match = style.match(/aspect-ratio:\s*(\d+)\s*\/\s*(\d+)/);
     if (match && width) {
       const [, w, h] = match;
       const aspectRatio = parseFloat(w) / parseFloat(h);
       const height = Math.round(width / aspectRatio);
 
-      // height 속성 삽입
-      img.setAttribute('height', String(height));
+      // height 속성 추가
+      $img.attr('height', String(height));
 
       // style에서 aspect-ratio 제거
       const cleanedStyle = style.replace(/aspect-ratio:\s*\d+\s*\/\s*\d+;?/g, '').trim();
       if (cleanedStyle) {
-        img.setAttribute('style', cleanedStyle);
+        $img.attr('style', cleanedStyle);
       } else {
-        img.removeAttribute('style');
+        $img.removeAttr('style');
       }
     }
   });
 
-  return doc.body.innerHTML;
+  return $('body').html() || '';
 };
