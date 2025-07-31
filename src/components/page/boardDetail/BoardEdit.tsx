@@ -2,18 +2,20 @@
 
 import { MdOutlineCancel as CancelButton } from 'react-icons/md';
 import { MdAutoFixNormal as SubmitButton } from 'react-icons/md';
-import { patchArticle } from '@/api/articleApi';
-import Button from '@/components/common/Button';
-import BoardInfoForm from '@/components/page/boardDetail/BoardInfo';
-import { Modal } from 'react-simplified-package';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Modal } from 'react-simplified-package';
+import { patchArticle } from '@/api/articleApi';
+import { toast } from 'cy-toast';
 import { useTextEditor } from '@/components/common/TextEditor/utils/hooks/useTextEditor';
 import { handlehtmlParse } from '@/components/common/TextEditor/utils/handlers/handleHtmlParse';
-import ContentEditor from '@/components/common/TextEditor/ContentEditor';
+import { getHtmlFirstImageSrc } from '@/components/common/TextEditor/utils/handlers/getHtmlFirstImageSrc';
+import { useUnloadAlert } from '@/hooks/useUnloadAlert';
+import Button from '@/components/common/Button';
 import ToolBar from '@/components/common/TextEditor/ToolBar';
-import { toast } from 'cy-toast';
 import SnackBar from '@/components/common/Snackbar';
-import { useRouter } from 'next/navigation';
+import BoardInfoForm from '@/components/page/boardDetail/BoardInfo';
+import ContentEditor from '@/components/common/TextEditor/ContentEditor';
 
 const BoardEdit = ({
   userName,
@@ -51,6 +53,8 @@ const BoardEdit = ({
     setIsModalOpen(true);
   };
 
+  useUnloadAlert({ activeBy: isEditing });
+
   const handlePatch = async () => {
     if (!userId) {
       toast.run(({ isClosing, isOpening, index }) => (
@@ -61,20 +65,34 @@ const BoardEdit = ({
       router.push('/login');
     }
 
-    const formData = {
-      title,
-      content,
-    };
+    const image = getHtmlFirstImageSrc(content);
+
+    let formData;
+
+    if (!image) {
+      formData = {
+        title,
+        content,
+      };
+    } else {
+      formData = {
+        image,
+        title,
+        content,
+      };
+    }
+
     try {
       await patchArticle(id, formData);
+
       router.refresh();
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
           게시물 수정에 실패했습니다.
         </SnackBar>
       ));
+      router.push('/error');
     } finally {
       setIsEditing(false);
       toast.run(({ isClosing, isOpening, index }) => (
@@ -128,7 +146,11 @@ const BoardEdit = ({
       </div>
       {!editor ? null : (
         <div className='px-5 pb-5 flex flex-col gap-[20px]'>
-          <div className='flex items-center gap-2 text-md-regular text-grayscale-400'>
+          <ToolBar editor={editor} setTempFiles={setTempFiles} />
+          <div className='min-h-64 h-auto overflow-auto'>
+            <ContentEditor editor={editor} />
+          </div>
+          <div className='flex items-center gap-2 justify-end text-md-regular text-grayscale-400'>
             <span>
               <span>공백 포함: </span>
               <span className='text-primary-green-200'>{lengthWithSpaces}</span> |
@@ -138,9 +160,6 @@ const BoardEdit = ({
               <span className='text-primary-green-200'>{lengthWithoutSpaces}</span>
             </span>
           </div>
-          <ContentEditor editor={editor} />
-
-          <ToolBar editor={editor} setTempFiles={setTempFiles} />
         </div>
       )}
       {isModalOpen && (
