@@ -13,11 +13,6 @@ const MobileMenu = ({ hasNewNotifications, onNotificationClick }: MobileMenuProp
     { label: '위키목록', href: '/wikilist' },
     { label: '자유게시판', href: '/boards' },
     {
-      label: '알림',
-      hasNewNotifications: hasNewNotifications,
-      onClick: onNotificationClick,
-    },
-    {
       label: '나의 위키',
       href: user?.profile?.code ? `/wiki/${user.profile.code}` : '/create-wiki',
     },

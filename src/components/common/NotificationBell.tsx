@@ -17,7 +17,7 @@ const NotificationBell = ({
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       onClick={onClick}
-      className='hidden md:inline relative'
+      className=' relative'
     >
       {notificationsEnabled ? (
         <FaBell
@@ -35,6 +35,7 @@ const NotificationBell = ({
           <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[2px] bg-gray-300 rotate-45 ring-2 ring-white'></div>
         </div>
       )}
+
       {hasNewNotifications && (
         <span
           className='absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white bg-secondary-red-200'

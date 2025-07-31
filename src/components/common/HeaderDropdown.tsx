@@ -50,7 +50,9 @@ const HeaderDropdown = ({
             alt='프로필 이미지'
             width={36}
             height={36}
-            className='rounded-full object-cover w-9 h-9'
+            className='rounded-full object-cover cursor-pointer
+            w-7 h-7
+            md:w-8 md:h-8'
           />
         ) : Icon ? ( // iconSrc가 없고 iconName이 있으면 아이콘 렌더링
           <Icon
