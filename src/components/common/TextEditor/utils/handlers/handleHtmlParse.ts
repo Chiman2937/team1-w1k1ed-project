@@ -1,5 +1,8 @@
+'use client';
 import { uploadFileAPI, UploadType } from '@/api/uploadFileAPI';
 import { Editor, generateHTML, JSONContent } from '@tiptap/react';
+import { replaceAspectRatioToHeight } from './replaceAspectRatioToHeight';
+import { addIdToHeadings } from './addIdToHeadings';
 
 interface Props {
   editor: Editor;
@@ -14,7 +17,10 @@ export const handlehtmlParse = async ({ editor, files }: Props) => {
 const getParsedHtml = async ({ editor, files }: Props) => {
   const contentJson = await getSanitizedJson({ editor, files });
   const html = generateHTML(contentJson, editor.extensionManager.extensions);
-  return html;
+  const aspectRatioconvertedHtml = replaceAspectRatioToHeight(html);
+  const headingIdSetHtml = addIdToHeadings(aspectRatioconvertedHtml);
+
+  return headingIdSetHtml;
 };
 const getSanitizedJson = async ({ editor, files }: Props) => {
   const contentJson = editor.getJSON();

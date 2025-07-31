@@ -1,6 +1,7 @@
-export const getHtmlFirstImageSrc = (html: string) => {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const img = doc.querySelector('img');
-  return img?.getAttribute('src') ?? null;
+import * as cheerio from 'cheerio';
+
+export const getHtmlFirstImageSrc = (html: string): string | null => {
+  const $ = cheerio.load(html);
+  const img = $('img').first();
+  return img.attr('src') ?? null;
 };

@@ -1,17 +1,21 @@
 .text-editor .local-video-outer-wrapper {
   height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
 }
 
 .text-editor .local-video-inner-wrapper {
-  height: 100%;
+  height: auto;
+  width: 100%;
   aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
 }
 
 .text-editor video {
-  width: 100%;
   height: 100%;
+  width: 100%;
   object-fit: cover;
   border: 0;
 }

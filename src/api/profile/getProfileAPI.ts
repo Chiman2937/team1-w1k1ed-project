@@ -7,7 +7,7 @@ interface GetProfileItemPayload {
 export interface GetProfileItemResponse {
   id: number;
   code: string;
-  image: string;
+  image: string | null;
   city: string;
   mbti: string;
   job: string;

@@ -3,6 +3,7 @@
 .text-editor .youtube-inner-wrapper,
 .text-editor .local-video-inner-wrapper {
   padding: 3px;
+  margin: 3px;
   cursor: pointer;
 }
 

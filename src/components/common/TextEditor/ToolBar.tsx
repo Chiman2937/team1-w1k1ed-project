@@ -28,6 +28,7 @@ import { ComboBox, ComboContainer, ComboButton, ComboList, ComboListItem } from 
 import { IoMdArrowDropdown as IconDropdown } from 'react-icons/io';
 import { OgLinkData } from './toolbar/components/LinkModal/components/LinkPreview';
 import LinkModal from './toolbar/components/LinkModal/LinkModal';
+import { Modal } from 'react-simplified-package';
 
 interface Props {
   editor: Editor;
@@ -220,9 +221,11 @@ const ToolBar = ({ editor, setTempFiles }: Props) => {
           onClick={handleLinkButtonClick}
           className={clsx(buttonDefaultStyle)}
         />
-        {isLinkModalOpen && (
+
+        <Modal isOpen={isLinkModalOpen} onClose={() => setIsLinkModalOpen(false)}>
           <LinkModal ogData={ogData} setOgData={setOgData} onModalClose={handleLinkSubmit} />
-        )}
+        </Modal>
+
         {/* 이미지 버튼 */}
         <EditorButton variant='image' onClick={addImage} className={clsx(buttonDefaultStyle)}>
           <input
