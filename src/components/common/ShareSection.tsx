@@ -95,8 +95,8 @@ const ShareSection = () => {
       variants={containerVariants}
       className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'
     >
-      <main className='mx-auto w-full'>
-        <section
+      <div className='mx-auto w-full'>
+        <div
           ref={containerRef}
           className='bg-gray-50 flex flex-col justify-center items-center py-[100px] md:py-[160px] lg:py-[200px]'
         >
@@ -118,7 +118,7 @@ const ShareSection = () => {
             <motion.div
               ref={scrollRef}
               style={{ x: xTranslation }}
-              className='flex flex-nowrap gap-[10px] md:gap-[20px] lg:gap-[70px] whitespace-nowrap my-10'
+              className='flex flex-nowrap gap-[10px] md:gap-[20px] lg:gap-[70px] whitespace-nowrap mb-15'
             >
               {repeatedItems.map((item, idx) => (
                 <span key={`scroll-item-${idx}`} className='shrink-0'>
@@ -133,8 +133,8 @@ const ShareSection = () => {
               ))}
             </motion.div>
           </motion.div>
-        </section>
-      </main>
+        </div>
+      </div>
     </motion.div>
   );
 };
