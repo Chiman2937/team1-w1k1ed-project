@@ -25,7 +25,7 @@ const BoardSkeleton = () => {
               </div>
               <div className='h-[14px] w-[50px] bg-gradient-to-r from-grayscale-300 to-grayscale-200 rounded-xl' />
             </div>
-            <div className='flex flex-col gap-[20px] min-h-52 overflow-auto md:min-h-72 xl:min-h-100 text-ellipsis'>
+            <div className='flex flex-col gap-[20px] min-h-64 overflow-auto'>
               <div className='h-[14px] w-[400px] bg-gradient-to-r from-grayscale-300 to-grayscale-200 rounded-xl'></div>
               <div className='h-[14px] w-[350px] bg-gradient-to-r from-grayscale-300 to-grayscale-200 rounded-xl'></div>
               <div className='h-[14px] w-[200px] bg-gradient-to-r from-grayscale-300 to-grayscale-200 rounded-xl'></div>
