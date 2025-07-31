@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import instance from '../clients/axios';
+import { getDisplayName } from '@/utils/displayName';
 
 // 게시글 작성자 타입
 export interface ArticleWriterResponse {
@@ -49,7 +50,7 @@ export const getArticlesAPI = async (
     ...article,
     writer: {
       ...article.writer,
-      name: article.writer.name.replace(/\d{2}$/, ''),
+      name: getDisplayName(article.writer.name),
     },
   }));
 

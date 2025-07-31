@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import instance from '../clients/axios';
+import { getDisplayName } from '@/utils/displayName';
 
 export interface Profile {
   id: number;
@@ -51,6 +52,6 @@ export const getProfilesAPI = async (keyword: string, signal?: AbortSignal): Pro
   // 검색어가 없으면 전체 반환 (뒤 2자리 제거)
   return rawProfiles.map((profile) => ({
     ...profile,
-    name: profile.name.replace(/\d{2}$/, ''),
+    name: getDisplayName(profile.name),
   }));
 };
