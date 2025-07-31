@@ -4,64 +4,72 @@ import { useState, useEffect } from 'react';
 import Logo from './Logo';
 import Nav from './Nav';
 import NotificationPanel from './NotificationPanel';
-import Button from './Button';
 import { useNotificationStore } from '@/store/useNotificationStore';
 import NotificationBell from './NotificationBell';
 import UserDropdown from './UserDropdown';
 import MobileMenu from './MobileMenu';
-
-// NotificationItem에서 사용하는 Item 타입 정의
-type Item = {
-  id: number;
-  content: string;
-  createdAt: string;
-};
+import { profilesAPI } from '@/api/profile/postProfilesAPI';
+import { useAuthContext } from '@/context/AuthContext';
 
 const HeaderAfterLogin = () => {
   // Zustand 상태와 함수 가져오기
-  const { notificationsEnabled, hasNewNotifications, setHasNewNotifications } =
-    useNotificationStore();
+  const {
+    notificationsEnabled,
+    hasNewNotifications,
+    setHasNewNotifications,
+    list: notifications, // Zustand 스토어의 list를 notifications로 사용
+    fetchNotifications, // 알림 불러오기 함수
+    startPollingNotifications,
+    stopPollingNotifications,
+  } = useNotificationStore();
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Item[]>([
-    // 알림 목록 상태를 HeaderAfterLogin으로 옮김
-    {
-      id: 1,
-      content: '첫 번째 알림입니다.',
-      createdAt: '2025-07-19T12:39:23.618Z',
-    },
-    {
-      id: 2,
-      content: '두 번째 알림이 도착했어요!',
-      createdAt: '2025-07-19T12:45:00.000Z',
-    },
-  ]);
 
-  // 새 알림 추가 함수 (NotificationPanel로 전달)
-  const handleAddNotification = () => {
-    // 알림이 비활성화 상태일 때는 함수 실행 중단
-    if (!notificationsEnabled) {
+  const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
+  const { user } = useAuthContext();
+
+  // 프로필 이미지 가져오기
+  useEffect(() => {
+    if (!user || !user.profile?.code) {
+      setUserProfileImage(null); // 사용자 정보 없으면 이미지도 null
       return;
     }
 
-    const newItem: Item = {
-      id: notifications.length > 0 ? Math.max(...notifications.map((item) => item.id)) + 1 : 1,
-      content: `새 알림 ${new Date().toLocaleTimeString()}`,
-      createdAt: new Date().toISOString(),
+    const fetchProfileImage = async () => {
+      try {
+        const imageUrl = await profilesAPI.getProfileImage(user.profile.code);
+        console.log('가져온 프로필 이미지 URL:', imageUrl);
+        setUserProfileImage(imageUrl);
+      } catch (error) {
+        console.error('프로필 이미지 가져오기 실패:', error);
+        setUserProfileImage(null);
+      }
     };
-    setNotifications([newItem, ...notifications]);
-    setHasNewNotifications(true); // 새 알림이 추가되었음을 표시
-  };
 
-  // 알림 삭제 함수 (NotificationPanel로 전달)
-  const handleDeleteNotification = (id: number) => {
-    setNotifications((prevList) => prevList.filter((item) => item.id !== id));
-    // 모든 알림을 삭제했을 때 빨간 점 없애기
-    if (notifications.length === 1 && notifications[0].id === id) {
-      // 마지막 알림이 삭제될 때
-      setHasNewNotifications(false);
+    fetchProfileImage();
+  }, [user]);
+
+  // 컴포넌트 마운트 시 초기 알림 목록 불러오기 및 폴링 시작/중지
+  useEffect(() => {
+    // 사용자가 로그인되어 있고, 알림 기능이 활성화되어 있을 때만 폴링 시작
+    if (user && notificationsEnabled) {
+      fetchNotifications({ reset: true }); // 초기 로드
+      startPollingNotifications(5000); // 5초마다 폴링 시작
+    } else {
+      stopPollingNotifications(); // 로그인 상태가 아니거나 알림 비활성화 시 폴링 중지
     }
-  };
+
+    // 컴포넌트 언마운트 시 폴링 중지
+    return () => {
+      stopPollingNotifications();
+    };
+  }, [
+    user,
+    notificationsEnabled,
+    fetchNotifications,
+    startPollingNotifications,
+    stopPollingNotifications,
+  ]);
 
   // 알림 패널이 열리면 새 알림 표시를 해제
   useEffect(() => {
@@ -74,8 +82,18 @@ const HeaderAfterLogin = () => {
   useEffect(() => {
     if (!notificationsEnabled) {
       setHasNewNotifications(false);
+      stopPollingNotifications(); // 알림 비활성화 시 폴링 중지
+    } else if (user) {
+      // 알림 활성화되고 사용자 로그인 상태면 다시 폴링 시작
+      startPollingNotifications(5000);
     }
-  }, [notificationsEnabled, setHasNewNotifications]);
+  }, [
+    notificationsEnabled,
+    setHasNewNotifications,
+    user,
+    startPollingNotifications,
+    stopPollingNotifications,
+  ]);
 
   return (
     <>
@@ -94,22 +112,13 @@ const HeaderAfterLogin = () => {
               </div>
             </div>
 
-            <div className='mb-4'>
-              <Button onClick={handleAddNotification}>새 알림 추가</Button>
-            </div>
-
             <div className='flex items-center gap-4'>
-              {/* 분리된 컴포넌트 사용 */}
               <NotificationBell
                 notificationsEnabled={notificationsEnabled}
                 hasNewNotifications={hasNewNotifications}
                 onClick={() => setIsPanelOpen(true)}
               />
-
-              {/* 분리된 컴포넌트 사용 */}
-              <UserDropdown />
-
-              {/* 분리된 컴포넌트 사용 */}
+              <UserDropdown userImage={userProfileImage} />
               <MobileMenu
                 hasNewNotifications={hasNewNotifications}
                 onNotificationClick={() => setIsPanelOpen(true)}
@@ -123,7 +132,6 @@ const HeaderAfterLogin = () => {
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
         list={notifications}
-        onDeleteItem={handleDeleteNotification}
       />
     </>
   );
