@@ -16,7 +16,7 @@ export default function BoardsHeader() {
     } else {
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='info' isOpening={isOpening} isClosing={isClosing} index={index}>
-          로그인이 필요한 서비스입니다.
+          로그인 후 이용바랍니다.
         </SnackBar>
       ));
     }
