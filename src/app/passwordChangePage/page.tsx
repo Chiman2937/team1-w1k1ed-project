@@ -13,7 +13,7 @@ const PasswordChangePage = () => {
           height={80}
           className='my-[60px] 
           w-[335px] 
-          md:w-[400px]'
+          md:w-[400px] transition-all duration-700'
         />
       </Link>
 
