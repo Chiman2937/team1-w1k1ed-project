@@ -7,6 +7,7 @@ import { Modal } from 'react-simplified-package';
 import QuestionModal from '../ProfileTitle/components/QuestionModal';
 import { useState } from 'react';
 import { GetProfileItemResponse } from '@/api/profile/getProfileAPI';
+import { useWikiContext } from '@/context/WikiContext';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -16,6 +17,7 @@ interface Props {
 const ProfileNoContent = ({ wikiData, content }: Props) => {
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const { user } = useAuthContext();
+  const { isEditing } = useWikiContext();
   const router = useRouter();
 
   const isEmpty = getHtmlStringIsEmpty(content);
@@ -26,6 +28,7 @@ const ProfileNoContent = ({ wikiData, content }: Props) => {
   };
 
   if (!isEmpty) return null;
+  if (isEditing) return null;
 
   return (
     <div className={clsx('bg-gray-100 rounded-[15px] py-[40px]', 'flex flex-col items-center')}>
