@@ -19,6 +19,7 @@ import { ToastRender } from 'cy-toast';
 import { useUnloadAlert } from '@/hooks/useUnloadAlert';
 import ProfileQnAEditor from './ProfileQnAEditor/ProfileQnAEditor';
 import { uploadFileAPI } from '@/api/uploadFileAPI';
+import ProfileNoContent from './ProfileNoContent/ProfileNoContent';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -129,6 +130,7 @@ const WikiDetailSection = ({ wikiData }: Props) => {
           <ProfileCard className='lg:hidden' wikiData={wikiData} />
         </div>
         <ProfileContent editor={editor} setTempFiles={setTempFiles} wikiData={wikiData} />
+        <ProfileNoContent content={wikiData.content} />
         <Modal isOpen={isExpiredModalOpen} onClose={() => setIsExpiredtModalOpen(false)}>
           <ExpiredModal onClose={() => setIsExpiredtModalOpen(false)} />
         </Modal>
