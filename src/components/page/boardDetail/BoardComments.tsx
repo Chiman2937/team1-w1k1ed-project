@@ -1,14 +1,14 @@
 'use client';
 
+import { FaCommentDots as CommentImg } from 'react-icons/fa';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'cy-toast';
+import { getComment, postComment } from '@/api/articleApi';
+import SnackBar from '@/components/common/Snackbar';
 import BoardComment from './BoardComment';
 import BoardTextArea from './BoardTextArea';
-import { useRouter } from 'next/navigation';
-import { getComment, postComment } from '@/api/articleApi';
-import { useRef, useState, useEffect, useCallback } from 'react';
 import LoadingSpinner from '@/components/common/LoadingSpinner/LoadingSpinner';
-import { FaCommentDots as CommentImg } from 'react-icons/fa';
-import { toast } from 'cy-toast';
-import SnackBar from '@/components/common/Snackbar';
 
 export interface CommentWriterResponse {
   image: string;
@@ -74,14 +74,24 @@ const BoardComments = ({
     try {
       setIsCommentLoading(true);
       const response = await getComment(id, LIMIT, cursor);
+
       setComments((prev) => {
-        if (prev == response.list) return [...prev];
-        return [...prev, ...response.list];
+        const prevCommentIds = new Set(prev.map((comment) => comment.id));
+
+        const newUniqueComments = response.list.filter(
+          (comment: CommentResponse) => !prevCommentIds.has(comment.id),
+        );
+
+        return [...prev, ...newUniqueComments];
       });
       setCursor(response.nextCursor);
-    } catch (error) {
-      console.log(error);
-      router.push('/error');
+    } catch {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          댓글을 불러오는데 실패했습니다.
+        </SnackBar>
+      ));
+      return router.push('/error');
     } finally {
       setIsCommentLoading(false);
     }
@@ -92,30 +102,32 @@ const BoardComments = ({
       const response = await getComment(id, 999);
       console.log(response);
       setCommentCount(response.list.length);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          댓글을 불러오는데 실패했습니다.
+        </SnackBar>
+      ));
       router.push('/error');
     }
   }, [id, router]);
 
   const handleCommentSubmit = async (formData: { content: string }) => {
+    if (!isAuthenticated) {
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          로그인 후 이용해 주시길 바랍니다.
+        </SnackBar>
+      ));
+      router.push('/login');
+    }
     try {
-      if (isAuthenticated) {
-        const newComment = await postComment(id, formData);
-        setComments((prevData) => {
-          return [newComment, ...prevData];
-        });
-        getAllComment();
-      } else {
-        toast.run(({ isClosing, isOpening, index }) => (
-          <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
-            로그인 후 이용해 주시길 바랍니다.
-          </SnackBar>
-        ));
-        router.push('/login');
-      }
-    } catch (e) {
-      console.log(e);
+      const newComment = await postComment(id, formData);
+      setComments((prevData) => {
+        return [newComment, ...prevData];
+      });
+      getAllComment();
+    } catch {
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
           댓글 작성에 실패했습니다.
