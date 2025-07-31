@@ -26,6 +26,7 @@ const BoardEdit = ({
   initalContent,
   isEditing,
   setIsEditing,
+  setIsComment,
 }: {
   userName: string;
   id: string;
@@ -35,6 +36,7 @@ const BoardEdit = ({
   initalContent: string;
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsComment: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [title, setTitle] = useState(initalTitle);
   const [content, setContent] = useState(initalContent);
@@ -65,22 +67,17 @@ const BoardEdit = ({
       router.push('/login');
     }
 
-    const image = getHtmlFirstImageSrc(content);
-
-    let formData;
+    let image = getHtmlFirstImageSrc(content);
 
     if (!image) {
-      formData = {
-        title,
-        content,
-      };
-    } else {
-      formData = {
-        image,
-        title,
-        content,
-      };
+      image = 'https://example.com/...';
     }
+
+    const formData = {
+      image,
+      title,
+      content,
+    };
 
     try {
       await patchArticle(id, formData);
@@ -95,6 +92,7 @@ const BoardEdit = ({
       router.push('/error');
     } finally {
       setIsEditing(false);
+      setIsComment(true);
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
           게시물 수정이 완료되었습니다.
@@ -103,9 +101,14 @@ const BoardEdit = ({
     }
   };
 
+  const handleCancle = () => {
+    setIsComment(true);
+    setIsEditing(false);
+  };
+
   return (
     <>
-      <div className='p-5 w-full'>
+      <div className='p-5 w-full m-auto'>
         <main className='flex flex-col gap-[30px]'>
           <div className='flex justify-between items-center'>
             <h2 className='text-primary-green-300 text-lg-semibold md:text-2xl-semibold '>
@@ -113,7 +116,7 @@ const BoardEdit = ({
             </h2>
             <div className='flex gap-[14px]'>
               <Button
-                onClick={() => setIsEditing(false)}
+                onClick={handleCancle}
                 variant='secondary'
                 className={'hidden md:inline w-[120px]'}
               >

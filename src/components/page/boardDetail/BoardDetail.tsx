@@ -26,10 +26,12 @@ const BoardDetail = ({
   id,
   userId,
   isAuthenticated,
+  setIsComment,
 }: {
   id: string;
   userId: number | undefined;
   isAuthenticated: boolean;
+  setIsComment: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [article, setArticle] = useState(null);
   const [likeCount, setLikeCount] = useState(0);
@@ -78,7 +80,6 @@ const BoardDetail = ({
             로그인 후 이용해 주시길 바랍니다.
           </SnackBar>
         ));
-        router.push('/login');
       }
       if (isLiked) {
         await deleteArticleLike(id);
@@ -138,6 +139,7 @@ const BoardDetail = ({
       router.push('/login');
     }
     setIsEditing(true);
+    setIsComment(false);
   };
 
   if (!article || isLoading)
@@ -161,18 +163,21 @@ const BoardDetail = ({
   if (isEditing)
     return (
       <Animation>
-        <BoardContent>
-          <BoardEdit
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
-            userName={newName}
-            id={id}
-            userId={userId}
-            date={date}
-            initalTitle={title}
-            initalContent={content}
-          />
-        </BoardContent>
+        <div className='flex justify-center items-center'>
+          <BoardContent>
+            <BoardEdit
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              setIsComment={setIsComment}
+              userName={newName}
+              id={id}
+              userId={userId}
+              date={date}
+              initalTitle={title}
+              initalContent={content}
+            />
+          </BoardContent>
+        </div>
       </Animation>
     );
 
