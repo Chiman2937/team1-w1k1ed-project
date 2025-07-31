@@ -84,9 +84,7 @@ export default function SignupPage() {
         { duration: 2000, closeDuration: 200, openDuration: 200 },
       );
 
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
+      router.push('/login?from=signup');
     } catch (error) {
       const axiosError = error as AxiosError;
       const errorMessage =

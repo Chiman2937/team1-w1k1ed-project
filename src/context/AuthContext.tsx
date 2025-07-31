@@ -10,7 +10,7 @@ interface AuthContextType {
   isAuthenticated: boolean; // 로그인 여부
   user: UserData | null; // 로그인한 사용자 정보
   accessToken: string | null; // API 요청에 사용할 접근 토큰
-  login: (accessToken: string, refreshToken: string, user: UserData) => void; //로그인 처리 함수
+  login: (accessToken: string, refreshToken: string, user: UserData, fromSignup?: boolean) => void; //로그인 처리 함수
   logout: () => void; //로그아웃 처리 함수
 }
 
@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 로그인 함수 정의: 외부에서 로그인 API 호출 성공 시 이 함수를 호출
   const login = useCallback(
-    (newAccessToken: string, newRefreshToken: string, newUser: UserData) => {
+    (newAccessToken: string, newRefreshToken: string, newUser: UserData, fromSignup?: boolean) => {
       // Access Token (유효 기간: 5분)
       CookiesJs.set('accessToken', newAccessToken, {
         expires: 5 / (24 * 60),
@@ -47,8 +47,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(newUser);
       setIsAuthenticated(true);
 
-      // 로그인 성공 후 메인 페이지('/')로 이동시킵니다.
-      router.push('/');
+      if (fromSignup) {
+        router.push('/mypage');
+      } else {
+        router.back();
+      }
     },
     [router],
   );
