@@ -10,6 +10,7 @@ import { useAuthContext } from '@/context/AuthContext';
 import { getProfilePingAPI } from '@/api/profile/getProfilePingAPI';
 import { toast } from 'cy-toast';
 import SnackBar from '@/components/common/Snackbar';
+import { getDisplayName } from '@/utils/displayName';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -62,7 +63,7 @@ const ProfileTitle = ({ wikiData, handleCancelClick, handleUpdateProfileSubmit }
           text-3xl-semibold
           md:text-5xl-semibold'
         >
-          {wikiData.name}
+          {getDisplayName(wikiData.name)}
         </h1>
         {isEditing && (
           <div className={clsx('flex flex-row gap-[10px]', 'sticky top-[120px]')}>
