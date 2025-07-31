@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import instance from '../clients/axios';
+import { getDisplayName } from '@/utils/displayName';
 
 // 게시글 작성자 타입
 export interface ArticleWriterResponse {
@@ -44,5 +45,14 @@ export const getArticlesAPI = async (
     params,
     signal,
   });
-  return response.data.list || [];
+  // 작성자 이름 뒤의 숫자 2자리 제거
+  const articles = (response.data.list || []).map((article) => ({
+    ...article,
+    writer: {
+      ...article.writer,
+      name: getDisplayName(article.writer.name),
+    },
+  }));
+
+  return articles;
 };

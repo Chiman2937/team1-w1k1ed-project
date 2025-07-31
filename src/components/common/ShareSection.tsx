@@ -1,8 +1,11 @@
+// ShareSection.tsx
+'use client';
+
 import Image from 'next/image';
 import clsx from 'clsx';
-import { motion, useAnimation, easeOut } from 'framer-motion'; // Framer Motion 임포트
-import { useInView } from 'react-intersection-observer'; // useInView 임포트
-import { useEffect } from 'react'; // useEffect 임포트
+import { motion, useMotionValue, useAnimationFrame, useAnimation, easeOut } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { useEffect, useRef, useState } from 'react';
 
 // 컨테이너와 아이템 variants 분리
 const containerVariants = {
@@ -36,12 +39,11 @@ const ShareSection = () => {
   }, [controls, inView]); // controls와 inView가 변경될 때마다 이 효과를 다시 실행
 
   const baseImageClass = `
-  border border-none rounded-[10px] aspect-square shrink-0
-  w-[76px] md:w-[147px] lg:w-[360px]
-`;
+    border border-none rounded-[10px] aspect-square shrink-0
+    w-[76px] md:w-[147px] lg:w-[360px]
+  `;
 
-  // 스크롤될 아이템 목록을 배열로 관리
-  const items = [
+  const originalItems = [
     <Image
       key='image-7'
       src='/images/type=image7.png'
@@ -92,42 +94,87 @@ const ShareSection = () => {
     />,
   ];
 
+  const itemsForScroll = [...originalItems, ...originalItems];
+
+  const xTranslation = useMotionValue(0);
+
+  // 스크롤 속도 (픽셀/초) - 원하는 속도로 조절
+  const scrollVelocity = -50;
+
+  const contentWidthRef = useRef<HTMLDivElement>(null);
+  const [fullContentWidth, setFullContentWidth] = useState(0);
+
+  // 컨테이너 너비 측정 로직
+  useEffect(() => {
+    const calculateWidth = () => {
+      if (contentWidthRef.current) {
+        // 모든 자식 요소의 너비와 gap을 합산하여 정확한 한 세트의 너비를 계산
+        // 여기서는 간단하게 `scrollWidth`를 이용한 후 2로 나누는 방법으로 계산
+        // `itemsForScroll`의 `scrollWidth`는 복제된 두 세트의 총 너비이므로, 원본 한 세트의 너비는 절반이 됩니다.
+        setFullContentWidth(contentWidthRef.current.scrollWidth / 2);
+      }
+    };
+
+    calculateWidth(); // 초기 로드 시 너비 계산
+
+    // 리사이즈 이벤트 리스너 추가 (반응형 대응)
+    window.addEventListener('resize', calculateWidth);
+
+    return () => {
+      window.removeEventListener('resize', calculateWidth);
+    };
+  }, []);
+
+  useAnimationFrame((t, delta) => {
+    // 뷰포트에 들어왔을 때만 애니메이션 실행
+    if (!inView || !fullContentWidth) return;
+
+    let currentX = xTranslation.get();
+
+    currentX += (scrollVelocity * delta) / 1000;
+
+    if (currentX < -fullContentWidth) {
+      currentX += fullContentWidth;
+    }
+
+    xTranslation.set(currentX);
+  });
+
   return (
-    // 전체 섹션을 motion.div로 감싸고 애니메이션 컨트롤을 연결
     <motion.div
       ref={ref} // useInView 훅과 연결하여 뷰포트 진입을 감지
       initial='hidden' // 초기 상태는 hidden (opacity: 0, y: 30)
       animate={controls} // useAnimation 훅으로 제어되는 애니메이션
-      variants={containerVariants} // 자식 요소들의 staggerChildren을 포함하는 컨테이너 variants
+      variants={containerVariants}
       className='w-full text-center mx-auto bg-grayscale-100 text-grayscale-500 overflow-hidden'
     >
       <main className='mx-auto w-full'>
         <section
           className='bg-gray-50 flex flex-col justify-center items-center
-          py-[100px]
-          md:py-[160px]
+          py-[100px] 
+          md:py-[160px] 
           lg:py-[200px]'
         >
           {/* 텍스트 블록에 itemVariants 적용 */}
           <motion.div
             variants={itemVariants}
-            className='text-right
-            mb-[40px] w-[335px]
-            md:mb-[80px] md:w-[646px]
+            className='text-right 
+            mb-[40px] w-[335px] 
+            md:mb-[80px] md:w-[646px] 
             lg:mb-[120px] lg:w-[924px]'
           >
             <h3
-              className='text-primary-green-200 font-nexon-gothic-bold
-              text-[10px]
-              md:text-[20px]
+              className='text-primary-green-200 font-nexon-gothic-bold 
+              text-[10px] 
+              md:text-[20px] 
               lg:text-[30px]'
             >
               SHARE
             </h3>
             <h2
-              className='font-nexon-gothic-regular mt-[10px]
-              text-[16px]
-              md:text-[32px]
+              className='font-nexon-gothic-regular mt-[10px] 
+              text-[16px] 
+              md:text-[32px] 
               lg:text-[50px]'
             >
               내 위키 만들고
@@ -136,41 +183,24 @@ const ShareSection = () => {
             </h2>
           </motion.div>
 
-          {/* 스크롤되는 컨테이너 전체에 itemVariants 적용 */}
           <motion.div
             variants={itemVariants}
             className='flex overflow-hidden 
             w-full items-center'
           >
-            <div
-              className='flex flex-nowrap
-              gap-[10px]
-              md:gap-[20px]
-              lg:gap-[70px]
-              animate-scroll-left md:animate-scroll-left lg:animate-scroll-left
-            '
+            <motion.div
+              style={{ x: xTranslation }}
+              ref={contentWidthRef}
+              className='flex flex-nowrap gap-[10px] md:gap-[20px] lg:gap-[70px] whitespace-nowrap'
             >
-              {items.map((item, index) => (
-                <span key={`first-${index}`} className='shrink-0'>
+              {itemsForScroll.map((item, index) => (
+                // staggerChildren을 적용하려면 여기에 motion.div를 사용해야 함
+                // 현재는 useAnimationFrame으로 전체를 움직이므로 itemVariants는 텍스트에만 적용
+                <span key={`scroll-item-${index}`} className='shrink-0'>
                   {item}
                 </span>
               ))}
-              {items.map((item, index) => (
-                <span key={`second-${index}`} className='shrink-0'>
-                  {item}
-                </span>
-              ))}
-              {items.map((item, index) => (
-                <span key={`third-${index}`} className='shrink-0'>
-                  {item}
-                </span>
-              ))}
-              {items.map((item, index) => (
-                <span key={`fourth-${index}`} className='shrink-0'>
-                  {item}
-                </span>
-              ))}
-            </div>
+            </motion.div>
           </motion.div>
         </section>
       </main>

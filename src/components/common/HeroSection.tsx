@@ -3,6 +3,8 @@ import Button from './Button';
 import { motion, useAnimation, easeOut } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
+import { useAuthContext } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 // 컨테이너와 아이템 variants 분리
 const containerVariants = {
@@ -24,6 +26,9 @@ const itemVariants = {
 };
 
 const HeroSection = () => {
+  const router = useRouter(); // useRouter 훅 사용
+  const { isAuthenticated } = useAuthContext(); // AuthContext에서 isAuthenticated 가져오기
+
   // 메인 HeroSection의 애니메이션 컨트롤
   const mainControls = useAnimation();
   const [mainRef, mainInView] = useInView({ triggerOnce: true, threshold: 0.2 });
@@ -43,6 +48,15 @@ const HeroSection = () => {
       writeSectionControls.start('visible');
     }
   }, [writeSectionControls, writeSectionInView]);
+
+  // '위키 만들기' 버튼 클릭 핸들러
+  const handleCreateWikiClick = () => {
+    if (isAuthenticated) {
+      router.push('/mypage'); // 로그인 후 MyPage로 이동
+    } else {
+      router.push('/login'); // 로그인 전 로그인 페이지로 이동
+    }
+  };
 
   return (
     <motion.div
@@ -86,7 +100,7 @@ const HeroSection = () => {
 
           <motion.div variants={itemVariants} className='relative z-10'>
             <Button
-              href='/mypage'
+              onClick={handleCreateWikiClick}
               variant='landingGray'
               className='mx-[40px] rounded-[15px] transition font-pretendard font-bold
               px-[30px] py-[15px] text-[20px]
