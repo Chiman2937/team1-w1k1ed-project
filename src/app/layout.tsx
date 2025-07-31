@@ -9,20 +9,23 @@ import { Suspense } from 'react';
 import Animation from '@/components/common/Animation';
 import { ToastRender } from 'cy-toast';
 
+const vercelUrl = process.env.VERCEL_URL;
+const nextOrigin = `https://${vercelUrl}`;
+
 export const metadata: Metadata = {
   title: 'wikied',
   description: '위키를 직접 작성하고 공유해보세요',
-  metadataBase: new URL(origin),
+  metadataBase: new URL(nextOrigin),
   openGraph: {
     title: 'wikied',
     description: '위키를 직접 작성하고 공유해보세요',
-    url: origin,
+    url: nextOrigin,
     siteName: 'wikied',
     locale: 'ko_KR',
     type: 'website',
     images: [
       {
-        url: `${origin}/images/image_opengraph_wide.png`,
+        url: `${nextOrigin}/images/image_opengraph_wide.png`,
         width: 1200,
         height: 630,
         alt: 'wikied 오픈 그래프 이미지',
@@ -33,10 +36,10 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'wikied',
     description: '위키를 직접 작성하고 공유해보세요',
-    images: [`${origin}/images/image_opengraph_wide.png`],
+    images: [`${nextOrigin}/images/image_opengraph_wide.png`],
   },
   keywords: ['위키', '소통', '프로필 작성', 'wikied'],
-  authors: [{ name: '파트3 1팀', url: origin }],
+  authors: [{ name: '파트3 1팀', url: nextOrigin }],
   generator: 'Next.js',
   category: '웹 애플리케이션',
 };
