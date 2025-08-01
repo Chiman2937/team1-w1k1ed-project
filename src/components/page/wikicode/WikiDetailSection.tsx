@@ -20,6 +20,8 @@ import { useUnloadAlert } from '@/hooks/useUnloadAlert';
 import ProfileQnAEditor from './ProfileQnAEditor/ProfileQnAEditor';
 import { uploadFileAPI } from '@/api/uploadFileAPI';
 import ProfileNoContent from './ProfileNoContent/ProfileNoContent';
+import { useRouter } from 'next/navigation';
+import LoadingOverlay from '@/components/common/LoadingOverlay';
 
 interface Props {
   wikiData: GetProfileItemResponse;
@@ -42,7 +44,11 @@ const WikiDetailSection = ({ wikiData }: Props) => {
 
   const [isExpiredModalOpen, setIsExpiredtModalOpen] = useState(false);
 
+  const [isUpload, setIsUploading] = useState(false);
+
   const { disable } = useUnloadAlert({ activeBy: isEditing });
+
+  const router = useRouter();
 
   const onTimerFinish = useCallback(() => {
     setEditingInfo(null);
@@ -61,19 +67,29 @@ const WikiDetailSection = ({ wikiData }: Props) => {
   const handleUpdateProfileSubmit = async () => {
     if (!editor) return;
     if (!wikiProfile) return;
+    setIsUploading(true);
     let nextProfileImage = wikiProfile.image;
     if (!!tempProfileImageFile) {
-      nextProfileImage = await uploadFileAPI({ fileObject: tempProfileImageFile, type: 'image' });
+      try {
+        nextProfileImage = await uploadFileAPI({ fileObject: tempProfileImageFile, type: 'image' });
+      } catch {
+        router.push('/error');
+      }
     }
-    const nextContent = await handlehtmlParse({ editor, files: tempFiles });
-    const nextWikiProfile = {
-      ...wikiProfile,
-      content: nextContent,
-      image: nextProfileImage,
-    };
-    await patchProfileItemAPI({ code: wikiData.code, params: nextWikiProfile });
-    disable();
-    window.location.reload();
+    let nextContent;
+    try {
+      nextContent = await handlehtmlParse({ editor, files: tempFiles });
+      const nextWikiProfile = {
+        ...wikiProfile,
+        content: nextContent,
+        image: nextProfileImage,
+      };
+      await patchProfileItemAPI({ code: wikiData.code, params: nextWikiProfile });
+      disable();
+      window.location.reload();
+    } catch {
+      router.push('/error');
+    }
   };
 
   // 수정 중 현황 정보 전역 state에 등록
@@ -136,6 +152,7 @@ const WikiDetailSection = ({ wikiData }: Props) => {
         </Modal>
       </div>
       <ProfileCard className='hidden lg:block sticky top-[100px]' wikiData={wikiData} />
+      {isUpload && <LoadingOverlay>게시글을 업로드하고 있어요.</LoadingOverlay>}
     </section>
   );
 };
