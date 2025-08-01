@@ -80,6 +80,7 @@ const BoardDetail = ({
             로그인 후 이용해 주시길 바랍니다.
           </SnackBar>
         ));
+        return;
       }
       if (isLiked) {
         await deleteArticleLike(id);

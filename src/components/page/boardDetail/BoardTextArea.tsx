@@ -97,11 +97,11 @@ const BoardTextArea = ({ count, isAuthenticated, onSubmit }: BoardTextAreaProps)
       <form
         onSubmit={handleSubmit}
         className={`mt-3 h-[140px] min-w-[320px] bg-grayscale-100 p-5 rounded-lg
-        border-2 ${isAuthenticated ? 'border-transparent focus-within:border-primary-green-200' : 'border-red-400'}
+        border-2 ${isAuthenticated ? 'border-transparent focus-within:border-primary-green-200' : 'bg-secondary-red-100 border-secondary-red-200'}
         transition-colors duration-300 ease-in-out`}
       >
         <textarea
-          className={`resize-none outline-none h-[55%] w-full overflow-hidden bg-grayscale-100 text-grayscale-500 ${isAuthenticated ? '' : 'placeholder:text-red-500 placeholder:text-lg-semibold'}`}
+          className={`resize-none outline-none h-[55%] w-full overflow-hidden bg-grayscale-100 text-grayscale-500 ${isAuthenticated ? '' : 'placeholder:text-secondary-red-200 placeholder:text-lg-semibold bg-secondary-red-100'}`}
           value={content}
           onChange={handleContentChange}
           onKeyDown={handleKeyDown}
@@ -119,6 +119,7 @@ const BoardTextArea = ({ count, isAuthenticated, onSubmit }: BoardTextAreaProps)
               variant='primary'
               disabled={characterCount > MAX_CHARACTERS || !content || !isAuthenticated}
               type='submit'
+              className={`${isAuthenticated ? '' : 'bg-secondary-red-200'}`}
             >
               댓글 작성
             </Button>
