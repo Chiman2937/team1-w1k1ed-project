@@ -16,6 +16,7 @@ import ToolBar from '@/components/common/TextEditor/ToolBar';
 import SnackBar from '@/components/common/Snackbar';
 import BoardInfoForm from '@/components/page/boardDetail/BoardInfo';
 import ContentEditor from '@/components/common/TextEditor/ContentEditor';
+import EditorClickCatcher from '@/components/common/TextEditor/textarea/EditorClickCatcher';
 
 const BoardEdit = ({
   userName,
@@ -150,8 +151,9 @@ const BoardEdit = ({
       {!editor ? null : (
         <div className='px-5 pb-5 flex flex-col gap-[20px]'>
           <ToolBar editor={editor} setTempFiles={setTempFiles} />
-          <div className='min-h-64 h-auto overflow-auto'>
+          <div className='flex flex-col min-h-64 h-auto overflow-auto'>
             <ContentEditor editor={editor} />
+            <EditorClickCatcher editor={editor} />
           </div>
           <div className='flex items-center gap-2 justify-end text-md-regular text-grayscale-400'>
             <span>
