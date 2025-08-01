@@ -133,13 +133,15 @@ const AddBoard = () => {
             </main>
           </div>
           {!editor ? null : (
-            <div className='px-5 pb-5 flex flex-col gap-[20px]'>
-              <ToolBar editor={editor} setTempFiles={setTempFiles} />
-              <div className='flex flex-col min-h-64 h-auto overflow-auto'>
-                <ContentEditor editor={editor} />
-                <EditorClickCatcher editor={editor} />
+            <>
+              <div className='px-5 flex flex-col gap-[20px]'>
+                <ToolBar editor={editor} setTempFiles={setTempFiles} />
+                <div className='flex flex-col min-h-64 h-auto overflow-auto'>
+                  <ContentEditor editor={editor} />
+                  <EditorClickCatcher editor={editor} />
+                </div>
               </div>
-              <div className='flex items-center gap-2 justify-end text-md-regular text-grayscale-400'>
+              <div className='px-5 pb-5 flex items-center gap-2 justify-end text-md-regular text-grayscale-400'>
                 <span>
                   <span>공백 포함: </span>
                   <span className='text-primary-green-200'>{lengthWithSpaces}</span> |
@@ -149,7 +151,7 @@ const AddBoard = () => {
                   <span className='text-primary-green-200'>{lengthWithoutSpaces}</span>
                 </span>
               </div>
-            </div>
+            </>
           )}
           {isModalOpen && (
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
