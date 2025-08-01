@@ -3,15 +3,16 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import CookiesJs from 'js-cookie';
-import { UserData } from '@/types/user';
+import { UserData, UserProfile } from '@/types/user';
 
 // AuthContextTYpe이 제공할 값 정의
 interface AuthContextType {
   isAuthenticated: boolean; // 로그인 여부
   user: UserData | null; // 로그인한 사용자 정보
   accessToken: string | null; // API 요청에 사용할 접근 토큰
-  login: (accessToken: string, refreshToken: string, user: UserData) => void; //로그인 처리 함수
+  login: (accessToken: string, refreshToken: string, user: UserData, fromSignup?: boolean) => void; //로그인 처리 함수
   logout: () => void; //로그아웃 처리 함수
+  updateProfile: (profile: UserProfile) => void;
 }
 
 // AuthContext 객체 생성
@@ -26,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 로그인 함수 정의: 외부에서 로그인 API 호출 성공 시 이 함수를 호출
   const login = useCallback(
-    (newAccessToken: string, newRefreshToken: string, newUser: UserData) => {
+    (newAccessToken: string, newRefreshToken: string, newUser: UserData, fromSignup?: boolean) => {
       // Access Token (유효 기간: 5분)
       CookiesJs.set('accessToken', newAccessToken, {
         expires: 5 / (24 * 60),
@@ -47,8 +48,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(newUser);
       setIsAuthenticated(true);
 
-      // 로그인 성공 후 메인 페이지('/')로 이동시킵니다.
-      router.push('/');
+      if (fromSignup) {
+        router.push('/mypage');
+      } else {
+        router.back();
+      }
     },
     [router],
   );
@@ -65,6 +69,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push('/login');
   }, [router]);
 
+  const updateProfile = useCallback(
+    (newProfile: UserProfile) => {
+      if (user) {
+        const updateUser = {
+          ...user,
+          profile: newProfile,
+        };
+        setUser(updateUser);
+        localStorage.setItem('user', JSON.stringify(updateUser));
+        console.log('AuthContext: profile 업데이트', updateUser.profile);
+      }
+    },
+    [user],
+  );
+
   // useMemo를 사용하여 contextValue가 불필요하게 다시 생성되는 것을 방지합니다.
   const contextValue = useMemo(
     () => ({
@@ -73,8 +92,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       login,
       logout,
+      updateProfile,
     }),
-    [isAuthenticated, accessToken, user, login, logout],
+    [isAuthenticated, accessToken, user, login, logout, updateProfile],
   );
 
   useEffect(() => {

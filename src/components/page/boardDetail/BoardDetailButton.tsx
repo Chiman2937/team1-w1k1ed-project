@@ -64,11 +64,7 @@ export const BoardLikeButton = ({
         className={`flex justify-center items-center gap-[2px] ${isLiked && 'text-primary-green-200'}`}
         onClick={() => onClick()}
       >
-        {isLiked ? (
-          <FullHeart size={18} className=' text-primary-green-300' />
-        ) : (
-          <EmptyHeart size={18} className=' text-grayscale-400' />
-        )}
+        <EmptyHeart size={18} className=' text-grayscale-400' />
         <span className='w-[15px] text-center'>{initialLikeCount}</span>
       </button>
     );

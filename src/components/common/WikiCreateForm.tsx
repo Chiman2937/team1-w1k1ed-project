@@ -17,7 +17,7 @@ import Image from 'next/image';
 
 const WikiCreateForm = () => {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuthContext(); // 사용자 인증 정보
+  const { user, isAuthenticated, updateProfile } = useAuthContext(); // 로그인된 사용자 정보와 인증 상태 가져오기
 
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [customInput, setCustomInput] = useState('');
@@ -153,7 +153,19 @@ const WikiCreateForm = () => {
       setCustomInput('');
       setAnswerInput('');
 
-      // 성공 시 위키 페이지로 이동
+      if (response.id && response.code) {
+        // UserProfile 타입에 맞게 객체 생성
+        const newProfile = {
+          id: response.id,
+          code: response.code,
+        };
+        updateProfile(newProfile); // AuthContext의 user.profile 업데이트
+        console.log('AuthContext의 user.profile이 업데이트되었습니다:', newProfile);
+      } else {
+        console.warn('위키 생성 응답에 유효한 id 또는 code가 없습니다. 프로필 업데이트 건너뜜.');
+      }
+
+      // 위키 생성 성공 후 응답에서 받은 code를 사용하여 해당 위키 페이지로 이동
       if (response.code) {
         router.replace(`/wiki/${response.code}`);
       } else {

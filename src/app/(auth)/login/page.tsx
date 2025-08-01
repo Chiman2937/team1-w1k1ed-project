@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import Input from '@/components/common/Input';
@@ -8,7 +8,6 @@ import Button from '@/components/common/Button';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
-import { useRouter } from 'next/navigation';
 import { authAPI } from '@/api/authAPI';
 import { useAuthContext } from '@/context/AuthContext';
 import { UserData } from '@/types/user';
@@ -29,8 +28,8 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const router = useRouter();
-  const { login, isAuthenticated } = useAuthContext();
+  const { login } = useAuthContext();
+  const [fromSignupPage, setFromSignupPage] = useState(false);
 
   const {
     register,
@@ -49,21 +48,20 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('from') === 'signup') {
+        setFromSignupPage(true);
+      } else {
+        setFromSignupPage(false); // from 파라미터가 없으면 초기화
+      }
+    }
     const rememberedEmail = CookiesJs.get(REMEMBER_EMAIL_KEY);
     if (rememberedEmail) {
-      // 'email' 필드에 저장된 이메일 값 설정
-      // shouldValidate: true 로 설정하여 값을 설정한 후 즉시 유효성 검사를 수행
       setValue('email', rememberedEmail, { shouldValidate: true });
-      // 'rememberEmail' 체크박스도 자동으로 체크
       setValue('rememberEmail', true);
     }
   }, [setValue]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/');
-    }
-  }, [isAuthenticated, router]);
 
   const onSubmit = async (data: LoginFormData) => {
     console.log('폼 제출됨:', data);
@@ -73,7 +71,12 @@ export default function LoginPage() {
       const responseData = await authAPI.signIn({ email, password });
       console.log('로그인 성공:', responseData);
 
-      login(responseData.accessToken, responseData.refreshToken, responseData.user as UserData);
+      login(
+        responseData.accessToken,
+        responseData.refreshToken,
+        responseData.user as UserData,
+        fromSignupPage,
+      );
 
       // '이메일 기억하기' 로직
       if (data.rememberEmail) {

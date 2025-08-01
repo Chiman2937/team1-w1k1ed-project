@@ -79,11 +79,7 @@ const ProfileImageEditor = ({ imageUrl }: Props) => {
     wikiProfile.image === null ? '/images/default_profile.svg' : wikiProfile.image;
 
   return (
-    <div className='flex flex-col items-center gap-[10px]'>
-      <Button variant='secondary' className='px-2 py-1' onClick={handleImageDefault}>
-        기본 이미지
-      </Button>
-
+    <div className='mb-[30px]'>
       <div className='relative aspect-square w-full'>
         <div className={clsx('relative rounded-full overflow-hidden', 'w-full h-full')}>
           <Image className='object-cover' src={nextImageSrc} alt='프로필 이미지' layout='fill' />
@@ -110,6 +106,13 @@ const ProfileImageEditor = ({ imageUrl }: Props) => {
           </div>
         )}
       </div>
+      <Button
+        variant='secondary'
+        className='text-xs absolute right-[20px] bottom-0 px-2 py-1 bg-white hover:bg-primary-green-100'
+        onClick={handleImageDefault}
+      >
+        기본 이미지 적용
+      </Button>
     </div>
   );
 };
