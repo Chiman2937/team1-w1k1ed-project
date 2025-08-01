@@ -44,7 +44,6 @@ const ProfileItemListViewer = ({ wikiData }: Props) => {
                 'bg-gray-100 rounded-[10px] text-center py-[10px]',
                 'text-grayscale-400',
                 'flex flex-col items-center justify-center',
-                'max-w-[200px]',
               )}
             >
               <span className='whitespace-nowrap'>작성된 내용이</span>
