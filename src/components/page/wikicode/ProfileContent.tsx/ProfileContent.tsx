@@ -5,6 +5,7 @@ import ContentViewer from '@/components/common/TextEditor/ContentViewer';
 import ToolBar from '@/components/common/TextEditor/ToolBar';
 import { useAuthContext } from '@/context/AuthContext';
 import { useWikiContext } from '@/context/WikiContext';
+import EditorClickCatcher from '@/components/common/TextEditor/textarea/EditorClickCatcher';
 interface Props {
   editor: Editor;
   setTempFiles: React.Dispatch<React.SetStateAction<Record<string, File>>>;
@@ -28,7 +29,10 @@ const ProfileContent = ({ editor, setTempFiles, wikiData }: Props) => {
           <div className='sticky top-[110px] md:top-[130px]  z-1'>
             <ToolBar editor={editor} setTempFiles={setTempFiles} />
           </div>
-          <ContentEditor editor={editor} />
+          <div className='mt-[10px] flex flex-col min-h-[237px]'>
+            <ContentEditor editor={editor} />
+            <EditorClickCatcher editor={editor} />
+          </div>
         </div>
       )}
       {!editCondition && <ContentViewer content={wikiData.content} />}
