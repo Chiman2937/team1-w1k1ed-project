@@ -32,6 +32,30 @@ const ProfileLabel = ({ children, className }: LabelProps) => {
   );
 };
 
+interface LinkProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+const ProfileLabelLink = ({ children, className }: LinkProps) => {
+  return (
+    <a
+      href={String(children)}
+      target='_blank'
+      className={clsx(
+        'text-grayscale-500 hover:text-primary-green-300 whitespace-nowrap',
+        'text-xs-regular',
+        'md:text-md-regular',
+        'xl:text-md-regular',
+        'grow',
+        className,
+      )}
+    >
+      {children}
+    </a>
+  );
+};
+
 interface ValueProps {
   children: React.ReactNode;
   className?: string;
@@ -79,6 +103,7 @@ const ProfileInput = ({ id, className, value, onChange }: InputProps) => {
 };
 
 ProfileField.label = ProfileLabel;
+ProfileField.link = ProfileLabelLink;
 ProfileField.value = ProfileValue;
 ProfileField.input = ProfileInput;
 

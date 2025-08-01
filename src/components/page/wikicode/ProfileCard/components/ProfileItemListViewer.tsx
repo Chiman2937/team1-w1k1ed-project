@@ -21,12 +21,13 @@ const ProfileItemListViewer = ({ wikiData }: Props) => {
   const emptyMap = fieldMap.filter(([_, value]) => value === '');
 
   return (
-    <div className='flex flex-col gap-[10px]'>
+    <div className='flex flex-col gap-[10px] overflow-hidden'>
       {filledMap.length > 0 &&
         filledMap.map(([label, value]) => (
           <ProfileField key={label}>
             <ProfileField.label>{label}</ProfileField.label>
-            <ProfileField.value>{value}</ProfileField.value>
+            {label !== 'SNS' && <ProfileField.value>{value}</ProfileField.value>}
+            {label === 'SNS' && <ProfileField.link>{value}</ProfileField.link>}
           </ProfileField>
         ))}
       {emptyMap.length > 0 && (
