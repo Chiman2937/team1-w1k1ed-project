@@ -2,11 +2,12 @@
 import { useEffect, useState } from 'react';
 import BoardsBestCard from './BoardsBestCard';
 import { getArticlesAPI, ArticleResponse } from '@/api/article/getArticlesAPI';
+import { useRouter } from 'next/navigation';
 
 function BoardsBest() {
   const [articles, setArticles] = useState<ArticleResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBestArticles = async () => {
@@ -16,14 +17,13 @@ function BoardsBest() {
         setArticles(bestArticles);
       } catch (error) {
         console.error('Failed to fetch best articles:', error);
-        setError('베스트 게시글을 불러오는데 실패했습니다.');
+        router.push('/error');
       } finally {
         setLoading(false);
       }
     };
-
     fetchBestArticles();
-  }, []);
+  }, [router]);
 
   if (loading) {
     return (
@@ -33,18 +33,10 @@ function BoardsBest() {
     );
   }
 
-  if (error) {
-    return (
-      <div className='w-full h-48 flex items-center justify-center'>
-        <div className='text-red-500'>{error}</div>
-      </div>
-    );
-  }
-
   if (articles.length === 0) {
     return (
       <div className='w-full h-48 flex items-center justify-center'>
-        <div className='text-gray-500'>베스트 게시글이 없습니다.</div>
+        <div className='text-gray-500'>게시글이 없어요!</div>
       </div>
     );
   }

@@ -59,6 +59,7 @@ const BoardsOrderDropdown = memo(({ value, onChange }: BoardsOrderDropdownProps)
           'relative',
           'flex items-center justify-between',
           'px-5 py-2.5 w-[140px] h-[45px]',
+          'w-full md:w-[140px]',
           'text-md-regular text-grayscale-500',
           'bg-grayscale-100 rounded-[10px]',
           'border border-transparent',

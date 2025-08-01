@@ -36,7 +36,7 @@ function Pagination<T>({
   className = '',
   itemSpacing = true,
   listHeight = {
-    mobile: 'h-[400px]',
+    mobile: 'h-[420px]',
     desktop: 'md:h-[500px]',
   },
 }: PaginationProps<T>) {

@@ -1,10 +1,9 @@
 'use client';
 
 import CopyToClipboard from '@/components/common/CopyToClipboard';
-import { IoPersonCircle } from 'react-icons/io5';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Profile } from '@/api/profile/getProfilesAPI';
+import WikiListProfile from './WikiListProfile';
 
 // nationality와 city를 조건에 따라 표시
 const getLocationText = (nationality: string, city: string) => {
@@ -32,39 +31,24 @@ const WikiListCard = ({ code, image, name, nationality, city, job }: Profile) =>
   return (
     <Link
       href={`/wiki/${code}`}
-      className='flex flex-row w-auto min-h-[142px] 
-        shadow-[0_0px_6px_-1px_rgba(0,0,0,0.15),0_4px_6px_-1px_rgba(0,0,0,0.1)]
-        hover:shadow-[0_-1px_10px_-2px_rgba(0,0,0,0.2),0_8px_10px_-6px_rgba(0,0,0,0.15)]
-        transition-shadow duration-200
-        px-6 py-5 gap-5 rounded-md items-center text-grayscale-400
-        md:gap-8 md:px-9 md:py-6'
+      className='flex flex-row w-[400px] md:w-auto h-[142px] md:h-auto md:min-h-[142px]
+  shadow-[0_0px_6px_-1px_rgba(0,0,0,0.15),0_4px_6px_-1px_rgba(0,0,0,0.1)]
+  hover:shadow-[0_-1px_10px_-2px_rgba(0,0,0,0.2),0_8px_10px_-6px_rgba(0,0,0,0.15)]
+  transition-shadow duration-200
+  px-6 py-5 gap-5 rounded-md items-center text-grayscale-400
+  md:gap-8 md:px-9 md:py-6'
     >
-      {/* 기존 내용들 동일 */}
-      {image ? (
-        <div className='relative size-[60px] shrink-0 rounded-full overflow-hidden md:size-[80px]'>
-          <Image
-            src={image}
-            alt='프로필 이미지'
-            fill
-            sizes='(max-width: 768px)60,80px'
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
-      ) : (
-        <div className='size-[60px] shrink-0 md:size-[80px]'>
-          <IoPersonCircle className='w-full h-full' color='#C6CADA' />
-        </div>
-      )}
+      <WikiListProfile image={image} />
 
       <div className='flex-1'>
         <div className='flex flex-col gap-3.5'>
           <h1 className='text-grayscale-500 text-xl-regular md:text-2xl-semibold'>{name}</h1>
-          <p className='text-xs-regular md:flex-row md:text-md-regular'>
+          <p className='text-xs-regular md:flex-row md:text-md-regular min-h-[18px] md:min-h-0'>
             {getLocationText(nationality, city) || '\u00A0'}
           </p>
         </div>
         <div className='flex flex-col text-xs-regular md:flex-row md:justify-between md:text-md-regular'>
-          <p>{job}</p>
+          <p className='min-h-[18px] md:min-h-0'>{job || '\u00A0'}</p>
           <div onClick={handleCopyClick}>
             <div className='block md:hidden'>
               <CopyToClipboard text={getFullProfileUrl(code)} size='default' />

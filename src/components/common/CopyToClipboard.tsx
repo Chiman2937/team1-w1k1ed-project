@@ -1,5 +1,7 @@
 import { AiOutlineLink } from 'react-icons/ai';
 import { truncateText } from '@/utils/truncateText';
+import { toast } from 'cy-toast';
+import SnackBar from '@/components/common/Snackbar';
 import clsx from 'clsx';
 
 // CopyToClipboard 컴포넌트에 사용되는 상수들 정리
@@ -67,7 +69,11 @@ export default function CopyToClipboard({
   const handleCopyClipBoard = async () => {
     try {
       if (!text.trim()) {
-        alert(COPY_TO_CLIPBOARD.MESSAGES.WARN);
+        toast.run(({ isClosing, isOpening, index }) => (
+          <SnackBar variant='info' isOpening={isOpening} isClosing={isClosing} index={index}>
+            {COPY_TO_CLIPBOARD.MESSAGES.WARN}
+          </SnackBar>
+        ));
         return;
       }
 
@@ -76,14 +82,26 @@ export default function CopyToClipboard({
 
       // 성공 메시지 출력
       if (showSuccessMessage) {
-        alert(successMessage); // TODO:나중에 스낵바로 변경
+        toast.run(({ isClosing, isOpening, index }) => (
+          <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
+            {successMessage}
+          </SnackBar>
+        ));
       }
     } catch (e) {
       // 실패했을 때 콘솔 및 유저에게 메시지 출력
       console.error('클립보드 복사 실패:', e);
-      alert(`${errorMessage}\n${COPY_TO_CLIPBOARD.MESSAGES.INFO}`); // TODO:나중에 스낵바로 변경
+
+      toast.run(({ isClosing, isOpening, index }) => (
+        <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
+          {errorMessage}
+          <br />
+          <span className='text-sm'>{COPY_TO_CLIPBOARD.MESSAGES.INFO}</span>
+        </SnackBar>
+      ));
     }
   };
+
   const displayText = truncateText(
     buttonText || text,
     COPY_TO_CLIPBOARD.MAX_TEXT_LENGTHS[size],
