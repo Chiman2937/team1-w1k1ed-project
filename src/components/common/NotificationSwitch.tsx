@@ -22,24 +22,19 @@ const NotificationSwitch = () => {
     const toastVariant = newEnabledState ? 'success' : 'info';
 
     // 토스트 알림 표시
-    toast.run(
-      ({ isClosing, isOpening, index }) => (
-        <SnackBar variant={toastVariant} isOpening={isOpening} isClosing={isClosing} index={index}>
-          {message}
-        </SnackBar>
-      ),
-      {
-        duration: 3000,
-      },
-    );
+    toast.run(({ isClosing, isOpening, index }) => (
+      <SnackBar variant={toastVariant} isOpening={isOpening} isClosing={isClosing} index={index}>
+        {message}
+      </SnackBar>
+    ));
   };
 
   return (
     <div
-      className='flex justify-between items-center px-1 py-1 my-4 w-auto 
+      className='flex justify-between items-center py-1 my-1 w-auto 
       text-lg font-semibold text-grayscale-500
       transition-all duration-700
-      bg-white rounded-[10px]'
+       rounded-[10px]'
     >
       <div>서비스 알림</div>
       <Switch
@@ -50,7 +45,7 @@ const NotificationSwitch = () => {
         p-1 ease-in-out focus:not-data-focus:outline-none 
         data-focus:outline data-focus:outline-white
         border border-grayscale-300 transition-colors duration-200
-        data-checked:border-primary-green-200'
+        data-checked:border-primary-green-200 '
       >
         <span
           aria-hidden='true'

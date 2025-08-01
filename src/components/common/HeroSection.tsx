@@ -162,7 +162,7 @@ const HeroSection = () => {
                   fill
                   sizes='(min-width: 1024px) calc(100vw - 160px), (min-width: 768px) calc(100vw - 80px), calc(100vw - 40px)'
                   className='bg-primary-green-200 border border-none rounded-[10px]
-                  object-cover'
+                  object-cover shadow-2xl'
                 />
               </motion.div>
             </motion.div>
@@ -175,7 +175,7 @@ const HeroSection = () => {
                 width={520}
                 height={681}
                 unoptimized
-                className='
+                className='shadow-2xl
                 w-[192px] h-[250px]
                 md:w-[365px] md:h-[479px]
                 lg:w-[520px] lg:h-[681px]'

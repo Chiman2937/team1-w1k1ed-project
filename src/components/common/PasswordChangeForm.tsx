@@ -10,7 +10,7 @@ import { authAPI } from '@/api/authAPI';
 import { toast } from 'cy-toast';
 import SnackBar from '../../components/common/Snackbar';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react'; // useEffect 임포트 추가
+import { useEffect } from 'react';
 
 // ----------------------------------------------
 // 비밀번호 변경용 zod 스키마 정의
@@ -34,12 +34,12 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 // 비밀번호 변경 폼 컴포넌트
 // ----------------------------------------------
 const PasswordChangeForm = () => {
-  const router = useRouter(); // useRouter 훅 사용
+  const router = useRouter();
 
   const {
     register, // input 연결용
     handleSubmit, // form submit handler
-    formState: { errors, touchedFields }, // 폼 에러 상태
+    formState: { errors, touchedFields, isValid }, // 폼 에러 상태
     reset, // 폼 필드 초기화 함수 추가
     watch, // 필드 값 감시용
     trigger, // 유효성 검사 수동 트리거용
@@ -58,7 +58,6 @@ const PasswordChangeForm = () => {
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     try {
-      // API 스펙에 맞춰 필드명 정리
       const payload = {
         currentPassword: data.currentPassword,
         password: data.newPassword,
@@ -68,20 +67,17 @@ const PasswordChangeForm = () => {
       const responseData = await authAPI.resetPassword(payload);
 
       console.log('비밀번호 변경 성공:', responseData);
-      // alert 대신 성공 토스트 메시지 표시
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='success' isOpening={isOpening} isClosing={isClosing} index={index}>
           비밀번호가 성공적으로 변경되었습니다.
         </SnackBar>
       ));
 
-      // 폼 필드 초기화
       reset();
-
-      // 비밀번호 변경 성공 후 랜딩 페이지로 이동
       router.push('/');
     } catch (error) {
       const axiosError = error as AxiosError;
+      const statusCode = axiosError.response?.status;
 
       const errorMessage =
         (axiosError.response?.data as { message?: string })?.message ||
@@ -89,12 +85,16 @@ const PasswordChangeForm = () => {
         '알 수 없는 오류';
 
       console.error('비밀번호 변경 실패:', errorMessage);
-      // alert 대신 실패 토스트 메시지 표시
       toast.run(({ isClosing, isOpening, index }) => (
         <SnackBar variant='error' isOpening={isOpening} isClosing={isClosing} index={index}>
           비밀번호 변경 실패: {errorMessage}
         </SnackBar>
       ));
+
+      // 500번대 에러(서버 오류)일 경우에만 에러 페이지로 이동
+      if (statusCode && statusCode >= 500) {
+        router.push('/error');
+      }
     }
   };
 
@@ -136,7 +136,9 @@ const PasswordChangeForm = () => {
       />
 
       <div className='flex justify-end mt-[16px]'>
-        <Button type='submit'>변경하기</Button>
+        <Button type='submit' disabled={!isValid}>
+          변경하기
+        </Button>
       </div>
     </form>
   );

@@ -21,7 +21,10 @@ const Nav = () => {
           <Link
             key={href}
             href={href}
-            className={clsx('cursor-pointer', isActive && 'text-primary-green-200 font-bold')}
+            className={clsx(
+              'cursor-pointer transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-300 rounded',
+              isActive ? 'text-primary-green-200 font-bold' : 'hover:text-primary-green-200',
+            )}
           >
             {label}
           </Link>

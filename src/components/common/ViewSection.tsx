@@ -81,7 +81,7 @@ const ViewSection = () => {
               alt='밝은 테마 채팅 화면'
               width={924}
               height={280}
-              className='border border-none rounded-[10px]
+              className='border border-none rounded-[10px] shadow-2xl
               w-[335px] h-[102px]
               md:w-[648px] md:h-[196px]
               lg:w-[924px] lg:h-[280px]'
@@ -98,7 +98,8 @@ const ViewSection = () => {
                 alt='알림 종 아이콘'
                 width={280}
                 height={280}
-                className='bg-secondary-purple-100 border border-none rounded-[10px] aspect-square
+                className='bg-secondary-purple-100 shadow-2xl
+                border border-none rounded-[10px] aspect-square
                 w-[102px]
                 md:w-[198px]
                 lg:w-[280px]'
@@ -108,7 +109,7 @@ const ViewSection = () => {
                 alt='FAQ 채팅 버블'
                 width={604}
                 height={280}
-                className='border border-none rounded-[10px]
+                className='border border-none rounded-[10px] shadow-2xl
                 w-[223px] h-[102px]
                 md:w-[428px] md:h-[198px]
                 lg:w-[604px] lg:h-[280px]'

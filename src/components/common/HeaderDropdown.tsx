@@ -42,7 +42,7 @@ const HeaderDropdown = ({
     <Menu as='div' className='relative font-pretendard text-[14px] font-normal'>
       <MenuButton
         className='flex items-center justify-center
-        focus:outline-none relative rounded-full'
+        focus:outline-none focus:ring-0 relative rounded-full'
       >
         {imageSrc ? ( // imageSrc가 있으면 Image 컴포넌트 렌더링
           <Image
@@ -50,7 +50,9 @@ const HeaderDropdown = ({
             alt='프로필 이미지'
             width={36}
             height={36}
-            className='rounded-full object-cover w-9 h-9'
+            className='rounded-full object-cover cursor-pointer
+            w-7 h-7
+            md:w-8 md:h-8'
           />
         ) : Icon ? ( // iconSrc가 없고 iconName이 있으면 아이콘 렌더링
           <Icon
@@ -75,7 +77,10 @@ const HeaderDropdown = ({
         )}
       </MenuButton>
 
-      <MenuItems className='absolute right-0 mt-2 w-[140px] text-center text-grayscale-500 bg-grayscale-50 rounded-[10px] shadow-lg z-50'>
+      <MenuItems
+        className='absolute right-0 mt-2 w-[140px] text-center text-grayscale-500 bg-grayscale-50 
+        rounded-[10px] shadow-lg z-50 focus:outline-none focus:ring-0'
+      >
         <div className='p-1'>
           {menuItems.map((item, idx) => {
             const isActive = pathname === item.href;

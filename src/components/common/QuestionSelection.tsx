@@ -48,12 +48,16 @@ const QuestionSelection: React.FC<QuestionSelectionProps> = ({
       {/* '직접 입력하기' 인풋 필드 */}
       <Input
         className='col-span-2'
-        placeholder='직접 입력하기'
+        placeholder='원하시는 질문을 직접 입력해보세요!'
         name='customQuestion'
         value={customInput}
         onChange={(e) => {
           setCustomInput(e.target.value);
           setSelectedQuestion(e.target.value ? e.target.value : null);
+          setAnswerInput('');
+        }}
+        onFocus={() => {
+          setSelectedQuestion(null);
           setAnswerInput('');
         }}
       />
