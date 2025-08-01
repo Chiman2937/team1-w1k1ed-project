@@ -31,24 +31,24 @@ const WikiListCard = ({ code, image, name, nationality, city, job }: Profile) =>
   return (
     <Link
       href={`/wiki/${code}`}
-      className='flex flex-row w-auto min-h-[142px] 
-        shadow-[0_0px_6px_-1px_rgba(0,0,0,0.15),0_4px_6px_-1px_rgba(0,0,0,0.1)]
-        hover:shadow-[0_-1px_10px_-2px_rgba(0,0,0,0.2),0_8px_10px_-6px_rgba(0,0,0,0.15)]
-        transition-shadow duration-200
-        px-6 py-5 gap-5 rounded-md items-center text-grayscale-400
-        md:gap-8 md:px-9 md:py-6'
+      className='flex flex-row w-[400px] md:w-auto h-[142px] md:h-auto md:min-h-[142px]
+  shadow-[0_0px_6px_-1px_rgba(0,0,0,0.15),0_4px_6px_-1px_rgba(0,0,0,0.1)]
+  hover:shadow-[0_-1px_10px_-2px_rgba(0,0,0,0.2),0_8px_10px_-6px_rgba(0,0,0,0.15)]
+  transition-shadow duration-200
+  px-6 py-5 gap-5 rounded-md items-center text-grayscale-400
+  md:gap-8 md:px-9 md:py-6'
     >
       <WikiListProfile image={image} />
 
       <div className='flex-1'>
         <div className='flex flex-col gap-3.5'>
           <h1 className='text-grayscale-500 text-xl-regular md:text-2xl-semibold'>{name}</h1>
-          <p className='text-xs-regular md:flex-row md:text-md-regular'>
+          <p className='text-xs-regular md:flex-row md:text-md-regular min-h-[18px] md:min-h-0'>
             {getLocationText(nationality, city) || '\u00A0'}
           </p>
         </div>
         <div className='flex flex-col text-xs-regular md:flex-row md:justify-between md:text-md-regular'>
-          <p>{job}</p>
+          <p className='min-h-[18px] md:min-h-0'>{job || '\u00A0'}</p>
           <div onClick={handleCopyClick}>
             <div className='block md:hidden'>
               <CopyToClipboard text={getFullProfileUrl(code)} size='default' />
