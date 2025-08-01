@@ -24,6 +24,7 @@ const WikiCreateForm = () => {
   const [answerInput, setAnswerInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false); // 리다이렉트 중인지 추적하는 새로운 상태
 
   const quizButtonsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +34,11 @@ const WikiCreateForm = () => {
   // 페이지 진입 시 기존 위키 존재 여부 확인
   useEffect(() => {
     const checkExistingWiki = async () => {
+      // 리다이렉트 중이라면 이 함수를 실행하지 않음
+      if (isRedirecting) {
+        setIsInitialLoading(false);
+        return;
+      }
       // 로그인되지 않은 경우 로그인 페이지로 이동
       if (!isAuthenticated) {
         router.replace('/login');
@@ -52,12 +58,18 @@ const WikiCreateForm = () => {
         // 기존 위키가 존재할 경우 → 리다이렉트
         if (profile && profile.code) {
           console.log(`기존 위키 발견: ${profile.code}, 리다이렉트합니다.`);
-          toast.run(({ isClosing, isOpening, index }) => (
-            <SnackBar variant='info' isOpening={isOpening} isClosing={isClosing} index={index}>
-              이미 위키가 생성되어있습니다. 위키페이지로 이동합니다.
-            </SnackBar>
-          ));
-          router.replace(`/wiki/${profile.code}`);
+
+          // 리다이렉트 시작을 알리기 전에 토스트를 한 번만 띄웁니다.
+          // isRedirecting 상태를 확인하여 중복 토스트를 방지합니다.
+          if (!isRedirecting) {
+            toast.run(({ isClosing, isOpening, index }) => (
+              <SnackBar variant='info' isOpening={isOpening} isClosing={isClosing} index={index}>
+                이미 위키가 생성되어있습니다. 위키페이지로 이동합니다.
+              </SnackBar>
+            ));
+            setIsRedirecting(true); // 토스트를 띄운 후 리다이렉트 상태로 변경
+            router.replace(`/wiki/${profile.code}`);
+          }
         } else {
           // 예외 상황: 프로필에는 code가 없는데 조회는 됨
           router.replace('/error');
@@ -83,7 +95,7 @@ const WikiCreateForm = () => {
     };
 
     checkExistingWiki();
-  }, [isAuthenticated, user, router]);
+  }, [isAuthenticated, user, router, isRedirecting]);
 
   // 외부 클릭 시 질문/답변 입력 초기화
   useEffect(() => {
@@ -167,6 +179,7 @@ const WikiCreateForm = () => {
 
       // 위키 생성 성공 후 응답에서 받은 code를 사용하여 해당 위키 페이지로 이동
       if (response.code) {
+        setIsRedirecting(true); // 리다이렉트 시작을 알림
         router.replace(`/wiki/${response.code}`);
       } else {
         // code 없을 경우 → 홈으로 이동
