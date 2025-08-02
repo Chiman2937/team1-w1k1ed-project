@@ -61,22 +61,30 @@ const SettingPage = () => {
         <NotificationSwitch />
         <hr className='my-5 border-t border-grayscale-300 w-auto' />
         <div className='flex flex-col gap-5'>
-          <a
+          <Link
+            href='/mypage'
+            className='text-lg font-semibold 
+            flex items-center justify-between'
+          >
+            위키 생성하기
+            <IconArrowRight className='size-6 fill-grayscale-400' />
+          </Link>
+          <Link
             href='/passwordChangePage'
             className='text-lg font-semibold 
             flex items-center justify-between'
           >
             비밀번호 변경
             <IconArrowRight className='size-6 fill-grayscale-400' />
-          </a>
-          <a
+          </Link>
+          <div
             onClick={logout}
             className='text-lg font-semibold 
             flex items-center justify-between cursor-pointer'
           >
             로그아웃
             <IconArrowRight className='size-6 fill-grayscale-400' />
-          </a>
+          </div>
         </div>
         <hr className='my-5 border-t border-grayscale-300 w-auto' />
       </div>

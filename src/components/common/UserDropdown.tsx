@@ -17,7 +17,6 @@ const UserDropdown = ({ userImage }: Props) => {
       label: '나의 위키',
       href: user?.profile?.code ? `/wiki/${user.profile.code}` : '/create-wiki',
     },
-    { label: '위키 생성하기', href: '/mypage' },
     { label: '설정', href: '/settings' },
     { label: '로그아웃', onClick: logout },
   ];
