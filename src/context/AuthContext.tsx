@@ -7,7 +7,7 @@ import { UserData, UserProfile } from '@/types/user';
 
 // AuthContextTYpe이 제공할 값 정의
 interface AuthContextType {
-  isAuthenticated: boolean | undefined; // 로그인 여부
+  isAuthenticated: boolean; // 로그인 여부
   isAuthLoading: boolean;
   user: UserData | null; // 로그인한 사용자 정보
   accessToken: string | null; // API 요청에 사용할 접근 토큰
@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // AuthProvider 컴포넌트 정의
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(undefined); // 현재 로그인 상태인지
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false); // 현재 로그인 상태인지
   const [user, setUser] = useState<UserData | null>(null); // 로그인한 사용자의 정보
   const [accessToken, setAccessToken] = useState<string | null>(null); // API 호출 시 필요한 토큰
   const [isAuthLoading, setIsAuthLoading] = useState(true);
