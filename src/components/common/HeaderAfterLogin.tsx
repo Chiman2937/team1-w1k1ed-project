@@ -46,7 +46,7 @@ const HeaderAfterLogin = () => {
     };
 
     fetchProfileImage();
-  }, [user]);
+  }, [user?.profile?.code]);
 
   // 폴링 및 알림 상태 관리
   useEffect(() => {

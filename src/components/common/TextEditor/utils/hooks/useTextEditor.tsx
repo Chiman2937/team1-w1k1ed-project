@@ -7,7 +7,7 @@ import { LocalVideoExtension } from '@/components/common/TextEditor/utils/extens
 import { YoutubeExtension } from '@/components/common/TextEditor/utils/extensions/YoutubeExtension';
 import { OGLinkExtension } from '../extensions/OGLinkExtension';
 import { LocalImageExtension } from '../extensions/LocalImageExtension';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getHtmlLength } from '../handlers/getHtmlLength';
 import { removeHeadingIds } from '../handlers/removeHeadingIds';
 
@@ -109,6 +109,14 @@ export const useTextEditor = ({ initialContent = '' }: Props = {}) => {
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
   });
+
+  useEffect(() => {
+    if (editor) {
+      setLengthWithSpaces(getHtmlLength.withSpaces(editor));
+      setLengthWithoutSpaces(getHtmlLength.withoutSpaces(editor));
+    }
+  }, [editor]);
+
   return {
     editor,
     tempFiles,
