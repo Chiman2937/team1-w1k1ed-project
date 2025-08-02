@@ -7,7 +7,8 @@ import { UserData, UserProfile } from '@/types/user';
 
 // AuthContextTYpe이 제공할 값 정의
 interface AuthContextType {
-  isAuthenticated: boolean; // 로그인 여부
+  isAuthenticated: boolean | undefined; // 로그인 여부
+  isAuthLoading: boolean;
   user: UserData | null; // 로그인한 사용자 정보
   accessToken: string | null; // API 요청에 사용할 접근 토큰
   login: (accessToken: string, refreshToken: string, user: UserData, fromSignup?: boolean) => void; //로그인 처리 함수
@@ -21,9 +22,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // AuthProvider 컴포넌트 정의
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false); // 현재 로그인 상태인지
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(undefined); // 현재 로그인 상태인지
   const [user, setUser] = useState<UserData | null>(null); // 로그인한 사용자의 정보
   const [accessToken, setAccessToken] = useState<string | null>(null); // API 호출 시 필요한 토큰
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   // 로그인 함수 정의: 외부에서 로그인 API 호출 성공 시 이 함수를 호출
   const login = useCallback(
@@ -88,13 +90,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const contextValue = useMemo(
     () => ({
       isAuthenticated,
+      isAuthLoading,
       accessToken,
       user,
       login,
       logout,
       updateProfile,
     }),
-    [isAuthenticated, accessToken, user, login, logout, updateProfile],
+    [isAuthenticated, isAuthLoading, accessToken, user, login, logout, updateProfile],
   );
 
   useEffect(() => {
@@ -121,6 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       setIsAuthenticated(false);
     }
+    setIsAuthLoading(false);
   }, []); // 빈 배열(`[]`)은 이 `useEffect` 훅이 컴포넌트가 처음 마운트될 때 딱 한 번만 실행되도록 한다.
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

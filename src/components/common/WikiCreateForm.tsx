@@ -17,7 +17,7 @@ import Image from 'next/image';
 
 const WikiCreateForm = () => {
   const router = useRouter();
-  const { user, isAuthenticated, updateProfile } = useAuthContext(); // 로그인된 사용자 정보와 인증 상태 가져오기
+  const { user, isAuthenticated, updateProfile, isAuthLoading } = useAuthContext(); // 로그인된 사용자 정보와 인증 상태 가져오기
 
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [customInput, setCustomInput] = useState('');
@@ -33,6 +33,8 @@ const WikiCreateForm = () => {
 
   // 페이지 진입 시 기존 위키 존재 여부 확인
   useEffect(() => {
+    if (isAuthLoading) return;
+
     const checkExistingWiki = async () => {
       // 리다이렉트 중이라면 이 함수를 실행하지 않음
       if (isRedirecting) {

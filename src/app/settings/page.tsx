@@ -62,6 +62,14 @@ const SettingPage = () => {
         <hr className='my-5 border-t border-grayscale-300 w-auto' />
         <div className='flex flex-col gap-5'>
           <a
+            href='/mypage'
+            className='text-lg font-semibold 
+            flex items-center justify-between'
+          >
+            위키 생성하기
+            <IconArrowRight className='size-6 fill-grayscale-400' />
+          </a>
+          <a
             href='/passwordChangePage'
             className='text-lg font-semibold 
             flex items-center justify-between'
