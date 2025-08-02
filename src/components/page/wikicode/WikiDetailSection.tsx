@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import ProfileIndex from './ProfileIndex/ProfileIndex';
 import { getHtmlHeadings } from '@/components/common/TextEditor/utils/handlers/getHtmlHeadings';
 import WikiInfo from './WikiInfo/WikiInfo';
+import { ToastRender } from 'cy-toast';
 import { useUnloadAlert } from '@/hooks/useUnloadAlert';
 import ProfileQnAEditor from './ProfileQnAEditor/ProfileQnAEditor';
 import { uploadFileAPI } from '@/api/uploadFileAPI';
@@ -122,6 +123,7 @@ const WikiDetailSection = ({ wikiData }: Props) => {
           'lg:max-w-[800px]',
         )}
       >
+        <ToastRender />
         <ProfileTitle
           handleCancelClick={handleCancelClick}
           handleUpdateProfileSubmit={handleUpdateProfileSubmit}

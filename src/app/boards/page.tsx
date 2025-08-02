@@ -1,7 +1,6 @@
 import BoardsBest from '@/components/page/boards/BoardsBest';
 import BoardsHeader from '@/components/page/boards/BoardsHeader';
 import BoardsLists from '@/components/page/boards/BoardsLists';
-import LoadingOverlay from '@/components/common/LoadingOverlay';
 import { Suspense } from 'react';
 
 export default function Boards() {
@@ -14,8 +13,9 @@ export default function Boards() {
       <BoardsHeader />
       <Suspense
         fallback={
-          <div>
-            <LoadingOverlay>페이지를 불러오고 있어요</LoadingOverlay>
+          <div className='text-center p-8'>
+            <div>게시글을 불러오는 중...</div>
+            <div className='animate-pulse'>⏳</div>
           </div>
         }
       >
