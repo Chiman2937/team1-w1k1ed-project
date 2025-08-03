@@ -36,7 +36,8 @@ export const handleImageSelect = (
         src: imageBlobURL,
         alt: file.name,
         width: nextWidth,
-        height: nextHeight,
+        aspectRatio: `${nextWidth} / ${nextHeight}`,
+        align: 'center',
       })
       .run();
   };

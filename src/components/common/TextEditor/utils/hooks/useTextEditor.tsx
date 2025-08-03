@@ -29,7 +29,6 @@ export const useTextEditor = ({ initialContent = '' }: Props = {}) => {
       LocalVideoExtension,
       YoutubeExtension,
       OGLinkExtension,
-      YoutubeExtension,
       LocalImageExtension,
       Link.configure({
         openOnClick: false,
